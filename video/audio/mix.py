@@ -649,7 +649,7 @@ def main():
     for _ in range(3):
         lufs = meter.integrated_loudness(mix)
         mix = mix * db(-14.0 - lufs)
-        mix = true_peak_limit(mix, -1.2)
+        mix = true_peak_limit(mix, -1.7)
     lufs = meter.integrated_loudness(mix)
     tp = measure_tp(mix)
     print(f"master: {lufs:.2f} LUFS integrated, true peak {tp:.2f} dBTP")

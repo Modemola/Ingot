@@ -53,7 +53,7 @@ This is the brief the soundtrack was built from. `audio/mix.py` implements it fr
 
 | | integrated |
 |---|---|
-| Whole film | −14.0 LUFS, true peak −1.2 dBTP |
+| Whole film | −14.0 LUFS, true peak −1.7 dBTP (−1.0 after AAC in the share copy) |
 | Voice, every scene | −13.5 to −13.9 LUFS |
 | Music under speech | about 12.5 dB below the voice (RMS) |
 | Music in the pauses | about 4 dB below the voice |
