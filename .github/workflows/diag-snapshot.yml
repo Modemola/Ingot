@@ -1,0 +1,25 @@
+# Temporary: read the live index prints for the demo film. Removed after use.
+name: diag snapshot
+on:
+  push:
+    branches: [claude/focused-allen-ggzad1]
+    paths: [.github/workflows/diag-snapshot.yml]
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+      - name: Prints
+        run: |
+          R=https://testnet-rpc.monad.xyz
+          I=0xaD065A9D41092f371A83f730B3b375D171a066AC
+          N=$(timeout 20 cast call $I 'observationCount()(uint256)' --rpc-url $R | awk '{print $1}')
+          OUT=""
+          for i in $(seq 76 $((N-1))); do
+            O=$(timeout 20 cast call $I 'observation(uint256)((uint64,uint64,uint32,uint16,uint256,uint256))' $i --rpc-url $R | tr -d '()' | sed 's/\[[^]]*\]//g' | tr -s ' ' | sed 's/ ,/,/g')
+            OUT="$OUT|$i:$O"
+          done
+          echo "::notice title=prints::$OUT"
