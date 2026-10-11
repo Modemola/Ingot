@@ -1,0 +1,48 @@
+{
+  "note": "Monad testnet (chain 10143), read 2026-10-11 at block 70,078,330 by a GitHub runner. Raw values; see SOURCES.md.",
+  "block": 70078330,
+  "index": {
+    "address": "0xaD065A9D41092f371A83f730B3b375D171a066AC",
+    "observationCount": 100,
+    "backfilled": 78,
+    "latestPrice": 3.7439,
+    "latestSamples": 38,
+    "latestVenues": 24,
+    "firstPrice": 3.124444,
+    "methodologyHash": "0x948d54871d0c5f72c955c90306fade7dd7b0c2312817d1a89f719a5b866124e4",
+    "finalityDelaySec": 60,
+    "maxDeviationBps": 2500
+  },
+  "market": {
+    "address": "0x5811068aEb4037A7690D28387E29Fe0c4f90b820",
+    "mark": 3.732131,
+    "quote10LotsLong": 3.706006,
+    "takerFeeBps": 10,
+    "initialMarginBps": 2000,
+    "maintenanceMarginBps": 1000,
+    "frontExpiry": 1793695419
+  },
+  "vault": {
+    "address": "0x7D8fb842ca5dC152854ED535B4b0C0e3b2ca82Ae",
+    "nav": 2016681.27,
+    "sharePrice": 1.00834,
+    "inventoryHours": 99270
+  },
+  "credit": {
+    "address": "0xcd7a1B8Fd9c67dAC3a97443c77199930eb6334D9",
+    "poolAssets": 1002595.13,
+    "ltvBps": 7000,
+    "rateBps": 500,
+    "demoLoan": {
+      "offtakeHours": 100000,
+      "hedgeEntry": 3.568061,
+      "principal": 251651.66,
+      "interest": 12582.58,
+      "debt": 264234.24,
+      "margin": 60000,
+      "recoveryHedged": 264234.24,
+      "recoveryUnhedgedAt": { "1.07": 167000.0, "1.50": 210000.0, "2.00": 260000.0, "2.50": 264234.24 }
+    }
+  },
+  "usdc": { "address": "0xe841dF0566e532822c50997e3084eF6fFB58ca5D", "supply": 3310000 }
+}
