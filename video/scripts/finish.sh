@@ -13,15 +13,17 @@ OUT=out
 COLOR="scale=in_color_matrix=bt601:in_range=full:out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int,format=yuv420p"
 TAGS="-colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv"
 
+if [ -z "${SKIP_MASTER:-}" ]; then
 # Master: 1080p60, near-transparent, AAC 320k.
 "$FF" -y -hide_banner -loglevel error -i "$OUT/picture.mp4" -i "$OUT/mix.wav" \
   -map 0:v -map 1:a -vf "$COLOR" -c:v libx264 -preset slow -crf 17 -tune animation $TAGS \
   -c:a aac -b:a 320k -ar 48000 -shortest -movflags +faststart \
   "$OUT/ingot-film-1080p60.mp4"
+fi
 
 # Share copy: 1080p30, two-pass to ~25 MB. The film grain is noise the encoder would spend the
 # whole budget on, so it is smoothed away first; everything else survives.
-DUR=$("$FF" -hide_banner -i "$OUT/picture.mp4" 2>&1 | sed -n 's/.*Duration: \([0-9:.]*\).*/\1/p' | awk -F: '{print $1*3600+$2*60+$3}')
+DUR=$( ("$FF" -hide_banner -i "$OUT/picture.mp4" 2>&1 || true) | sed -n 's/.*Duration: \([0-9:.]*\).*/\1/p' | awk -F: '{print $1*3600+$2*60+$3}')
 TARGET_MB=${TARGET_MB:-24.6}
 AUDIO_K=128
 VIDEO_K=$(awk -v d="$DUR" -v mb="$TARGET_MB" -v a="$AUDIO_K" 'BEGIN{printf "%d", (mb*8*1024*1024/d)/1000 - a - 8}')
