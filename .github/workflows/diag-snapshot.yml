@@ -1,0 +1,42 @@
+# Temporary: snapshot live Monad testnet state for the demo film. Removed after use.
+name: diag snapshot
+on:
+  push:
+    branches: [claude/focused-allen-ggzad1]
+    paths: [.github/workflows/diag-snapshot.yml]
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+      - name: Snapshot
+        run: |
+          R=https://testnet-rpc.monad.xyz
+          I=0xaD065A9D41092f371A83f730B3b375D171a066AC
+          M=0x5811068aEb4037A7690D28387E29Fe0c4f90b820
+          V=0x7D8fb842ca5dC152854ED535B4b0C0e3b2ca82Ae
+          C=0xcd7a1B8Fd9c67dAC3a97443c77199930eb6334D9
+          U=0xe841dF0566e532822c50997e3084eF6fFB58ca5D
+          c() { timeout 20 cast call "$@" --rpc-url $R 2>&1 | tr '\n' ' '; }
+          N=$(c $I 'observationCount()(uint256)' | awk '{print $1}')
+          L=$((N-1))
+          S=$(c $M 'seriesCount()(uint256)' | awk '{print $1}')
+          F=$((S-1))
+          echo "::notice title=index::count=$N latest=[$(c $I 'latest()(uint256,uint64)')] finalizedThrough=[$(c $I 'finalizedThrough()(uint64)')] last=[$(c $I 'observation(uint256)((uint64,uint64,uint32,uint16,uint256,uint256))' $L)] first=[$(c $I 'observation(uint256)((uint64,uint64,uint32,uint16,uint256,uint256))' 0)] methodology=[$(c $I 'methodologyHash()(bytes32)')] guards=[$(c $I 'finalityDelay()(uint32)') $(c $I 'maxDeviationBps()(uint16)') $(c $I 'minInterval()(uint32)')]"
+          echo "::notice title=market::series=$S front=[$(c $M 'seriesAt(uint256)((uint64,uint64,uint64,bool,int32,uint256,uint256))' $F)] mark=[$(c $M 'markPrice(uint256)(uint256)' $F)] quote10lotsLong=[$(c $M 'quote(uint256,int256)(uint256)' $F 7300000000000000000000)] fee=[$(c $M 'takerFeeBps()(uint16)')] im=[$(c $M 'initialMarginBps()(uint16)')] mm=[$(c $M 'maintenanceMarginBps()(uint16)')] vaultEquity=[$(c $M 'equity(address)(int256)' $V)] vaultPos=[$(c $M 'positionOf(address,uint256)((int256,int256,uint32,bool))' $V $F)]"
+          echo "::notice title=vault::totalAssets=[$(c $V 'totalAssets()(uint256)')] sharePrice=[$(c $V 'sharePrice()(uint256)')] supply=[$(c $V 'totalSupply()(uint256)')] avail=[$(c $V 'availableLiquidity()(uint256)')]"
+          echo "::notice title=credit::assets=[$(c $C 'totalAssets()(uint256)')] avail=[$(c $C 'availableLiquidity()(uint256)')] loans=[$(c $C 'loanCount()(uint256)')] open=[$(c $C 'openLoanCount()(uint256)')] terms=[$(c $C 'ltvBps()(uint16)') $(c $C 'rateBps()(uint16)') $(c $C 'minMarginBps()(uint16)') $(c $C 'hedgeMarginBps()(uint16)')]"
+          echo "::notice title=loan0::$(c $C 'loanAt(uint256)((address,uint256,uint256,uint16,uint256,uint256,uint256,uint256,uint256,uint64,uint64,bool))' 0)"
+          P=""; for p in 1070000000000000000 1500000000000000000 2000000000000000000 2500000000000000000 3000000000000000000 3595000000000000000 5000000000000000000 8920000000000000000; do P="$P | $p: $(c $C 'project(uint256,uint256)((uint256,int256,uint256,uint256,uint256))' 0 $p)"; done
+          echo "::notice title=project0::$P"
+          echo "::notice title=usdc::supply=[$(c $U 'totalSupply()(uint256)')] head=[$(timeout 20 cast block-number --rpc-url $R)] time=[$(timeout 20 cast block latest --field timestamp --rpc-url $R)]"
+          H=$(timeout 20 cast block-number --rpc-url $R); T=0x8b4eaa5b1e32e6a8b2d4b4b0e2d8ef1d1b5e0d5d4a77f41c7c1a4a5b7f4f6f5e
+          PUB=$(timeout 20 cast sig-event 'Published(uint256,uint64,uint256,uint32,uint16)')
+          OUT=""; for k in $(seq 0 40); do TO=$((H - k*1000)); FR=$((TO-999)); L1=$(timeout 20 cast logs --from-block $FR --to-block $TO --address $I $PUB --rpc-url $R --json 2>&1); if echo "$L1" | jq -e . >/dev/null 2>&1; then X=$(echo "$L1" | jq -r '.[] | "\(.blockNumber)/\(.transactionHash)"' | tr '\n' ' '); OUT="$OUT $X"; else OUT="$OUT ERR:$(echo $L1 | head -c 200)"; break; fi; done
+          echo "::notice title=recent publishes::$OUT"
+          TR=$(timeout 20 cast sig-event 'Transfer(address,address,uint256)')
+          OUT=""; for k in $(seq 0 40); do TO=$((H - k*1000)); FR=$((TO-999)); L1=$(timeout 20 cast logs --from-block $FR --to-block $TO --address $U $TR --rpc-url $R --json 2>&1); if echo "$L1" | jq -e . >/dev/null 2>&1; then X=$(echo "$L1" | jq -r '.[] | "\(.blockNumber)/\(.transactionHash)/\(.topics[1][26:])>\(.topics[2][26:])"' | tr '\n' ' '); OUT="$OUT $X"; else OUT="$OUT ERR:$(echo $L1 | head -c 200)"; break; fi; done
+          echo "::notice title=recent usdc transfers::$OUT"
