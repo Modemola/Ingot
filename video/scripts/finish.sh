@@ -9,9 +9,14 @@ cd "$(dirname "$0")/.."
 FF="${FFMPEG:-ffmpeg}"
 OUT=out
 
-# Master: the 1080p60 picture untouched, AAC 320k.
+# Remotion writes full-range BT.601; every player expects limited-range BT.709.
+COLOR="scale=in_color_matrix=bt601:in_range=full:out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int,format=yuv420p"
+TAGS="-colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv"
+
+# Master: 1080p60, near-transparent, AAC 320k.
 "$FF" -y -hide_banner -loglevel error -i "$OUT/picture.mp4" -i "$OUT/mix.wav" \
-  -map 0:v -map 1:a -c:v copy -c:a aac -b:a 320k -ar 48000 -shortest -movflags +faststart \
+  -map 0:v -map 1:a -vf "$COLOR" -c:v libx264 -preset slow -crf 17 -tune animation $TAGS \
+  -c:a aac -b:a 320k -ar 48000 -shortest -movflags +faststart \
   "$OUT/ingot-film-1080p60.mp4"
 
 # Share copy: 1080p30, two-pass to ~25 MB. The film grain is noise the encoder would spend the
@@ -21,8 +26,8 @@ TARGET_MB=${TARGET_MB:-24.6}
 AUDIO_K=128
 VIDEO_K=$(awk -v d="$DUR" -v mb="$TARGET_MB" -v a="$AUDIO_K" 'BEGIN{printf "%d", (mb*8*1024*1024/d)/1000 - a - 8}')
 echo "share: ${DUR}s at ${VIDEO_K}k video + ${AUDIO_K}k audio"
-VF="fps=30,hqdn3d=2.2:1.6:5:4,format=yuv420p"
-X264="-c:v libx264 -preset veryslow -tune animation -b:v ${VIDEO_K}k -maxrate $((VIDEO_K * 3))k -bufsize $((VIDEO_K * 4))k -g 120 -bf 4"
+VF="fps=30,hqdn3d=2.2:1.6:5:4,$COLOR"
+X264="-c:v libx264 -preset veryslow -tune animation -b:v ${VIDEO_K}k -maxrate $((VIDEO_K * 3))k -bufsize $((VIDEO_K * 4))k -g 120 -bf 4 $TAGS"
 cd "$OUT"
 "$FF" -y -hide_banner -loglevel error -i picture.mp4 -vf "$VF" $X264 -pass 1 -passlogfile share -an -f mp4 /dev/null
 "$FF" -y -hide_banner -loglevel error -i picture.mp4 -i mix.wav -map 0:v -map 1:a -vf "$VF" $X264 -pass 2 -passlogfile share \
