@@ -1,0 +1,201 @@
+{
+  "fps": 60,
+  "duration": 167.895,
+  "frames": 10074,
+  "scenes": [
+    {
+      "id": "open",
+      "start": 0.0,
+      "end": 13.203
+    },
+    {
+      "id": "problem",
+      "start": 13.203,
+      "end": 35.325
+    },
+    {
+      "id": "index",
+      "start": 35.325,
+      "end": 63.045
+    },
+    {
+      "id": "trade",
+      "start": 63.045,
+      "end": 87.858
+    },
+    {
+      "id": "credit",
+      "start": 87.858,
+      "end": 130.611
+    },
+    {
+      "id": "vault",
+      "start": 130.611,
+      "end": 144.525
+    },
+    {
+      "id": "proof",
+      "start": 144.525,
+      "end": 158.223
+    },
+    {
+      "id": "end",
+      "start": 158.223,
+      "end": 167.895
+    }
+  ],
+  "lines": [
+    {
+      "id": "L1",
+      "scene": "open",
+      "start": 1.8,
+      "end": 6.045,
+      "screen": "The most important price in AI\nis the price of renting a GPU.",
+      "caption": "The most important price in AI is the price of renting a GPU."
+    },
+    {
+      "id": "L2",
+      "scene": "open",
+      "start": 6.595,
+      "end": 8.003,
+      "screen": "And nobody can hedge it.",
+      "caption": "And nobody can hedge it."
+    },
+    {
+      "id": "L3",
+      "scene": "problem",
+      "start": 14.003,
+      "end": 28.041,
+      "screen": "Rental rates run from 45% below the index\nto 237% above it.",
+      "caption": "GPU operators borrow against compute they've already sold. But rental rates move every day \u2014 and from one provider to the next, they run from 45% below the index to 237% above it."
+    },
+    {
+      "id": "L4",
+      "scene": "problem",
+      "start": 28.741,
+      "end": 33.925,
+      "screen": "So lenders charge for risk\nthey can't measure.",
+      "caption": "So lenders can't underwrite the cash flow, and they charge a premium for risk they can't measure."
+    },
+    {
+      "id": "L5",
+      "scene": "index",
+      "start": 36.225,
+      "end": 42.241,
+      "screen": "An on-chain index for one H100 GPU-hour.",
+      "caption": "Ingot starts with the price itself: an on-chain index for one H100 GPU-hour."
+    },
+    {
+      "id": "L6",
+      "scene": "index",
+      "start": 42.841,
+      "end": 54.531,
+      "screen": "$3.7439 \u00b7 38 quotes \u00b7 24 venues",
+      "caption": "Every print carries the hash of its methodology, the quotes behind it, and the venues they came from. Right now: $3.74, from 38 quotes across 24 venues."
+    },
+    {
+      "id": "L7",
+      "scene": "index",
+      "start": 55.231,
+      "end": 61.845,
+      "screen": "Provisional, then final.",
+      "caption": "And a print stays provisional for a finality window, so a bad scrape can be revoked before money moves against it."
+    },
+    {
+      "id": "L8",
+      "scene": "trade",
+      "start": 63.845,
+      "end": 70.095,
+      "screen": "Cash-settled. 730 GPU-hour lots.",
+      "caption": "On that index, Ingot lists cash-settled contracts, in 730 GPU-hour lots."
+    },
+    {
+      "id": "L9",
+      "scene": "trade",
+      "start": 70.695,
+      "end": 78.269,
+      "screen": "The worst fill, enforced on-chain.",
+      "caption": "Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price it can ever fill at \u2014 enforced on-chain."
+    },
+    {
+      "id": "L10",
+      "scene": "trade",
+      "start": 80.869,
+      "end": 86.458,
+      "screen": "Settled in under a second.",
+      "caption": "Monad settles it in under a second, so every position is marked continuously against the index."
+    },
+    {
+      "id": "L11",
+      "scene": "credit",
+      "start": 88.658,
+      "end": 90.578,
+      "screen": "Here's what the market is for.",
+      "caption": "Here's what the market is really for."
+    },
+    {
+      "id": "L12",
+      "scene": "credit",
+      "start": 91.178,
+      "end": 102.015,
+      "screen": "The loan and its hedge, in one transaction.",
+      "caption": "A GPU operator draws a loan against 100,000 GPU-hours of next month's revenue. In the same transaction, the protocol opens the hedge that protects it."
+    },
+    {
+      "id": "L13",
+      "scene": "credit",
+      "start": 103.815,
+      "end": 107.677,
+      "screen": "All four, or none.",
+      "caption": "Four steps. One block. If any of them fails, none of them happened."
+    },
+    {
+      "id": "L14",
+      "scene": "credit",
+      "start": 109.477,
+      "end": 112.165,
+      "screen": "Sweep the settlement rate.",
+      "caption": "Now, sweep the rate this contract could settle at."
+    },
+    {
+      "id": "L15",
+      "scene": "credit",
+      "start": 112.465,
+      "end": 119.505,
+      "screen": "Unhedged: $111,967 short.",
+      "caption": "Unhedged, the lender's recovery falls through the debt. At $1.10, they're short $112,000."
+    },
+    {
+      "id": "L16",
+      "scene": "credit",
+      "start": 120.505,
+      "end": 128.611,
+      "screen": "Hedged: $274,311 at every rate.",
+      "caption": "Hedged, it doesn't move: $274,000 at every rate. And every point on this chart comes straight from the contract."
+    },
+    {
+      "id": "L17",
+      "scene": "vault",
+      "start": 131.511,
+      "end": 142.925,
+      "screen": "The vault takes the other side.",
+      "caption": "Every trade fills against an underwriter vault. It quotes both ways off the mark, earns the spread, and is margined like any trader \u2014 so when it's stretched, it simply stops adding risk."
+    },
+    {
+      "id": "L18",
+      "scene": "proof",
+      "start": 145.325,
+      "end": 156.823,
+      "screen": "",
+      "caption": "116 contract tests. Three security reviews. An end-to-end test of this exact flow on every push. And 78 days of real H100 prices."
+    },
+    {
+      "id": "L19",
+      "scene": "end",
+      "start": 159.823,
+      "end": 162.895,
+      "screen": "",
+      "caption": "Ingot. Compute, priced and hedged. Live on Monad."
+    }
+  ]
+}
