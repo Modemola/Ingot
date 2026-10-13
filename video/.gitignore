@@ -4,3 +4,4 @@ public/footage/
 public/audio/
 audio-src/*.wav
 demo/audio-src/*.wav
+public/demo/
