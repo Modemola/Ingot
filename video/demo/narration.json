@@ -2,21 +2,80 @@
   "voice": "af_heart",
   "speed": 1.0,
   "lines": [
-    {"id": "D1", "text": "This is Ingot, running live on Mohnad testnet. Everything you're about to see is a real transaction, from a brand-new wallet.", "caption": "This is Ingot, running live on Monad testnet. Everything you're about to see is a real transaction, from a brand-new wallet."},
-    {"id": "D2", "text": "Ingot turns the price of renting a G P U into a market you can trade, hedge, and borrow against.", "caption": "Ingot turns the price of renting a GPU into a market you can trade, hedge, and borrow against."},
-    {"id": "D3", "text": "Open the terminal, and connect a wallet.", "caption": "Open the terminal, and connect a wallet."},
-    {"id": "D4", "text": "This is the index: the on-demand price of one H one hundred G P U hour, published on chain. Every print carries its methodology, and the quotes and venues behind it.", "caption": "This is the index: the on-demand price of one H100 GPU-hour, published on-chain. Every print carries its methodology, and the quotes and venues behind it."},
-    {"id": "D5", "text": "The wallet is empty, so the faucet sends it test U S D C. One transaction, confirmed in a block.", "caption": "The wallet is empty, so the faucet sends it test USDC. One transaction, confirmed in a block."},
-    {"id": "D6", "text": "Post twenty thousand as margin. Approve, then deposit.", "caption": "Post $20,000 as margin. Approve, then deposit."},
-    {"id": "D7", "text": "Now, go long ten lots: seventy-three hundred G P U hours. Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price the contract will accept.", "caption": "Now, go long 10 lots: 7,300 GPU-hours. Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price the contract will accept."},
-    {"id": "D8", "text": "Filled, in one block. The position is live, and marked to the index.", "caption": "Filled, in one block. The position is live, and marked to the index."},
-    {"id": "D9", "text": "Here's that same trade, on the explorer.", "caption": "Here's that same trade, on the explorer."},
-    {"id": "D10", "text": "Now, the reason this market exists. On the credit desk, a G P U operator borrows against next month's revenue: a hundred thousand G P U hours, at the index rate, with the minimum margin.", "caption": "Now, the reason this market exists. On the credit desk, a GPU operator borrows against next month's revenue: 100,000 GPU-hours, at the index rate, with the minimum margin."},
-    {"id": "D11", "text": "One click draws the loan, and opens its hedge, in the same transaction. All of it happens, or none of it does.", "caption": "One click draws the loan, and opens its hedge, in the same transaction. All of it happens, or none of it does."},
-    {"id": "D12", "text": "Now drag the settlement rate. Unhedged, the lender's recovery falls through the debt. Hedged, it holds at every rate. Every point is read straight from the contract.", "caption": "Now drag the settlement rate. Unhedged, the lender's recovery falls through the debt. Hedged, it holds at every rate. Every point is read straight from the contract."},
-    {"id": "D13", "text": "On the other side of every trade is the underwriter vault. It quotes both ways off the mark, and earns the spread and the fees.", "caption": "On the other side of every trade is the underwriter vault. It quotes both ways off the mark, and earns the spread and the fees."},
-    {"id": "D14", "text": "Deposit ten thousand, and the vault mints shares at the current share price.", "caption": "Deposit $10,000, and the vault mints shares at the current share price."},
-    {"id": "D15", "text": "Back on the terminal, closing is one click, and the profit or loss lands straight in margin.", "caption": "Back on the terminal, closing is one click, and the profit or loss lands straight in margin."},
-    {"id": "D16", "text": "Ingot. Compute, priced and hedged. Live now, on Mohnad testnet.", "caption": "Ingot. Compute, priced and hedged. Live now, on Monad testnet."}
+    {
+      "id": "D1",
+      "text": "This is Ingot, running live on Mohnad testnet. Everything you're about to see is a real transaction, from a brand-new wallet.",
+      "caption": "This is Ingot, running live on Monad testnet. Everything you're about to see is a real transaction, from a brand-new wallet."
+    },
+    {
+      "id": "D2",
+      "text": "Ingot turns the price of renting a G P U into a market you can trade, hedge, and borrow against.",
+      "caption": "Ingot turns the price of renting a GPU into a market you can trade, hedge, and borrow against."
+    },
+    {
+      "id": "D3",
+      "text": "Open the terminal, and connect a wallet.",
+      "caption": "Open the terminal, and connect a wallet."
+    },
+    {
+      "id": "D4",
+      "text": "This is the index: the on-demand price of one H one hundred G P U hour, published on chain. Every print carries its methodology, and the quotes and venues behind it.",
+      "caption": "This is the index: the on-demand price of one H100 GPU-hour, published on-chain. Every print carries its methodology, and the quotes and venues behind it."
+    },
+    {
+      "id": "D5",
+      "text": "The wallet is empty, so the faucet sends it test U S D C. One transaction, confirmed in a block.",
+      "caption": "The wallet is empty, so the faucet sends it test USDC. One transaction, confirmed in a block."
+    },
+    {
+      "id": "D6",
+      "text": "Post twenty thousand as margin. Approve, then deposit.",
+      "caption": "Post $20,000 as margin. Approve, then deposit."
+    },
+    {
+      "id": "D7",
+      "text": "Now, go long ten lots: seventy-three hundred G P U hours. Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price the contract will accept.",
+      "caption": "Now, go long 10 lots: 7,300 GPU-hours. Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price the contract will accept."
+    },
+    {
+      "id": "D8",
+      "text": "Filled, in one block. The position is live, and marked to the index.",
+      "caption": "Filled, in one block. The position is live, and marked to the index."
+    },
+    {
+      "id": "D10",
+      "text": "Now, the reason this market exists. On the credit desk, a G P U operator borrows against next month's revenue: a hundred thousand G P U hours, at the index rate, with the minimum margin.",
+      "caption": "Now, the reason this market exists. On the credit desk, a GPU operator borrows against next month's revenue: 100,000 GPU-hours, at the index rate, with the minimum margin."
+    },
+    {
+      "id": "D11",
+      "text": "One click draws the loan, and opens its hedge, in the same transaction. All of it happens, or none of it does.",
+      "caption": "One click draws the loan, and opens its hedge, in the same transaction. All of it happens, or none of it does."
+    },
+    {
+      "id": "D12",
+      "text": "Now drag the settlement rate. Unhedged, the lender's recovery falls through the debt. Hedged, it holds at every rate. Every point is read straight from the contract.",
+      "caption": "Now drag the settlement rate. Unhedged, the lender's recovery falls through the debt. Hedged, it holds at every rate. Every point is read straight from the contract."
+    },
+    {
+      "id": "D13",
+      "text": "On the other side of every trade is the underwriter vault. It quotes both ways off the mark, and earns the spread and the fees.",
+      "caption": "On the other side of every trade is the underwriter vault. It quotes both ways off the mark, and earns the spread and the fees."
+    },
+    {
+      "id": "D14",
+      "text": "Deposit ten thousand, and the vault mints shares at the current share price.",
+      "caption": "Deposit $10,000, and the vault mints shares at the current share price."
+    },
+    {
+      "id": "D15",
+      "text": "Back on the terminal, closing is one click, and the profit or loss lands straight in margin.",
+      "caption": "Back on the terminal, closing is one click, and the profit or loss lands straight in margin."
+    },
+    {
+      "id": "D16",
+      "text": "Ingot. Compute, priced and hedged. Live now, on Mohnad testnet.",
+      "caption": "Ingot. Compute, priced and hedged. Live now, on Monad testnet."
+    }
   ]
 }

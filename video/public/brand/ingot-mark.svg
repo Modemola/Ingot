@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><title>Ingot</title>
+  <defs>
+    <linearGradient id="gtop" gradientUnits="userSpaceOnUse" x1="162.9" y1="257.8" x2="349.1" y2="122.7">
+      <stop offset="0" stop-color="#fffaf0"/><stop offset="0.45" stop-color="#fbe7bd"/><stop offset="1" stop-color="#f0cf8c"/>
+    </linearGradient>
+    <linearGradient id="gfront" gradientUnits="userSpaceOnUse" x1="285.5" y1="227.3" x2="300.3" y2="348.1">
+      <stop offset="0" stop-color="#f4cd84"/><stop offset="0.55" stop-color="#d9a24e"/><stop offset="1" stop-color="#a87228"/>
+    </linearGradient>
+    <linearGradient id="gright" gradientUnits="userSpaceOnUse" x1="162.9" y1="257.8" x2="46.1" y2="278.2">
+      <stop offset="0" stop-color="#a5712a"/><stop offset="1" stop-color="#4a3010"/>
+    </linearGradient>
+    <linearGradient id="gsheen" gradientUnits="userSpaceOnUse" x1="134.6" y1="0" x2="465.9" y2="0">
+      <stop offset="0.08" stop-color="#fff" stop-opacity="0"/><stop offset="0.3" stop-color="#fff6e0" stop-opacity="0.2"/>
+      <stop offset="0.55" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs><path d="M46.08 278.15 L134.59 389.32 L162.91 257.84 L103.90 183.72 Z" fill="url(#gright)"/><path d="M134.59 389.32 L465.92 306.83 L408.10 196.79 L162.91 257.84 Z" fill="url(#gfront)"/><path d="M134.59 389.32 L465.92 306.83 L408.10 196.79 L162.91 257.84 Z" fill="url(#gsheen)"/><path d="M162.91 257.84 L408.10 196.79 L349.09 122.68 L103.90 183.72 Z" fill="url(#gtop)"/><path d="M162.91 257.84 L408.10 196.79" stroke="#fffaf0" stroke-opacity="0.9" stroke-width="3.07" fill="none" stroke-linecap="round"/><path d="M162.91 257.84 L103.90 183.72" stroke="#fff4dc" stroke-opacity="0.45" stroke-width="3.07" fill="none" stroke-linecap="round"/><path d="M183.94 226.59 L222.78 216.92 L209.68 200.47 L251.75 189.99 L258.83 198.88 L297.67 189.22 L284.22 172.32 L326.29 161.84 L326.29 161.84" fill="none" stroke="#fffdf6" stroke-opacity="0.85" stroke-width="6.45" stroke-linejoin="miter"/><path d="M183.94 221.52 L222.78 211.85 L209.68 195.40 L251.75 184.92 L258.83 193.82 L297.67 184.15 L284.22 167.25 L326.29 156.77 L326.29 156.77" fill="none" stroke="#a06a22" stroke-width="9.22" stroke-linejoin="miter"/></svg>
