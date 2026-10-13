@@ -1,0 +1,8 @@
+# CRE workflow settings: what `cre workflow simulate` / `deploy` build and run.
+staging-settings:
+  user-workflow:
+    workflow-name: "ingot-index-staging"
+  workflow-artifacts:
+    workflow-path: "./main.ts"
+    config-path: "./config.staging.json"
+    secrets-path: ""
