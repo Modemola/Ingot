@@ -115,7 +115,7 @@ def main():
     meter = pyln.Meter(SR)
     for _ in range(3):
         mix = mix * M.db(-14.0 - meter.integrated_loudness(mix))
-        mix = M.true_peak_limit(mix, -1.7)
+        mix = M.true_peak_limit(mix, -2.6)
     print(f"demo mix: {meter.integrated_loudness(mix):.2f} LUFS, true peak {M.measure_tp(mix):.2f} dBTP")
     f = int(0.01 * SR)
     mix[:f] *= np.linspace(0, 1, f)[:, None]
