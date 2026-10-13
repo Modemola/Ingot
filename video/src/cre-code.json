@@ -1,0 +1,154 @@
+[
+ {
+  "title": "Each node fetches the live venue feed over the HTTP capability",
+  "lines": [
+   [
+    44,
+    "function fetchPriceOnThisNode(nodeRuntime: NodeRuntime<Config>): number {"
+   ],
+   [
+    45,
+    "  const http = new cre.capabilities.HTTPClient();"
+   ],
+   [
+    46,
+    "  const offers: Offer[] = [];"
+   ],
+   [
+    47,
+    ""
+   ],
+   [
+    48,
+    "  for (const url of nodeRuntime.config.venues) {"
+   ],
+   [
+    49,
+    "    try {"
+   ],
+   [
+    50,
+    "      const response = http.sendRequest(nodeRuntime, { url, method: \"GET\" }).result();"
+   ],
+   [
+    51,
+    "      const body = JSON.parse(new TextDecoder().decode(response.body));"
+   ],
+   [
+    null,
+    "  \u2026"
+   ],
+   [
+    58,
+    "  const print = buildPrint(offers);"
+   ]
+  ]
+ },
+ {
+  "title": "The DON agrees one price: a median across nodes",
+  "lines": [
+   [
+    67,
+    "/// The hourly job: agree a price across the DON, then write one signed report to Monad."
+   ],
+   [
+    68,
+    "const publishIndex = async (runtime: Runtime<Config>) => {"
+   ],
+   [
+    69,
+    "  const agreedPrice = runtime"
+   ],
+   [
+    70,
+    "    .runInNodeMode(fetchPriceOnThisNode, consensusMedianAggregation())()"
+   ],
+   [
+    71,
+    "    .result();"
+   ]
+  ]
+ },
+ {
+  "title": "One DON-signed report, written to IngotIndexReceiver on Monad testnet",
+  "lines": [
+   [
+    86,
+    "  const report = runtime"
+   ],
+   [
+    87,
+    "    .report({"
+   ],
+   [
+    88,
+    "      // Protobuf JSON carries `bytes` as base64, which tsc caught when this was passed raw."
+   ],
+   [
+    89,
+    "      encodedPayload: toBase64(encoded),"
+   ],
+   [
+    90,
+    "      encoderName: \"evm\","
+   ],
+   [
+    91,
+    "      signingAlgo: \"ecdsa\","
+   ],
+   [
+    92,
+    "      hashingAlgo: \"keccak256\","
+   ],
+   [
+    93,
+    "    })"
+   ],
+   [
+    94,
+    "    .result();"
+   ],
+   [
+    95,
+    ""
+   ],
+   [
+    96,
+    "  const evm = new EVMClient(MONAD_TESTNET_SELECTOR);"
+   ],
+   [
+    97,
+    "  const receipt = evm"
+   ],
+   [
+    98,
+    "    .writeReport(runtime, { receiver: runtime.config.receiver, report })"
+   ],
+   [
+    99,
+    "    .result();"
+   ]
+  ]
+ },
+ {
+  "title": "Fired by a cron trigger",
+  "lines": [
+   [
+    110,
+    "/// The workflow the CRE runner starts: one cron trigger, on the schedule in the config."
+   ],
+   [
+    111,
+    "export const initWorkflow = (config: Config) => ["
+   ],
+   [
+    112,
+    "  handler(new cre.capabilities.CronCapability().trigger({ schedule: config.schedule }), publishIndex),"
+   ],
+   [
+    113,
+    "];"
+   ]
+  ]
+ }
+]
