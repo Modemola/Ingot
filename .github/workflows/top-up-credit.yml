@@ -1,0 +1,48 @@
+# Adds lender capital to the HedgedCredit pool on Monad testnet, so judges' loans have room.
+#
+# Mints test USDC (the mock is open-mint) and deposits it through the pool's public
+# depositLender, exactly as any lender would. The deployer only pays the gas.
+
+name: Top up the credit pool
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/focused-allen-ggzad1]
+    paths: [.github/workflows/top-up-credit.yml]
+
+concurrency:
+  group: top-up-credit
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  RPC_URL: https://testnet-rpc.monad.xyz
+  USDC: "0xe841dF0566e532822c50997e3084eF6fFB58ca5D"
+  CREDIT: "0xcd7a1B8Fd9c67dAC3a97443c77199930eb6334D9"
+  AMOUNT: "5000000000000" # 5,000,000 USDC (6 decimals)
+
+jobs:
+  top-up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+
+      - name: Mint, approve, deposit
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          me=$(cast wallet address --private-key "$DEPLOYER_PRIVATE_KEY")
+          available() { cast call --rpc-url "$RPC_URL" "$CREDIT" "availableLiquidity()(uint256)" | awk '{print $1}'; }
+          echo "available before: $(available)"
+          send() { cast send --rpc-url "$RPC_URL" --private-key "$DEPLOYER_PRIVATE_KEY" "$@" --json | jq -r '"  \(.transactionHash) status \(.status)"'; }
+          send "$USDC" "mint(address,uint256)" "$me" "$AMOUNT"
+          send "$USDC" "approve(address,uint256)" "$CREDIT" "$AMOUNT"
+          send "$CREDIT" "depositLender(uint256)" "$AMOUNT"
+          echo "available after:  $(available)"

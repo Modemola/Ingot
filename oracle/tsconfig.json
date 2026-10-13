@@ -12,5 +12,5 @@
     "esModuleInterop": true,
     "isolatedModules": true
   },
-  "files": ["workflow.ts", "encoding.ts", "methodology.ts"]
+  "files": ["workflow.ts", "encoding.ts", "methodology.ts", "index-workflow/main.ts"]
 }

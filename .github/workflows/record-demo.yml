@@ -1,0 +1,102 @@
+# Records the product demo on Monad testnet, for when no local machine can reach Monad.
+#
+# A real browser drives the live site with a brand-new wallet, funded with a little MON from the
+# deployer, through the faucet, a trade, a hedged loan, a vault deposit and a close: real
+# transactions, real blocks. The raw footage and a log of every step and transaction hash are
+# pushed to the `demo-footage` branch for the edit. The new wallet's key lives only in this job.
+#
+# Requires the DEPLOYER_PRIVATE_KEY repository secret (the same one "Deploy to Monad testnet" uses).
+
+name: Record the demo
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/focused-allen-ggzad1]
+    paths: [.github/workflows/record-demo.yml, web/e2e/demo.mjs]
+
+concurrency:
+  group: record-demo
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  RPC_URL: https://testnet-rpc.monad.xyz
+  BASE_URL: https://monad-six-sooty.vercel.app
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+
+      - name: Install
+        working-directory: web
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright-core install --with-deps chromium
+          sudo apt-get install -y -qq ffmpeg > /dev/null
+
+      - name: A fresh wallet, funded from the deployer
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          wallet=$(cast wallet new --json)
+          key=$(jq -r '.[0].private_key' <<< "$wallet")
+          address=$(jq -r '.[0].address' <<< "$wallet")
+          echo "::add-mask::$key"
+          echo "WALLET_KEY=$key" >> "$GITHUB_ENV"
+          deployer=$(cast wallet address --private-key "$DEPLOYER_PRIVATE_KEY")
+          echo "deployer $deployer: $(cast balance --rpc-url "$RPC_URL" --ether "$deployer") MON"
+          cast send --rpc-url "$RPC_URL" --private-key "$DEPLOYER_PRIVATE_KEY" "$address" --value 1.5ether > /dev/null
+          echo "demo wallet $address: $(cast balance --rpc-url "$RPC_URL" --ether "$address") MON"
+
+      - name: Record
+        working-directory: web
+        env:
+          OUT_DIR: ${{ runner.temp }}/demo
+        run: node e2e/demo.mjs
+
+      - name: Encode
+        if: always()
+        working-directory: ${{ runner.temp }}/demo
+        run: |
+          [ -s frames.txt ] || exit 0
+          ffmpeg -y -hide_banner -loglevel error -f concat -safe 0 -i frames.txt \
+            -vf "fps=30,format=yuv420p" -c:v libx264 -preset slow -crf 16 raw.mp4
+          ls -la raw.mp4
+
+      - name: Publish the footage to the demo-footage branch
+        if: always()
+        working-directory: ${{ runner.temp }}/demo
+        run: |
+          set -euo pipefail
+          mkdir -p publish
+          if [ -f raw.mp4 ]; then split -b 45m -d raw.mp4 publish/raw.mp4.part-; fi
+          cp events.json frames.json publish/ 2>/dev/null || true
+          cp failure-*.png publish/ 2>/dev/null || true
+          cd publish
+          git init -q -b demo-footage
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -qm "Demo footage, run ${GITHUB_RUN_NUMBER}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" demo-footage
