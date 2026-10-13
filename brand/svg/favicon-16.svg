@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><title>Ingot</title>
+  <defs>
+    <linearGradient id="xtop" gradientUnits="userSpaceOnUse" x1="4.6" y1="8.1" x2="11.4" y2="3.1">
+      <stop offset="0" stop-color="#fffaf0"/><stop offset="0.45" stop-color="#fbe7bd"/><stop offset="1" stop-color="#f0cf8c"/>
+    </linearGradient>
+    <linearGradient id="xfront" gradientUnits="userSpaceOnUse" x1="9.1" y1="7.0" x2="9.6" y2="11.4">
+      <stop offset="0" stop-color="#f4cd84"/><stop offset="0.55" stop-color="#d9a24e"/><stop offset="1" stop-color="#a87228"/>
+    </linearGradient>
+    <linearGradient id="xright" gradientUnits="userSpaceOnUse" x1="4.6" y1="8.1" x2="0.3" y2="8.8">
+      <stop offset="0" stop-color="#a5712a"/><stop offset="1" stop-color="#4a3010"/>
+    </linearGradient>
+    <linearGradient id="xsheen" gradientUnits="userSpaceOnUse" x1="3.6" y1="0" x2="15.7" y2="0">
+      <stop offset="0.08" stop-color="#fff" stop-opacity="0"/><stop offset="0.3" stop-color="#fff6e0" stop-opacity="0.2"/>
+      <stop offset="0.55" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs><path d="M0.32 8.81 L3.56 12.88 L4.59 8.07 L2.44 5.36 Z" fill="url(#xright)"/><path d="M3.56 12.88 L15.68 9.86 L13.56 5.83 L4.59 8.07 Z" fill="url(#xfront)"/><path d="M3.56 12.88 L15.68 9.86 L13.56 5.83 L4.59 8.07 Z" fill="url(#xsheen)"/><path d="M4.59 8.07 L13.56 5.83 L11.41 3.12 L2.44 5.36 Z" fill="url(#xtop)"/><path d="M4.59 8.07 L13.56 5.83" stroke="#fffaf0" stroke-opacity="0.9" stroke-width="0.10" fill="none" stroke-linecap="round"/><path d="M4.59 8.07 L2.44 5.36" stroke="#fff4dc" stroke-opacity="0.45" stroke-width="0.10" fill="none" stroke-linecap="round"/></svg>
