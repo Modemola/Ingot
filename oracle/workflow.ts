@@ -102,11 +102,9 @@ const publishIndex = async (runtime: Runtime<Config>) => {
   return { price: agreedPrice, observedAt };
 };
 
-export const workflow = [
-  handler(
-    new cre.capabilities.CronCapability().trigger({ schedule: "0 0 * * * *" }),
-    publishIndex,
-  ),
+/// The workflow the CRE runner starts: one cron trigger, on the schedule in the config.
+export const initWorkflow = (config: Config) => [
+  handler(new cre.capabilities.CronCapability().trigger({ schedule: config.schedule }), publishIndex),
 ];
 
-export default workflow;
+export default initWorkflow;
