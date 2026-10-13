@@ -1,0 +1,160 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "scenes": [
+    {
+      "id": "open",
+      "lines": [
+        {
+          "id": "L1",
+          "text": "The most important price in AI is the price of renting a G P U.",
+          "screen": "The most important price in AI\nis the price of renting a GPU.",
+          "caption": "The most important price in AI is the price of renting a GPU."
+        },
+        {
+          "id": "L2",
+          "text": "And nobody can hedge it.",
+          "screen": "And nobody can hedge it.",
+          "caption": "And nobody can hedge it."
+        }
+      ]
+    },
+    {
+      "id": "problem",
+      "lines": [
+        {
+          "id": "L3",
+          "text": "G P U operators borrow against compute they've already sold. But rental rates move every day, and from one provider to the next, they run from forty-five percent below the index, to two hundred and thirty-seven percent above it.",
+          "screen": "Rental rates run from 45% below the index\nto 237% above it.",
+          "caption": "GPU operators borrow against compute they've already sold. But rental rates move every day \u2014 and from one provider to the next, they run from 45% below the index to 237% above it."
+        },
+        {
+          "id": "L4",
+          "text": "So lenders can't underwrite the cash flow, and they charge a premium for risk they can't measure.",
+          "screen": "So lenders charge for risk\nthey can't measure.",
+          "caption": "So lenders can't underwrite the cash flow, and they charge a premium for risk they can't measure."
+        }
+      ]
+    },
+    {
+      "id": "index",
+      "lines": [
+        {
+          "id": "L5",
+          "text": "Ingot starts with the price itself: an on-chain index, for one H one hundred G P U hour.",
+          "screen": "An on-chain index for one H100 GPU-hour.",
+          "caption": "Ingot starts with the price itself: an on-chain index for one H100 GPU-hour."
+        },
+        {
+          "id": "L6",
+          "text": "Every print carries the hash of its methodology, the quotes behind it, and the venues they came from. Right now, three dollars seventy-four, from thirty-eight quotes, across twenty-four venues.",
+          "screen": "$3.7439 \u00b7 38 quotes \u00b7 24 venues",
+          "caption": "Every print carries the hash of its methodology, the quotes behind it, and the venues they came from. Right now: $3.74, from 38 quotes across 24 venues."
+        },
+        {
+          "id": "L7",
+          "text": "And a print stays provisional for a finality window, so a bad scrape can be revoked, before money moves against it.",
+          "screen": "Provisional, then final.",
+          "caption": "And a print stays provisional for a finality window, so a bad scrape can be revoked before money moves against it."
+        }
+      ]
+    },
+    {
+      "id": "trade",
+      "lines": [
+        {
+          "id": "L8",
+          "text": "On that index, Ingot lists cash-settled contracts, in seven hundred and thirty G P U hour lots.",
+          "screen": "Cash-settled. 730 GPU-hour lots.",
+          "caption": "On that index, Ingot lists cash-settled contracts, in 730 GPU-hour lots."
+        },
+        {
+          "id": "L9",
+          "text": "Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price it can ever fill at, enforced on-chain.",
+          "screen": "The worst fill, enforced on-chain.",
+          "caption": "Before you sign, the ticket shows your fill, the margin it locks, the fee, and the worst price it can ever fill at \u2014 enforced on-chain."
+        },
+        {
+          "id": "L10",
+          "text": "Mohnad settles it in under a second, so every position is marked continuously against the index.",
+          "screen": "Settled in under a second.",
+          "caption": "Monad settles it in under a second, so every position is marked continuously against the index."
+        }
+      ]
+    },
+    {
+      "id": "credit",
+      "lines": [
+        {
+          "id": "L11",
+          "text": "Here's what the market is really for.",
+          "screen": "Here's what the market is for.",
+          "caption": "Here's what the market is really for."
+        },
+        {
+          "id": "L12",
+          "text": "A G P U operator draws a loan against a hundred thousand G P U hours of next month's revenue. In the same transaction, the protocol opens the hedge that protects it.",
+          "screen": "The loan and its hedge, in one transaction.",
+          "caption": "A GPU operator draws a loan against 100,000 GPU-hours of next month's revenue. In the same transaction, the protocol opens the hedge that protects it."
+        },
+        {
+          "id": "L13",
+          "text": "Four steps. One block. If any of them fails, none of them happened.",
+          "screen": "All four, or none.",
+          "caption": "Four steps. One block. If any of them fails, none of them happened."
+        },
+        {
+          "id": "L14",
+          "text": "Now, sweep the rate this contract could settle at.",
+          "screen": "Sweep the settlement rate.",
+          "caption": "Now, sweep the rate this contract could settle at."
+        },
+        {
+          "id": "L15",
+          "text": "Unhedged, the lender's recovery falls through the debt. At a dollar ten, they're short a hundred and twelve thousand dollars.",
+          "screen": "Unhedged: $111,967 short.",
+          "caption": "Unhedged, the lender's recovery falls through the debt. At $1.10, they're short $112,000."
+        },
+        {
+          "id": "L16",
+          "text": "Hedged, it doesn't move. Two hundred and seventy-four thousand, at every rate. And every point on this chart comes straight from the contract.",
+          "screen": "Hedged: $274,311 at every rate.",
+          "caption": "Hedged, it doesn't move: $274,000 at every rate. And every point on this chart comes straight from the contract."
+        }
+      ]
+    },
+    {
+      "id": "vault",
+      "lines": [
+        {
+          "id": "L17",
+          "text": "Every trade fills against an underwriter vault. It quotes both ways off the mark, earns the spread, and is margined like any trader. So when it's stretched, it simply stops adding risk.",
+          "screen": "The vault takes the other side.",
+          "caption": "Every trade fills against an underwriter vault. It quotes both ways off the mark, earns the spread, and is margined like any trader \u2014 so when it's stretched, it simply stops adding risk."
+        }
+      ]
+    },
+    {
+      "id": "proof",
+      "lines": [
+        {
+          "id": "L18",
+          "text": "A hundred and sixteen contract tests. Three security reviews. An end-to-end test of this exact flow, on every push. And seventy-eight days of real H one hundred prices.",
+          "screen": "",
+          "caption": "116 contract tests. Three security reviews. An end-to-end test of this exact flow on every push. And 78 days of real H100 prices."
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "lines": [
+        {
+          "id": "L19",
+          "text": "Ingot. Compute, priced and hedged. Live on Mohnad.",
+          "screen": "",
+          "caption": "Ingot. Compute, priced and hedged. Live on Monad."
+        }
+      ]
+    }
+  ]
+}

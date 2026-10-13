@@ -1,0 +1,52 @@
+{
+  "prompt": "PS C:\\Users\\HP\\Ingot\\oracle> ",
+  "runs": [
+    {
+      "command": "cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0",
+      "output": [
+        "! Using default private key for chain write simulation. To use your own key, set CRE_ETH_PRIVATE_KEY in your .env file or system environment.",
+        "✓ Workflow compiled",
+        "✓ Simulation limits enabled",
+        "  HTTP: req=120kb resp=250kb timeout=10s | ConfHTTP: req=125kb resp=500kb timeout=1m30s | Consensus obs=25kb | ChainWrite evm_report=50kb evm_gas=10000000 solana_report=265b solana_cu=300000 | WASM binary=100mb compressed=20mb",
+        "  Binary hash: d2038e4d4d9db6a42a86762e9106d4effbd12a990ff0c968dc25eb410601b1e1",
+        "  Config hash: ba25edc137136b4985a5556127e348484cb30992bf429e4f17cb66bdb263d88c",
+        "2026-10-14T00:30:21Z [SIMULATION] Simulator Initialized",
+        "",
+        "2026-10-14T00:30:21Z [SIMULATION] Running trigger trigger=cron-trigger@1.0.0",
+        "2026-10-14T00:30:22Z [USER LOG] node print $3.7570/GPU-hour from 24 venues, 38 quotes",
+        "2026-10-14T00:30:22Z [USER LOG] DON agreed $3.7570/GPU-hour at 1791934222",
+        "2026-10-14T00:30:23Z [USER LOG] report written to IngotIndexReceiver 0xEcD7c0ECf2093415dEC999379e631002d637D254 on Monad testnet: tx SUCCESS, hash none",
+        "",
+        "✓ Workflow Simulation Result:",
+        "{",
+        "  \"observedAt\": 1791934222,",
+        "  \"price\": 3.75697",
+        "}",
+        "",
+        "2026-10-14T00:30:23Z [SIMULATION] Execution finished signal received",
+        "2026-10-14T00:30:23Z [SIMULATION] Skipping WorkflowEngineV2",
+        "",
+        "╭──────────────────────────────────────────────────────╮",
+        "│ Simulation complete! Ready to deploy your workflow?  │",
+        "│                                                      │",
+        "│ Run cre account access to request deployment access. │",
+        "╰──────────────────────────────────────────────────────╯"
+      ]
+    },
+    {
+      "command": "cre account access",
+      "output": [
+        "",
+        "! Deployment access is not yet enabled for your organization.",
+        "",
+        "",
+        "",
+        "✓ Access request submitted successfully!",
+        "",
+        "Thanks for applying.",
+        "We're carefully reviewing each request to ensure we can provide the best experience. If your request is approved, we'll contact you with next steps.",
+        ""
+      ]
+    }
+  ]
+}

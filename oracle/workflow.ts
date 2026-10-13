@@ -98,15 +98,18 @@ const publishIndex = async (runtime: Runtime<Config>) => {
     .writeReport(runtime, { receiver: runtime.config.receiver, report })
     .result();
 
-  runtime.log(`published: ${JSON.stringify(receipt)}`);
+  // The reply carries protobuf BigInts and raw bytes, which JSON.stringify refuses; report the
+  // fields that matter, readably.
+  const status = ["FATAL", "REVERTED", "SUCCESS"][receipt.txStatus] ?? String(receipt.txStatus);
+  const hash = receipt.txHash ? "0x" + Array.from(receipt.txHash, (b) => b.toString(16).padStart(2, "0")).join("") : "none";
+  runtime.log(`report written to IngotIndexReceiver ${runtime.config.receiver} on Monad testnet: tx ${status}, hash ${hash}`);
+  if (receipt.errorMessage) runtime.log(`chain write note: ${receipt.errorMessage}`);
   return { price: agreedPrice, observedAt };
 };
 
-export const workflow = [
-  handler(
-    new cre.capabilities.CronCapability().trigger({ schedule: "0 0 * * * *" }),
-    publishIndex,
-  ),
+/// The workflow the CRE runner starts: one cron trigger, on the schedule in the config.
+export const initWorkflow = (config: Config) => [
+  handler(new cre.capabilities.CronCapability().trigger({ schedule: config.schedule }), publishIndex),
 ];
 
-export default workflow;
+export default initWorkflow;
