@@ -1,0 +1,9 @@
+{"version": 2, "width": 150, "height": 42, "timestamp": 1791934241, "env": {"SHELL": "/bin/bash", "TERM": null}}
+[0.005223, "o", "\u001b[1;37mIngot · the H100 rental index, published by a Chainlink CRE workflow\u001b[0m\r\n\r\n\u001b[1;33m$ cre version\u001b[0m\r\n"]
+[1.005772, "o", "CRE CLI version v1.38.0\r\n"]
+[1.209502, "o", "\r\n\u001b[1;33m$ cre whoami\u001b[0m\r\n"]
+[2.204958, "o", "\u001b[?25l\u001b[?2004h"]
+[2.20546, "o", "\r \u001b[K\u001b[150D\u001b[2K\r\u001b[?2004l\u001b[?25h\u001b[?1002l\u001b[?1003l\u001b[?1006l"]
+[2.205485, "o", "\r\n! You are not logged in\r\n\r\n"]
+[2.205739, "o", "\u001b[?25l\u001b[?2004h\u001b[?1004h"]
+[2.223237, "o", "\r┃ Would you like to login now?                                                                                                                        \r\n┃                                                                                                                                                     \r\n┃   Yes, login     No, cancel                                                                                                                         \r\n\u001b[K\r\n←/→ toggle • enter submit • y Yes, login • n No, cancel\u001b[K\u001b[150D"]
