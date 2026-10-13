@@ -9,6 +9,7 @@ import { Proof } from "./scenes/Proof";
 import { Trade } from "./scenes/Trade";
 import { Vault } from "./scenes/Vault";
 import { DEMO, Demo } from "./Demo";
+import { CRE_DURATION, CRE_FPS, Cre } from "./Cre";
 import { TL, useSeconds } from "./time";
 import { Backdrop, Finish } from "./ui/Backdrop";
 import { Subtitles } from "./ui/Subtitles";
@@ -42,5 +43,6 @@ export const Root: React.FC = () => (
   <>
     <Composition id="Film" component={Film} durationInFrames={TL.frames} fps={TL.fps} width={1920} height={1080} />
     <Composition id="Demo" component={Demo} durationInFrames={DEMO.frames} fps={DEMO.fps} width={1920} height={1080} />
+    <Composition id="Cre" component={Cre} durationInFrames={CRE_DURATION * CRE_FPS} fps={CRE_FPS} width={1920} height={1080} />
   </>
 );
