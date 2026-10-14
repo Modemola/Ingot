@@ -12,7 +12,14 @@ const queries = [...source.matchAll(/\/\* GraphQL \*\/ `([\s\S]*?)`/g)].map((m) 
 
 async function ask(query, variables = {}) {
   const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ query, variables }) });
-  return { status: response.status, body: await response.json().catch(() => null) };
+  const text = await response.text();
+  let body = null;
+  try {
+    body = JSON.parse(text);
+  } catch {
+    body = { raw: text.slice(0, 300) };
+  }
+  return { status: response.status, body };
 }
 
 let failed = false;
@@ -24,6 +31,6 @@ for (const query of queries) {
   const ok = status === 200 && body?.data && !body.errors;
   failed ||= !ok;
   console.log(`\n${name}: HTTP ${status} ${ok ? "ok" : "FAILED"}`);
-  console.log(JSON.stringify(body?.errors ?? body?.data, null, 1).slice(0, 2500));
+  console.log(String(JSON.stringify(body?.errors ?? body?.data ?? body, null, 1)).slice(0, 2500));
 }
 process.exit(failed ? 1 : 0);
