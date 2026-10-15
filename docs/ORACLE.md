@@ -62,6 +62,8 @@ minimum interval and monotonic timestamps are enforced in `IngotIndex` exactly a
 | | |
 |---|---|
 | `oracle/workflow.ts` | The CRE workflow: cron trigger, node-mode fetch, median consensus, EVM write |
+| `oracle/index-workflow/` | The CLI's workflow folder: `main.ts` (the Runner entry), `workflow.yaml`, config |
+| `oracle/project.yaml` | CRE project settings: the Monad testnet RPC |
 | `oracle/methodology.ts` | The index methodology, shared by the workflow and the simulator |
 | `oracle/encoding.ts` | Report-body encoding, shared — and deliberately free of any SDK import |
 | `oracle/simulate.ts` | Runs the whole thing locally over a real venue snapshot |
@@ -73,10 +75,41 @@ Monad testnet is a first-class chain in the CRE SDK's selector table
 
 ## Running it
 
+### With the Chainlink CRE CLI
+
+`oracle/` is a CRE project: `project.yaml` names the Monad testnet RPC, and
+`index-workflow/` holds `workflow.yaml`, the config (the live venue feed and the
+`IngotIndexReceiver` address) and `main.ts`, the entry point that hands `initWorkflow` to the
+SDK's `Runner`.
+
+```bash
+cd oracle
+bun install && bun x cre-setup      # SDK + the Javy WASM toolchain
+cre login
+cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0
+```
+
+A real run, CRE CLI v1.38.0, 2026-10-14:
+
+```
+✓ Workflow compiled
+[SIMULATION] Running trigger trigger=cron-trigger@1.0.0
+[USER LOG] node print $3.7570/GPU-hour from 24 venues, 38 quotes
+[USER LOG] DON agreed $3.7570/GPU-hour at 1791934222
+[USER LOG] report written to IngotIndexReceiver 0xEcD7c0ECf2093415dEC999379e631002d637D254 on Monad testnet: tx SUCCESS, hash none
+✓ Workflow Simulation Result: { "observedAt": 1791934222, "price": 3.75697 }
+```
+
+The cron trigger fires, the HTTP capability fetches the live feed, `consensusMedianAggregation`
+agrees the price, and the EVM capability writes the DON-signed report to the receiver (a dry
+run: `--broadcast` would send it). Deployment access to a live DON has been requested.
+
+### The local harness
+
 ```bash
 cd oracle
 pnpm install
-pnpm simulate     # the workflow's logic over a real snapshot
+pnpm simulate     # the workflow's logic over a real snapshot, with a lying node
 pnpm typecheck    # two programs: the workflow against the SDK's sandbox types,
                   # the simulator against plain Node
 ```
@@ -131,9 +164,10 @@ failure that test exists to find.
 
 ## Deploying against a live DON
 
-`Deploy.s.sol` deploys the receiver and installs it as a publisher. Registering the workflow with
-a DON needs the CRE CLI and a funded registration, which this environment cannot reach; the logic
-is identical on both paths because both import the same `methodology.ts`. After registration:
+`Deploy.s.sol` deploys the receiver and installs it as a publisher. The workflow simulates with the
+CRE CLI today (above); registering it with a live DON needs deployment access, which has been
+requested. The logic is identical on every path because each imports the same `methodology.ts`.
+After registration:
 
 ```bash
 cast send <indexReceiver> 'setForwarder(address)' <cre-forwarder>
