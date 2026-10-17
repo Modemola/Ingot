@@ -1,0 +1,99 @@
+# Works out why the hosted Envio deployment is not serving: reads Envio Cloud's own deploy docs,
+# probes the hosted endpoint, and runs this indexer against Monad testnet on the runner (RPC as
+# the data source, so no HyperSync token is needed) to prove the handlers sync real events.
+name: Diagnose the indexer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/focused-allen-ggzad1]
+    paths: [.github/workflows/diagnose-indexer.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - working-directory: indexer
+        run: pnpm install --frozen-lockfile > /dev/null
+      - name: Envio Cloud docs
+        working-directory: indexer
+        run: |
+          for q in "hosted service deployment" "envio cloud troubleshooting" "deployment stuck deploying" "hosted service environment variables" "api token hosted"; do
+            echo "::group::search: $q"; pnpm exec envio tools search-docs "$q" || true; echo "::endgroup::"
+          done
+          for p in hosted-service-deployment envio-cloud-troubleshooting hosted-service hosted-service-billing; do
+            echo "::group::page: $p"; pnpm exec envio tools fetch-docs "https://docs.envio.dev/docs/HyperIndex/$p" || true; echo "::endgroup::"
+          done
+
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Hosted endpoint
+        run: |
+          for u in https://indexer.dev.hyperindex.xyz/dd86630/v1/graphql https://indexer.dev.hyperindex.xyz/dd86630/v1/graphql/; do
+            echo "== $u"
+            curl -sS -m 20 -o body.txt -w "HTTP %{http_code}\n" -H 'content-type: application/json' \
+              -d '{"query":"{ chain_metadata { chain_id block_height latest_processed_block num_events_processed } }"}' "$u" || true
+            head -c 500 body.txt; echo
+          done
+
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: testing
+          POSTGRES_DB: envio-dev
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      ENVIO_PG_HOST: localhost
+      ENVIO_PG_PORT: "5432"
+      ENVIO_PG_USER: postgres
+      ENVIO_PG_PASSWORD: testing
+      ENVIO_PG_DATABASE: envio-dev
+      ENVIO_HASURA: "false"
+      ENVIO_TUI: "false"
+      TUI_OFF: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - working-directory: indexer
+        run: pnpm install --frozen-lockfile > /dev/null
+      - name: Use the public RPC as the data source (runner only)
+        working-directory: indexer
+        run: |
+          sed -i 's|^  - id: 10143 # Monad testnet|  - id: 10143 # Monad testnet\n    rpc:\n      url: https://testnet-rpc.monad.xyz\n      for: sync|' config.yaml
+          sed -n '/^chains:/,$p' config.yaml
+      - name: Sync for four minutes
+        working-directory: indexer
+        run: |
+          timeout 240 pnpm exec envio start > run.log 2>&1 || true
+          tail -n 120 run.log
+      - name: What landed in Postgres
+        run: |
+          export PGPASSWORD=testing
+          psql -h localhost -U postgres -d envio-dev -c "select table_schema, table_name from information_schema.tables where table_schema not in ('pg_catalog','information_schema') order by 1,2;"
+          for t in $(psql -h localhost -U postgres -d envio-dev -Atc "select table_schema||'.\"'||table_name||'\"' from information_schema.tables where table_schema='public'"); do
+            echo "$t: $(psql -h localhost -U postgres -d envio-dev -Atc "select count(*) from $t" 2>&1)"
+          done
+          psql -h localhost -U postgres -d envio-dev -c "select * from public.chain_metadata" 2>&1 | head || true
