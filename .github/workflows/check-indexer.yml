@@ -1,0 +1,21 @@
+# Runs the site's indexer queries against the hosted Envio deployment and prints the results.
+name: Check the indexer
+
+# Run by hand (Actions → Check the indexer) once the hosted deployment is up; it is a probe of an
+# external service, not a check on this repo's code.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/check-indexer.mjs
