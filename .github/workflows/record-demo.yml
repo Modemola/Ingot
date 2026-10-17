@@ -9,11 +9,9 @@
 
 name: Record the demo
 
+# By hand only: each run funds a fresh wallet from the deployer and replaces the footage.
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/focused-allen-ggzad1]
-    paths: [.github/workflows/record-demo.yml, web/e2e/demo.mjs]
 
 concurrency:
   group: record-demo
@@ -24,7 +22,7 @@ permissions:
 
 env:
   RPC_URL: https://testnet-rpc.monad.xyz
-  BASE_URL: https://monad-six-sooty.vercel.app
+  BASE_URL: https://ingotx.vercel.app
 
 jobs:
   record:
