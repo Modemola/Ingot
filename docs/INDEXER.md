@@ -105,18 +105,20 @@ Envio's hosted service builds straight from the repository:
    It now carries the real addresses and deploy block.
 2. In Envio's hosted service, connect this GitHub repository with the indexer directory set to
    `indexer/`, config `config.yaml`, branch `main`.
-3. Copy the GraphQL endpoint it gives you into the web app's `NEXT_PUBLIC_INDEXER_URL`.
+3. The live deployment serves https://indexer.dev.hyperindex.xyz/dd86630/v1/graphql. The web
+   app uses it by default on testnet; `NEXT_PUBLIC_INDEXER_URL` overrides it.
+   `node tools/check-indexer.mjs` (or Actions → Check the indexer) runs the site's queries against it.
 
 ## In the app
 
-With `NEXT_PUBLIC_INDEXER_URL` set, the web app adds two indexer-backed cards:
+With an indexer endpoint, the web app adds two indexer-backed cards:
 - **Market activity** on the terminal: the trade tape for the front series and the vault's
   derived inventory (which way traders are net), volume, trader count, and liquidations with
   bad debt.
 - **Loan book** on the credit desk: every loan's basis ratio, hedge size and strike, debt, and
   what its hedge returned at settlement.
 
-Unset, both cards are omitted and nothing else changes. Trading, borrowing and underwriting
+Without one (a local-chain build), both cards are omitted and nothing else changes. Trading, borrowing and underwriting
 never depend on the indexer; they read and write the contracts directly.
 
 ## Example queries
