@@ -1,7 +1,7 @@
 // Records the product demo: a real browser driving the live site, a real wallet signing real
 // transactions. Output is raw footage plus a log of when each step happened, for the edit.
 //
-//   WALLET_KEY=0x… BASE_URL=https://monad-six-sooty.vercel.app node e2e/demo.mjs
+//   WALLET_KEY=0x… BASE_URL=https://ingotx.vercel.app node e2e/demo.mjs
 //
 // The wallet is a minimal EIP-1193 provider in the page: reads go straight to the RPC, and
 // eth_sendTransaction is handed to Node, which signs with WALLET_KEY. The key never enters the
@@ -15,7 +15,7 @@ import { chromium } from "playwright-core";
 import { createWalletClient, defineChain, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 
-const BASE_URL = process.env.BASE_URL ?? "https://monad-six-sooty.vercel.app";
+const BASE_URL = process.env.BASE_URL ?? "https://ingotx.vercel.app";
 const RPC_URL = process.env.RPC_URL ?? "https://testnet-rpc.monad.xyz";
 const CHAIN_ID = Number(process.env.CHAIN_ID ?? 10143);
 const EXPLORER = process.env.EXPLORER ?? "https://testnet.monadscan.com";
