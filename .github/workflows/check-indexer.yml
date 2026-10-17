@@ -1,11 +1,10 @@
 # Runs the site's indexer queries against the hosted Envio deployment and prints the results.
 name: Check the indexer
 
+# Run by hand (Actions → Check the indexer) once the hosted deployment is up; it is a probe of an
+# external service, not a check on this repo's code.
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/focused-allen-ggzad1]
-    paths: [.github/workflows/check-indexer.yml, tools/check-indexer.mjs, web/components/Activity.tsx, web/lib/indexer.ts]
 
 permissions:
   contents: read
