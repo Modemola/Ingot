@@ -2,10 +2,16 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-/// GraphQL endpoint of the hosted Envio indexer (see docs/INDEXER.md). Optional: without it
-/// the app reads everything it needs straight from the contracts and simply omits the views
-/// that need history — trade tape, loan book — rather than faking them.
-export const INDEXER_URL = process.env.NEXT_PUBLIC_INDEXER_URL;
+import { LOCAL_CHAIN_ENABLED } from "./chains";
+
+/// The hosted Envio HyperIndex deployment indexing Ingot on Monad testnet (see docs/INDEXER.md).
+const TESTNET_INDEXER = "https://indexer.dev.hyperindex.xyz/dd86630/v1/graphql";
+
+/// GraphQL endpoint of the Envio indexer. NEXT_PUBLIC_INDEXER_URL overrides it; a build for a
+/// local chain has none, because the hosted indexer follows testnet. Without it the app reads
+/// everything it needs straight from the contracts and simply omits the views that need
+/// history — trade tape, loan book — rather than faking them.
+export const INDEXER_URL = process.env.NEXT_PUBLIC_INDEXER_URL ?? (LOCAL_CHAIN_ENABLED ? undefined : TESTNET_INDEXER);
 
 /// Postgres numerics can arrive as strings or numbers depending on the GraphQL layer's
 /// settings. Strings are exact; accept numbers only as a fallback.
