@@ -12,7 +12,7 @@ export const Browser: React.FC<{
   url?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-}> = ({ src, width = 1500, cam = { x: 720, y: 405, zoom: 1 }, pageW = 1440, pageH = 810, url = "monad-six-sooty.vercel.app/trade", style, children }) => {
+}> = ({ src, width = 1500, cam = { x: 720, y: 405, zoom: 1 }, pageW = 1440, pageH = 810, url = "ingotx.vercel.app/trade", style, children }) => {
   const bar = 44;
   const innerW = width;
   const innerH = (width * 810) / 1440;

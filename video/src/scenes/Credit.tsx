@@ -89,7 +89,7 @@ export const Credit: React.FC = () => {
 
       {/* L12: the credit desk */}
       <div style={{ position: "absolute", left: 320, top: 190, opacity: page }}>
-        <Browser src="footage/credit_top.jpg" url="monad-six-sooty.vercel.app/credit" width={1280} cam={{ x: 470, y: 560, zoom: 1.5 }} />
+        <Browser src="footage/credit_top.jpg" url="ingotx.vercel.app/credit" width={1280} cam={{ x: 470, y: 560, zoom: 1.5 }} />
       </div>
       <div style={{ position: "absolute", left: FX, top: FY, width: FW, height: 820, overflow: "hidden", opacity: formOpacity, borderRadius: 4, boxShadow: "0 50px 120px -30px rgba(0,0,0,0.95), 0 0 90px -20px rgba(232,182,97,0.16)" }}>
         <Img src={staticFile("footage/credit_form.jpg")} style={{ width: FW, transform: `translateY(${-scroll}px)` }} />
@@ -105,7 +105,7 @@ export const Credit: React.FC = () => {
       )}
       {page + form > 0.5 && drawn < 0.6 && <Cursor x={cur.x} y={cur.y} t={t} click={cur.click} visible={tw(t, L12.start + 0.8, L12.start + 1.1)} />}
       <div style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: drawn * (1 - formOut) }}>
-        <Browser src="footage/draw/0039.jpg" url="monad-six-sooty.vercel.app/credit" width={1280} cam={{ x: 720 - 320 * pushDraw, y: 405 + 300 * pushDraw, zoom: 1 + 0.25 * pushDraw }} />
+        <Browser src="footage/draw/0039.jpg" url="ingotx.vercel.app/credit" width={1280} cam={{ x: 720 - 320 * pushDraw, y: 405 + 300 * pushDraw, zoom: 1 + 0.25 * pushDraw }} />
         <div style={{ position: "absolute", top: 100, fontFamily: F.mono, fontSize: 22, letterSpacing: "0.3em", color: C.gold, textShadow: "0 0 18px rgba(232,182,97,0.6)" }}>DRAWN · AND HEDGED · IN THE SAME BLOCK</div>
       </div>
 

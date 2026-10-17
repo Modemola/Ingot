@@ -41,7 +41,7 @@ const config = createConfig({
             metadata: {
               name: "Ingot",
               description: "A cash-settled market for compute, and the credit layer it unlocks.",
-              url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://monad-six-sooty.vercel.app",
+              url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ingotx.vercel.app",
               icons: [],
             },
           }),
