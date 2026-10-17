@@ -27,7 +27,8 @@ const meta = await ask("{ chain_metadata { chain_id block_height latest_processe
 console.log("sync:", JSON.stringify(meta.body?.data ?? meta.body));
 for (const query of queries) {
   const name = query.match(/query (\w+)/)?.[1];
-  const { status, body } = await ask(query, { series: "0" });
+  // send only the variables the query declares, as the site does
+  const { status, body } = await ask(query, query.includes("$series") ? { series: "0" } : {});
   const ok = status === 200 && body?.data && !body.errors;
   failed ||= !ok;
   console.log(`\n${name}: HTTP ${status} ${ok ? "ok" : "FAILED"}`);
