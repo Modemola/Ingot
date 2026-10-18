@@ -12,9 +12,12 @@ import { SplitFlap, providerBoard } from "@/components/fx/SplitFlap";
 import { ColumnsFallback } from "@/components/hero/Fallbacks";
 import { Hallmarks } from "@/components/ui";
 import { INDEX_SERIES } from "@/lib/story-data";
+import { useLatestIndex } from "@/lib/useIngot";
 
 const PriceColumns = dynamic(() => import("@/components/hero/PriceColumns"), { ssr: false });
 
+/// The stored series' last point: the backtest's own figures, and the headline number until the
+/// onchain read lands.
 const LATEST = INDEX_SERIES[INDEX_SERIES.length - 1][1];
 
 /// Where real providers sat against the index across the 78 days (docs/BACKTEST.md).
@@ -42,8 +45,9 @@ function goldWords(...words: string[]) {
 // ---------------------------------------------------------------------------
 
 export function TickerBand() {
+  const index = useLatestIndex() ?? LATEST;
   const stats = [
-    { v: `$${LATEST.toFixed(4)}`, l: "H100 index / GPU-hr" },
+    { v: `$${index.toFixed(4)}`, l: "H100 index / GPU-hr" },
     { v: "59.8%", l: "Annualised volatility" },
     { v: "6.14×", l: "Dearest ÷ cheapest" },
     { v: "23", l: "Providers a day" },
@@ -68,7 +72,7 @@ export function TickerBand() {
         {BASIS.map(([name, b]) => (
           <span key={name} className="mx-6 inline-flex items-center gap-3 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.16em]">
             <span className="text-ink-muted">{name}</span>
-            <span className="text-ink-secondary">${(LATEST * (1 + b)).toFixed(2)}</span>
+            <span className="text-ink-secondary">${(index * (1 + b)).toFixed(2)}</span>
             <span className={b < 0 ? "text-good" : "text-critical"}>
               {b > 0 ? "+" : ""}
               {(b * 100).toFixed(1)}%
@@ -160,6 +164,8 @@ export function IndexStage() {
     setStage(v < 0.38 ? 0 : v < 0.7 ? 1 : 2);
   });
   const veil = useTransform(scrollYProgress, [0.9, 1], [0, 1]);
+  const index = useLatestIndex() ?? LATEST;
+  const board = useMemo(() => providerBoard(index).slice(0, 5), [index]);
 
   const venues = useMemo(
     () =>
@@ -209,7 +215,7 @@ export function IndexStage() {
               transition={{ duration: 0.6 }}
               className="pointer-events-auto border border-hairline bg-void/70 p-4 backdrop-blur"
             >
-              {stage === 2 && <SplitFlap value={`$${LATEST.toFixed(4)}`} label="INGOT H100 INDEX" sequence={providerBoard(LATEST).slice(0, 5)} stepMs={200} size="md" />}
+              {stage === 2 && <SplitFlap value={`$${index.toFixed(4)}`} label="INGOT H100 INDEX" sequence={board} stepMs={200} size="md" />}
             </motion.div>
           </div>
         </div>
