@@ -25,8 +25,15 @@ for (const { path, expect } of PAGES) {
   page.on("pageerror", (e) => errors.push(e.message));
   const res = await page.goto(BASE + path, { waitUntil: "networkidle", timeout: 60_000 }).catch((e) => ({ status: () => e.message }));
   await page.waitForTimeout(12_000); // contract reads and indexer polls settle
+  // Scroll the whole page so scroll-triggered sections reveal before the screenshot.
+  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  for (let y = 0; y < height; y += 600) {
+    await page.mouse.wheel(0, 600);
+    await page.waitForTimeout(250);
+  }
+  await page.waitForTimeout(1_500);
   const text = await page.locator("body").innerText();
-  const missing = expect.filter((t) => !text.includes(t));
+  const missing = expect.filter((t) => !text.toLowerCase().includes(t.toLowerCase())); // innerText applies text-transform
   const unreachable = text.includes("Indexer unreachable");
   const prices = [...new Set(text.match(/\$\d\.\d{2,4}/g) ?? [])].slice(0, 6);
   const ok = res.status() === 200 && !missing.length && !unreachable;
