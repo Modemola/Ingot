@@ -5,7 +5,7 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
 
-import { assertFresh, computePrint, MAX_SOURCE_AGE_HOURS } from "./publish-index.mjs";
+import { assertFresh, computePrint, MAX_SOURCE_AGE_HOURS, pickFreshest } from "./publish-index.mjs";
 
 const offer = (provider, gpu, usd_hr, kind = "on-demand") => ({ provider, gpu, usd_hr, kind });
 
@@ -75,4 +75,19 @@ test("refuses a snapshot older than the freshness limit", () => {
 test("refuses a snapshot with no timestamp or one from the future", () => {
   assert.throws(() => assertFresh({ offers: [] }), /generated_at/);
   assert.throws(() => assertFresh(SNAPSHOT, Date.parse(SNAPSHOT.generated_at) - 3 * 3_600_000), /future/);
+});
+
+test("reads the freshest source, so a lagging mirror cannot stall the index", () => {
+  const mirror = { ...SNAPSHOT, generated_at: "2026-09-21T08:47:00.000Z" };
+  const api = { ...SNAPSHOT, generated_at: "2026-09-23T08:47:00.000Z" };
+  assert.equal(pickFreshest([mirror, api]), api);
+  assert.equal(pickFreshest([api, mirror]), api);
+  assert.equal(pickFreshest([{ offers: [] }, mirror]), mirror, "an undated reply is ignored");
+  assert.throws(() => pickFreshest([]), /no source/);
+});
+
+test("the freshest of several stale copies is still stale", () => {
+  const old = { ...SNAPSHOT, generated_at: "2026-09-20T00:00:00.000Z" };
+  const now = Date.parse("2026-09-23T00:00:00.000Z");
+  assert.throws(() => assertFresh(pickFreshest([old, old]), now), /refusing to publish stale data/);
 });
