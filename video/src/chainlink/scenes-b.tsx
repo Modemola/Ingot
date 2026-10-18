@@ -112,8 +112,8 @@ export const Consensus: React.FC = () => {
   const outvotedAt = wordT("L11", "outvoted");
   const isBad = tw(t, badAt, badAt + 0.3);
   const shake = t > ninetyAt && t < ninetyAt + 0.5 ? Math.sin(t * 80) * 6 * (1 - (t - ninetyAt) / 0.5) : 0;
-  const fly = tw(t, medianAt, medianAt + 1.1, 0, 1, INOUT);
-  const lit = tw(t, medianAt + 1.1, medianAt + 1.5);
+  const fly = tw(t, medianAt, medianAt + 0.6, 0, 1, INOUT);
+  const lit = tw(t, medianAt + 1.4, medianAt + 1.8);
   const out = tw(t, outvotedAt, outvotedAt + 0.4);
   return (
     <AbsoluteFill>
@@ -137,11 +137,15 @@ export const Consensus: React.FC = () => {
       {liarLabel(t, badAt)}
       {/* the values fall into order */}
       {SORTED.map((node, k) => {
-        const from = { x: NODES[node], y: NODE_Y };
-        const to = { x: slotX(k), y: SLOT_Y };
-        const p = tw(t, medianAt + k * 0.06, medianAt + 1.0 + k * 0.06, 0, 1, INOUT);
-        const x = interpolate(p, [0, 1], [from.x, to.x]);
-        const y = interpolate(p, [0, 1], [from.y, to.y]);
+        // Drop straight down, then slide into order: leftward cards pass below, rightward above,
+        // so no two ever overlap on the way.
+        const fromX = NODES[node];
+        const toX = slotX(k);
+        const pA = tw(t, medianAt, medianAt + 0.6, 0, 1, INOUT);
+        const pB = tw(t, medianAt + 0.6, medianAt + 1.4, 0, 1, INOUT);
+        const lane = toX < fromX ? 1 : -1;
+        const x = interpolate(pB, [0, 1], [fromX, toX]);
+        const y = interpolate(pA, [0, 1], [NODE_Y, SLOT_Y]) + lane * Math.sin(Math.PI * pB) * 62;
         const value = node === LIAR ? "$99.00" : HONEST[node];
         const median = k === 2;
         return (
@@ -165,7 +169,7 @@ export const Consensus: React.FC = () => {
         );
       })}
       <At x={960} y={SLOT_Y + 92}>
-        <div style={{ opacity: tw(t, medianAt + 0.8, medianAt + 1.3) }}>
+        <div style={{ opacity: tw(t, medianAt + 1.2, medianAt + 1.7) }}>
           <Label size={13}>sorted · lowest to highest</Label>
         </div>
       </At>

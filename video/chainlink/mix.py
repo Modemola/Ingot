@@ -164,10 +164,12 @@ def fx():
     put(M.sfx_glitch(0.22), word("L10", "bad data"), -27, 0.3)
     put(M.sfx_glitch(0.3), word("L10", "ninety-nine"), -24, 0.3)
     med = word("L11", "median") - 0.2
-    put(M.sfx_whoosh(1.1, 300, 3500, 0.5), med, -30, wet=0.25)
+    for k in range(5):  # the drop, then the slide into order
+        put(M.sfx_tick(1100 + k * 60, 0.05), med + 0.55 + k * 0.02, -32, -0.4 + k * 0.2)
+    put(M.sfx_whoosh(0.9, 300, 3500, 0.5), med + 0.6, -31, wet=0.25)
     for k in range(5):
-        put(M.sfx_clack(), med + 1.0 + k * 0.06, -28, -0.4 + k * 0.2)
-    put(M.sfx_chime(86), med + 1.15, -29, wet=0.5)
+        put(M.sfx_clack(), med + 1.38 + k * 0.03, -29, -0.4 + k * 0.2)
+    put(M.sfx_chime(86), med + 1.45, -29, wet=0.5)
     out_at = word("L11", "outvoted")
     put(M.sfx_impact(70, 0.9, 0.6), out_at, -22, 0.3, wet=0.2)
     put(M.sfx_clack(), out_at, -18, 0.3)
