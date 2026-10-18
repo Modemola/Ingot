@@ -22,8 +22,11 @@ jobs:
       # The site queries it from the browser, so the endpoint must answer a CORS preflight.
       - name: CORS from the live site
         run: |
-          curl -sS -m 20 -o /dev/null -D - -X OPTIONS \
-            -H 'Origin: https://monad-six-sooty.vercel.app' -H 'Access-Control-Request-Method: POST' \
-            -H 'Access-Control-Request-Headers: content-type' \
-            https://indexer.dev.hyperindex.xyz/dd86630/v1/graphql | tee headers.txt
-          grep -qi '^access-control-allow-origin:' headers.txt
+          for origin in https://ingotx.vercel.app https://monad-six-sooty.vercel.app; do
+            echo "== $origin"
+            curl -sS -m 20 -o /dev/null -D - -X OPTIONS \
+              -H "Origin: $origin" -H 'Access-Control-Request-Method: POST' \
+              -H 'Access-Control-Request-Headers: content-type' \
+              https://indexer.dev.hyperindex.xyz/dd86630/v1/graphql | tee headers.txt
+            grep -qi "^access-control-allow-origin: \($origin\|\*\)" headers.txt
+          done

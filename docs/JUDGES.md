@@ -5,7 +5,7 @@ just a wallet: any EVM browser extension (MetaMask, Rabby, Phantom, OKX, Coinbas
 phone, a wallet app's built-in browser. There is no login and no password; the wallet is the
 credential.
 
-**Live app:** <https://monad-six-sooty.vercel.app>
+**Live app:** <https://ingotx.vercel.app>
 
 ## 1. Point a wallet at Monad testnet
 

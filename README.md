@@ -5,7 +5,7 @@
 **A cash-settled market for compute, and the credit layer it unlocks.**
 
 Built for Metropolis — Onchain Finance & Trading track. Live on Monad testnet:
-**<https://monad-six-sooty.vercel.app>** · five-minute walkthrough in [docs/JUDGES.md](docs/JUDGES.md).
+**<https://ingotx.vercel.app>** · five-minute walkthrough in [docs/JUDGES.md](docs/JUDGES.md).
 
 ---
 
