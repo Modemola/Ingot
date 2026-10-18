@@ -6,7 +6,7 @@ const SITE =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://monad-six-sooty.vercel.app");
+    : "https://ingotx.vercel.app");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return ["", "/trade", "/credit", "/underwrite"].map((path) => ({
