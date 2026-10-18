@@ -25,19 +25,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Build and serve this branch
+      - name: Build this branch
         if: inputs.url == 'local'
         working-directory: web
-        run: |
-          pnpm install --frozen-lockfile > /dev/null
-          pnpm build > /dev/null
-          (pnpm exec next start -p 3000 > "$RUNNER_TEMP/next.log" 2>&1 &)
-          for i in $(seq 1 30); do curl -fsS -o /dev/null http://localhost:3000 && break; sleep 2; done
+        run: pnpm install --frozen-lockfile > /dev/null && pnpm build > /dev/null
       - run: npm i --no-save --no-package-lock playwright-core@1.63.0 > /dev/null
       - name: Check
         run: |
           url="${{ inputs.url || 'https://ingotx.vercel.app' }}"
-          [ "$url" = local ] && url=http://localhost:3000
+          if [ "$url" = local ]; then
+            # Served from this step: a server started in an earlier step does not outlive it.
+            (cd web && pnpm exec next start -p 3000 > "$RUNNER_TEMP/next.log" 2>&1 &)
+            for i in $(seq 1 30); do curl -fsS -o /dev/null http://localhost:3000 && break; sleep 2; done
+            url=http://localhost:3000
+          fi
           CHROME_PATH=$(command -v google-chrome) node tools/check-site.mjs "$url" "$RUNNER_TEMP/site-check"
       - name: Publish screenshots
         if: always()
