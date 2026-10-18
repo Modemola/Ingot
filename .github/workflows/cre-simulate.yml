@@ -10,11 +10,9 @@
 
 name: CRE simulation
 
+# By hand only: it needs the CRE_API_KEY secret, and its last step replaces the cre-simulation branch.
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/focused-allen-ggzad1]
-    paths: [.github/workflows/cre-simulate.yml, oracle/**]
 
 concurrency:
   group: cre-simulate
