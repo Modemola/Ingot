@@ -157,6 +157,20 @@ export function useAccountState(seriesId: bigint | undefined) {
   };
 }
 
+/// The index's newest print, in USD per GPU-hour. Undefined until the read lands, or where nothing
+/// is deployed; the landing page shows the stored series' last point until then.
+export function useLatestIndex(): number | undefined {
+  const { deployment, chainId } = useDeployment();
+  const { data } = useReadContract({
+    address: deployment?.index,
+    abi: ingotIndexAbi,
+    functionName: "latest",
+    chainId,
+    query: { enabled: Boolean(deployment) },
+  });
+  return data ? Number(data[0]) / 1e18 : undefined;
+}
+
 /// Enough for the 78-day backfill plus the first few days of live prints.
 const HISTORY_DEPTH = 96;
 
