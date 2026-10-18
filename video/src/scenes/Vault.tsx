@@ -25,7 +25,7 @@ export const Vault: React.FC = () => {
         <Rise text="The vault takes the other side." t={t} at={L17.start} size={52} accent={["other", "side."]} />
       </div>
       <div style={{ position: "absolute", left: 110, top: 250, opacity: enter, transform: `translateY(${(1 - enter) * 60}px)` }}>
-        <Browser src="footage/underwrite_top.jpg" url="monad-six-sooty.vercel.app/underwrite" width={1040} cam={{ x: 720, y: 405, zoom: 1 }} />
+        <Browser src="footage/underwrite_top.jpg" url="ingotx.vercel.app/underwrite" width={1040} cam={{ x: 720, y: 405, zoom: 1 }} />
       </div>
 
       {/* quotes both ways off the mark */}

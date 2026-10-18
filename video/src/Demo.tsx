@@ -119,7 +119,7 @@ const Intro: React.FC = () => {
         <Img src={staticFile("brand/ingot-logo-dark-transparent.svg")} style={{ width: 760 }} />
       </div>
       <div style={{ marginTop: 6, fontFamily: F.mono, fontSize: 19, letterSpacing: "0.34em", color: C.gold, opacity: tw(t, 0.7, 1.3) }}>LIVE PRODUCT DEMO · MONAD TESTNET</div>
-      <div style={{ marginTop: 18, fontFamily: F.mono, fontSize: 17, letterSpacing: "0.08em", color: C.muted, opacity: tw(t, 1.0, 1.6) }}>monad-six-sooty.vercel.app</div>
+      <div style={{ marginTop: 18, fontFamily: F.mono, fontSize: 17, letterSpacing: "0.08em", color: C.muted, opacity: tw(t, 1.0, 1.6) }}>ingotx.vercel.app</div>
     </AbsoluteFill>
   );
 };
@@ -141,7 +141,7 @@ const Outro: React.FC = () => {
         Compute, <span style={{ fontStyle: "italic", color: C.gold }}>priced</span> &amp; hedged.
       </div>
       <div style={{ marginTop: 26, display: "flex", gap: 30, fontFamily: F.mono, fontSize: 21, opacity: tw(t, s + 0.9, s + 1.5) }}>
-        <span style={{ color: C.goldSoft }}>monad-six-sooty.vercel.app</span>
+        <span style={{ color: C.goldSoft }}>ingotx.vercel.app</span>
         <span style={{ color: C.muted }}>·</span>
         <span style={{ color: C.ink2 }}>github.com/Modemola/Ingot</span>
       </div>
