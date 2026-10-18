@@ -5,11 +5,9 @@
 
 name: Top up the credit pool
 
+# By hand only: each run mints and deposits more test USDC.
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/focused-allen-ggzad1]
-    paths: [.github/workflows/top-up-credit.yml]
 
 concurrency:
   group: top-up-credit

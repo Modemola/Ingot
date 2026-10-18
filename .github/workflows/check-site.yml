@@ -4,9 +4,6 @@ name: Check the live site
 
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/focused-allen-ggzad1]
-    paths: [.github/workflows/check-site.yml, tools/check-site.mjs]
 
 permissions:
   contents: write
