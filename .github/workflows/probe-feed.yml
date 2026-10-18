@@ -1,0 +1,33 @@
+# One-off: find the freshest copy of the GPU rental-price feed the index is built from.
+name: Probe the price feed
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/focused-allen-ggzad1]
+    paths: [.github/workflows/probe-feed.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Candidates
+        run: |
+          ua='ingot-index-keeper'
+          get() { echo; echo "== $1"; curl -sSL -m 25 -A "$ua" -o body -w "HTTP %{http_code} %{content_type} %{size_download}B\n" "$1" || true; }
+          age() { jq -r '"date=\(.date // "-") generated_at=\(.generated_at // .generatedAt // "-") offers=\((.offers // .data // []) | length)"' body 2>/dev/null || head -c 300 body; }
+          get https://gpurentalprices.com/data; grep -oE '"(https://gpurentalprices\.com)?/[A-Za-z0-9/_.-]*(api|json|csv)[A-Za-z0-9/_.?=&-]*"' body | sort -u | head -40
+          get https://gpurentalprices.com/methodology; grep -oE '"(https://gpurentalprices\.com)?/[A-Za-z0-9/_.-]*(api|json)[A-Za-z0-9/_.?=&-]*"' body | sort -u | head -20
+          for u in https://gpurentalprices.com/api/latest https://gpurentalprices.com/api/latest.json https://gpurentalprices.com/data/latest.json \
+                   https://gpurentalprices.com/api/v1/latest https://gpurentalprices.com/api/prices https://gpurentalprices.com/api/offers \
+                   https://huggingface.co/datasets/gpurentalprices/gpu-rental-prices/resolve/main/data/latest.json \
+                   https://huggingface.co/datasets/gpurentalprices/gpu-rental-prices/resolve/main/latest.json \
+                   https://raw.githubusercontent.com/adriannutiu/gpu-rental-prices/main/data/latest.json; do
+            get "$u"; age
+          done
+          echo; echo "== HF dataset files"
+          curl -sS -m 25 https://huggingface.co/api/datasets/gpurentalprices/gpu-rental-prices | jq -r '.lastModified, (.siblings[]?.rfilename)' | tail -25 || true
