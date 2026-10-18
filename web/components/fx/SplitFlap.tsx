@@ -31,30 +31,46 @@ export function SplitFlap({
   const inView = useInView(ref, { once: true, margin: "-40px" });
   const [frame, setFrame] = useState<Frame>({ label: label ?? "", value });
   const played = useRef(false);
+  const settled = useRef(false);
+  // The value can change while the sequence plays (a live price landing): the run reads these
+  // at each step, so it finishes its flips and lands on whatever is current.
+  const final = useRef<Frame>({ label: label ?? "", value });
+  final.current = { label: label ?? "", value };
+  const steps = useRef({ sequence, stepMs });
+  steps.current = { sequence, stepMs };
 
   useEffect(() => {
-    if (!inView || played.current) {
-      if (played.current) setFrame({ label: label ?? "", value });
-      return;
-    }
+    if (settled.current) setFrame({ label: label ?? "", value });
+  }, [label, value]);
+
+  useEffect(() => {
+    if (!inView || played.current) return;
     played.current = true;
-    if (sequence.length === 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setFrame({ label: label ?? "", value });
+    const land = () => {
+      settled.current = true;
+      setFrame(final.current);
+    };
+    if (steps.current.sequence.length === 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      land();
       return;
     }
     let i = 0;
     const tick = () => {
-      if (i < sequence.length) {
-        setFrame(sequence[i]);
+      const { sequence: seq, stepMs: ms } = steps.current;
+      if (i < seq.length) {
+        setFrame(seq[i]);
         i += 1;
-        timer = setTimeout(tick, stepMs);
+        timer = setTimeout(tick, ms);
       } else {
-        setFrame({ label: label ?? "", value });
+        land();
       }
     };
     let timer = setTimeout(tick, 200);
-    return () => clearTimeout(timer);
-  }, [inView, sequence, stepMs, value, label]);
+    return () => {
+      clearTimeout(timer);
+      if (!settled.current) land();
+    };
+  }, [inView]);
 
   const width = Math.max(value.length, ...sequence.map((f) => f.value.length));
   const labelWidth = Math.max((label ?? "").length, ...sequence.map((f) => f.label.length));

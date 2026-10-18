@@ -4,6 +4,10 @@ name: Check the live site
 
 on:
   workflow_dispatch:
+    inputs:
+      url:
+        description: Site to check, or "local" to build and serve this branch on the runner
+        default: https://ingotx.vercel.app
 
 permissions:
   contents: write
@@ -14,12 +18,28 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        if: inputs.url == 'local'
+        with:
+          version: 10
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Build this branch
+        if: inputs.url == 'local'
+        working-directory: web
+        run: pnpm install --frozen-lockfile > /dev/null && pnpm build > /dev/null
       - run: npm i --no-save --no-package-lock playwright-core@1.63.0 > /dev/null
       - name: Check
-        run: CHROME_PATH=$(command -v google-chrome) node tools/check-site.mjs https://ingotx.vercel.app "$RUNNER_TEMP/site-check"
+        run: |
+          url="${{ inputs.url || 'https://ingotx.vercel.app' }}"
+          if [ "$url" = local ]; then
+            # The static export, served from this step: a server started in an earlier step does not outlive it.
+            (node web/e2e/serve.mjs web/out 3000 > "$RUNNER_TEMP/serve.log" 2>&1 &)
+            for i in $(seq 1 30); do curl -fsS -o /dev/null http://localhost:3000 && break; sleep 2; done
+            url=http://localhost:3000
+          fi
+          CHROME_PATH=$(command -v google-chrome) node tools/check-site.mjs "$url" "$RUNNER_TEMP/site-check"
       - name: Publish screenshots
         if: always()
         working-directory: ${{ runner.temp }}/site-check
