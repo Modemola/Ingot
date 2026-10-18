@@ -62,7 +62,8 @@ export const Stakes: React.FC = () => {
   return (
     <AbsoluteFill>
       <At x={960} y={300}>
-        <div style={{ ...enter(t, s.start + 0.1, out), display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+        {/* enters once the opening board has dissolved, so the two prices never overlap */}
+        <div style={{ ...enter(t, s.start + 0.55, out), display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
           <Price value="$3.7195" size={64} />
           <Label size={15}>Ingot H100 index</Label>
         </div>

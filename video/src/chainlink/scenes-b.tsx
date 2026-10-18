@@ -117,13 +117,13 @@ export const Consensus: React.FC = () => {
   const out = tw(t, outvotedAt, outvotedAt + 0.4);
   return (
     <AbsoluteFill>
-      <At x={960} y={170}>
+      <At x={960} y={330}>
         <Title t={t} />
       </At>
       {NODES.map((x, i) => {
         const liar = i === LIAR;
         return (
-          <At key={x} x={x + (liar ? shake : 0)} y={NODE_Y - 120}>
+          <At key={x} x={x + (liar ? shake : 0)} y={NODE_Y}>
             <div style={{ opacity: liar ? 1 - 0.6 * out : 1 }}>
               <Hex size={150} t={t} at={-10} color={liar && isBad > 0.5 ? C.critical : B.bright}>
                 <div style={{ position: "relative", height: 34, width: 120, textAlign: "center" }}>
@@ -137,7 +137,7 @@ export const Consensus: React.FC = () => {
       {liarLabel(t, badAt)}
       {/* the values fall into order */}
       {SORTED.map((node, k) => {
-        const from = { x: NODES[node], y: NODE_Y - 120 };
+        const from = { x: NODES[node], y: NODE_Y };
         const to = { x: slotX(k), y: SLOT_Y };
         const p = tw(t, medianAt + k * 0.06, medianAt + 1.0 + k * 0.06, 0, 1, INOUT);
         const x = interpolate(p, [0, 1], [from.x, to.x]);
@@ -191,7 +191,7 @@ function interpolateColor(p: number) {
 function liarLabel(t: number, at: number) {
   const x = NODES[LIAR];
   return (
-    <At x={x} y={NODE_Y + 4}>
+    <At x={x} y={NODE_Y + 108}>
       <div style={{ ...enter(t, at + 0.2), whiteSpace: "nowrap" }}>
         <Label color={C.critical} size={14}>fed bad data</Label>
       </div>
