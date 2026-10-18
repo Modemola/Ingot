@@ -34,8 +34,8 @@ jobs:
         run: |
           url="${{ inputs.url || 'https://ingotx.vercel.app' }}"
           if [ "$url" = local ]; then
-            # Served from this step: a server started in an earlier step does not outlive it.
-            (cd web && pnpm exec next start -p 3000 > "$RUNNER_TEMP/next.log" 2>&1 &)
+            # The static export, served from this step: a server started in an earlier step does not outlive it.
+            (node web/e2e/serve.mjs web/out 3000 > "$RUNNER_TEMP/serve.log" 2>&1 &)
             for i in $(seq 1 30); do curl -fsS -o /dev/null http://localhost:3000 && break; sleep 2; done
             url=http://localhost:3000
           fi
