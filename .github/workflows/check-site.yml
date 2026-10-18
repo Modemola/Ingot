@@ -4,6 +4,10 @@ name: Check the live site
 
 on:
   workflow_dispatch:
+    inputs:
+      url:
+        description: Site to check
+        default: https://ingotx.vercel.app
 
 permissions:
   contents: write
@@ -19,7 +23,7 @@ jobs:
           node-version: 22
       - run: npm i --no-save --no-package-lock playwright-core@1.63.0 > /dev/null
       - name: Check
-        run: CHROME_PATH=$(command -v google-chrome) node tools/check-site.mjs https://ingotx.vercel.app "$RUNNER_TEMP/site-check"
+        run: CHROME_PATH=$(command -v google-chrome) node tools/check-site.mjs "${{ inputs.url || 'https://ingotx.vercel.app' }}" "$RUNNER_TEMP/site-check"
       - name: Publish screenshots
         if: always()
         working-directory: ${{ runner.temp }}/site-check

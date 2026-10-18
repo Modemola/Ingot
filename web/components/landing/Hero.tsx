@@ -3,13 +3,14 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import { Magnetic, SplitWords } from "@/components/fx/motion";
 import { Scene } from "@/components/fx/Scene";
 import { SplitFlap, providerBoard } from "@/components/fx/SplitFlap";
 import { GoldFallback } from "@/components/hero/Fallbacks";
 import { INDEX_SERIES } from "@/lib/story-data";
+import { useLatestIndex } from "@/lib/useIngot";
 
 // Three.js only ever loads on the landing page, and only in the browser.
 const GoldScene = dynamic(() => import("@/components/hero/GoldScene"), {
@@ -21,14 +22,16 @@ const GoldScene = dynamic(() => import("@/components/hero/GoldScene"), {
   ),
 });
 
-const LATEST = INDEX_SERIES[INDEX_SERIES.length - 1][1];
-const BOARD = providerBoard(LATEST);
+/// Shown until the onchain read lands: the last point of the stored series.
+const STORED = INDEX_SERIES[INDEX_SERIES.length - 1][1];
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const textY = useTransform(scrollYProgress, [0, 1], [0, -90]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
+  const index = useLatestIndex() ?? STORED;
+  const board = useMemo(() => providerBoard(index), [index]);
 
   return (
     <section ref={ref} className="relative min-h-[132svh] overflow-hidden">
@@ -73,7 +76,7 @@ export function Hero() {
         </p>
 
         <div style={{ animationDelay: "0.9s" }} className="rise mt-8 [@media(max-height:820px)]:mt-6">
-          <SplitFlap value={`$${LATEST.toFixed(4)}`} label="INGOT H100 INDEX" sequence={BOARD} size="md" />
+          <SplitFlap value={`$${index.toFixed(4)}`} label="INGOT H100 INDEX" sequence={board} size="md" />
           <div className="label mt-2.5">USD per GPU-hour · eight venues flip, one price lands</div>
         </div>
 
