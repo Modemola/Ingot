@@ -14,7 +14,12 @@
 // Universe is on-demand and secure capacity only — spot, community and serverless are
 // different products with different availability, and mixing them makes the index meaningless.
 
-const SOURCE = "https://raw.githubusercontent.com/adriannutiu/gpu-rental-prices/main/data/latest.json";
+/// The dataset's canonical live API first, then its GitHub mirror. Both serve the same snapshot
+/// schema; the mirror can lag the API by a day or more, so the freshest one that answers wins.
+export const SOURCES = [
+  "https://gpurentalprices.com/api/latest.json",
+  "https://raw.githubusercontent.com/adriannutiu/gpu-rental-prices/main/data/latest.json",
+];
 const INCLUDED_KINDS = new Set(["on-demand", "secure"]);
 const TRIM_FRACTION = 0.1;
 const MIN_SOURCES = 3;
@@ -89,11 +94,26 @@ export function assertFresh(snapshot, now = Date.now()) {
   if (ageHours < -1) throw new Error("snapshot is dated in the future — refusing to publish");
 }
 
-async function main() {
-  const response = await fetch(SOURCE, { headers: { "user-agent": "ingot-index-keeper" } });
-  if (!response.ok) throw new Error(`source returned ${response.status}`);
+/// The most recently generated of the snapshots that arrived. Freshness is still checked after:
+/// picking the newest of several stale copies must not make stale data publishable.
+export function pickFreshest(snapshots) {
+  const dated = snapshots.filter((s) => s && !Number.isNaN(Date.parse(s.generated_at ?? "")));
+  if (!dated.length) throw new Error("no source returned a dated snapshot — refusing to publish");
+  return dated.reduce((a, b) => (Date.parse(b.generated_at) > Date.parse(a.generated_at) ? b : a));
+}
 
-  const snapshot = await response.json();
+async function fetchSnapshot(url) {
+  const response = await fetch(url, { headers: { "user-agent": "ingot-index-keeper" }, signal: AbortSignal.timeout(20_000) });
+  if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+  return response.json();
+}
+
+async function main() {
+  const results = await Promise.allSettled(SOURCES.map(fetchSnapshot));
+  for (const [i, r] of results.entries()) {
+    if (r.status === "rejected") console.error(`publish-index: ${SOURCES[i]} unavailable: ${r.reason?.message ?? r.reason}`);
+  }
+  const snapshot = pickFreshest(results.filter((r) => r.status === "fulfilled").map((r) => r.value));
   assertFresh(snapshot);
   const print = computePrint(snapshot);
 
