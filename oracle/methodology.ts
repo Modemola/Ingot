@@ -84,6 +84,28 @@ export function buildPrint(offers: Offer[]): IndexPrint {
   };
 }
 
+/// A copy of the venue dataset: every offer, stamped with when it was generated.
+export type Snapshot = { generated_at?: string; offers: Offer[] };
+
+/// The print is stamped with the time it is published, so the data behind it must be current: a
+/// feed that stopped updating would otherwise keep publishing yesterday's rate as today's. The
+/// same limit as the scheduled publisher (tools/publish-index.mjs).
+export const MAX_SNAPSHOT_AGE_HOURS = 36;
+
+/// The newest of the copies that arrived, or throw if even that one is stale. Picking the newest
+/// of several stale copies must not make stale data publishable.
+export function freshestSnapshot(snapshots: Snapshot[], nowMs: number): Snapshot {
+  const dated = snapshots.filter((s) => !Number.isNaN(Date.parse(s.generated_at ?? "")));
+  if (dated.length === 0) throw new Error("no feed returned a dated snapshot");
+  const newest = dated.reduce((a, b) => (Date.parse(b.generated_at!) > Date.parse(a.generated_at!) ? b : a));
+  const ageHours = (nowMs - Date.parse(newest.generated_at!)) / 3_600_000;
+  if (ageHours > MAX_SNAPSHOT_AGE_HOURS) {
+    throw new Error(`newest snapshot is ${ageHours.toFixed(1)}h old (limit ${MAX_SNAPSHOT_AGE_HOURS}h)`);
+  }
+  if (ageHours < -1) throw new Error("snapshot is dated in the future");
+  return newest;
+}
+
 /// Convert a float price to 18-decimal fixed point without going through a lossy string path.
 export function toWei(price: number): bigint {
   return BigInt(Math.round(price * 1e9)) * 10n ** 9n;

@@ -78,7 +78,8 @@ Monad testnet is a first-class chain in the CRE SDK's selector table
 ### With the Chainlink CRE CLI
 
 `oracle/` is a CRE project: `project.yaml` names the Monad testnet RPC, and
-`index-workflow/` holds `workflow.yaml`, the config (the live venue feed and the
+`index-workflow/` holds `workflow.yaml`, the config (the venue feed's live API and its GitHub
+mirror, of which each node uses the freshest copy, refusing anything over 36 hours old; and the
 `IngotIndexReceiver` address) and `main.ts`, the entry point that hands `initWorkflow` to the
 SDK's `Runner`.
 
