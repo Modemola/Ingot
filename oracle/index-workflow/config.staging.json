@@ -1,8 +1,5 @@
 {
   "receiver": "0xEcD7c0ECf2093415dEC999379e631002d637D254",
-  "feeds": [
-    "https://gpurentalprices.com/api/latest.json",
-    "https://raw.githubusercontent.com/adriannutiu/gpu-rental-prices/main/data/latest.json"
-  ],
+  "feeds": ["https://gpurentalprices.com/gpu-prices.csv"],
   "schedule": "0 0 * * * *"
 }

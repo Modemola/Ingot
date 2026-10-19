@@ -21,7 +21,7 @@ import {
 } from "@chainlink/cre-sdk";
 
 import { WORKFLOW_TAG, encodeReport, toBase64 } from "./encoding";
-import { buildPrint, freshestSnapshot, type Snapshot } from "./methodology";
+import { buildPrint, freshestSnapshot, parseCsvSnapshot, type Snapshot } from "./methodology";
 
 /// Monad testnet, from the SDK's own chain-selector table.
 export const MONAD_TESTNET_SELECTOR = 2183018362218727504n;
@@ -29,8 +29,9 @@ export const MONAD_TESTNET_SELECTOR = 2183018362218727504n;
 export type Config = {
   /// Address of IngotIndexReceiver on Monad.
   receiver: `0x${string}`;
-  /// Copies of the venue dataset each node queries independently: the dataset's live API, then its
-  /// GitHub mirror. The mirror can lag by days, so the freshest copy that answers is used.
+  /// Copies of the venue dataset each node queries independently, as `.csv` or JSON. The freshest
+  /// copy that answers is used. CRE caps an HTTP response at 250 KB, which the full JSON exceeds,
+  /// so the config lists the dataset's CSV export.
   feeds: string[];
   /// Cron schedule. Hourly by default; the index's own minInterval is the real floor.
   schedule: string;
@@ -49,8 +50,12 @@ function fetchPriceOnThisNode(nodeRuntime: NodeRuntime<Config>): number {
   for (const url of nodeRuntime.config.feeds) {
     try {
       const response = http.sendRequest(nodeRuntime, { url, method: "GET" }).result();
-      const body = JSON.parse(new TextDecoder().decode(response.body));
-      if (Array.isArray(body?.offers)) snapshots.push(body as Snapshot);
+      const text = new TextDecoder().decode(response.body);
+      if (url.split("?")[0].endsWith(".csv")) snapshots.push(parseCsvSnapshot(text));
+      else {
+        const body = JSON.parse(text);
+        if (Array.isArray(body?.offers)) snapshots.push(body as Snapshot);
+      }
     } catch (error) {
       nodeRuntime.log(`feed ${url} unavailable: ${String(error)}`);
     }

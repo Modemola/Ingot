@@ -1,11 +1,11 @@
-# One-off: find a copy of the price feed small enough for CRE's 250 KB HTTP response limit.
+# One-off: check the CSV feed against the JSON API (same print, under CRE's 250 KB limit).
 name: Probe the price feed
 
 on:
   workflow_dispatch:
   push:
     branches: [claude/focused-allen-ggzad1]
-    paths: [.github/workflows/probe-feed.yml]
+    paths: [.github/workflows/probe-feed.yml, oracle/compare-feeds.ts]
 
 permissions:
   contents: read
@@ -15,21 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Candidates
-        run: |
-          get() { printf '%-95s ' "$1"; curl -sSL -m 25 -A ingot-index-keeper -H 'accept-encoding: identity' -o body -w "%{http_code} %{content_type} %{size_download}B" "$1" || true; printf '  %s\n' "$(jq -r '"offers=\((.offers // .data // .prices // []) | length) gen=\(.generated_at // .generatedAt // "-")"' body 2>/dev/null | head -1)"; }
-          B=https://gpurentalprices.com
-          for q in "?gpu=h100" "?gpu=h100-sxm" "?model=h100" "?filter=h100" "?gpus=h100" "?kind=on-demand" "?q=h100"; do get "$B/api/latest.json$q"; done
-          for p in /api/h100.json /api/latest/h100.json /api/gpus/h100.json /api/prices/h100.json /api/gpu/h100.json /api/h100/latest.json /api/latest-h100.json /api/index.json /api/summary.json /api/stats.json /api/health.json /api/errata.json /gpu-prices.csv /statistics-matched.csv; do get "$B$p"; done
-          echo; echo "== /gpu-prices.csv head"; curl -sSL -m 25 $B/gpu-prices.csv | head -5
-          echo; echo "== H100 rows only, as JSON"; curl -sSL -m 25 $B/api/latest.json | jq -c '{generated_at, offers: [.offers[] | select(.gpu|ascii_downcase|startswith("h100"))]}' | wc -c
-          echo; echo "== API docs page"; curl -sSL -m 25 $B/api-prices -o docs.html; grep -oE '(/api/[A-Za-z0-9/_.{}:-]*(\?[A-Za-z0-9_=&{}.-]*)?)' docs.html | sort -u | head -40
-          python3 - <<'PY'
-          import re, html
-          t = open("docs.html", encoding="utf-8", errors="ignore").read()
-          t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=re.S)
-          t = html.unescape(re.sub(r"<[^>]+>", " ", t))
-          t = re.sub(r"\s+", " ", t)
-          for m in re.finditer(r".{0,220}(api|endpoint|json|query|param|filter)[^.]{0,220}", t, flags=re.I):
-              print("-", m.group(0)[:440])
-          PY
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - working-directory: oracle
+        run: pnpm install > /dev/null && npx tsx compare-feeds.ts
