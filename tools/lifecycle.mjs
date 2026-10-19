@@ -102,7 +102,7 @@ async function chainTime(rpc) {
 const word = (hex, i) => BigInt("0x" + hex.slice(2 + i * 64, 2 + (i + 1) * 64));
 
 /// `Series` is a static tuple: listedAt, windowStart, expiry, settled, basisBps, settlementPrice,
-/// longOpenInterest — one word each.
+/// longOpenInterest: one word each.
 export function decodeSeries(id, hex) {
   return {
     id,

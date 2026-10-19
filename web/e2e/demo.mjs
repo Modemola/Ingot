@@ -189,7 +189,7 @@ const nav = (name) => page.locator("header").getByRole("link", { name }).first()
 
 let step = "start";
 try {
-  // 1 — the landing page
+  // 1: the landing page
   step = "landing";
   await page.goto(BASE_URL, { waitUntil: "load" });
   await rest(2500);
@@ -208,7 +208,7 @@ try {
   }
   await rest(1200);
 
-  // 2 — the terminal, a fresh wallet, test USDC
+  // 2: the terminal, a fresh wallet, test USDC
   step = "trade";
   mark("to-trade");
   await go(/^trade$/i, "Open a position");
@@ -291,7 +291,7 @@ try {
     await rest(1500);
   }
 
-  // 3 — hedged credit
+  // 3: hedged credit
   step = "credit";
   mark("to-credit");
   await go(/^credit$/i, "Draw against an offtake");
@@ -353,7 +353,7 @@ try {
   mark("sweep-done");
   await rest(3000);
 
-  // 4 — the underwriter vault
+  // 4: the underwriter vault
   step = "underwrite";
   mark("to-underwrite");
   await go(/^underwrite$/i, "Take the other side");
@@ -373,7 +373,7 @@ try {
   mark("vault-deposited");
   await rest(4000);
 
-  // 5 — close the trade
+  // 5: close the trade
   step = "close";
   mark("to-close");
   await go(/^trade$/i, "Your position");

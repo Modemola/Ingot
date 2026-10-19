@@ -7,7 +7,7 @@ import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 ///
 /// Software rendering counts as no. A browser whose GPU is blocklisted still hands out a WebGL
 /// context, backed by SwiftShader or llvmpipe on the CPU, and the scenes here would then run at a
-/// frame or two a second while blocking the main thread — a frozen page is worse than a drawn one.
+/// frame or two a second while blocking the main thread: a frozen page is worse than a drawn one.
 function supportsWebGL(): boolean {
   try {
     const canvas = document.createElement("canvas");
@@ -45,8 +45,8 @@ class SceneBoundary extends Component<{ fallback: ReactNode; children: ReactNode
 
 /// A 3D scene that can never take the page down with it, and never slows the first paint.
 ///
-/// Without this, a browser that cannot create a WebGL context — a blocked GPU, a locked-down
-/// corporate laptop, some privacy browsers — threw inside three.js, and the error unmounted the
+/// Without this, a browser that cannot create a WebGL context (a blocked GPU, a locked-down
+/// corporate laptop, some privacy browsers) threw inside three.js, and the error unmounted the
 /// whole landing page. Now the scene is only mounted where WebGL exists, any failure inside it is
 /// caught here, and either way the visitor sees a drawn fallback instead.
 ///

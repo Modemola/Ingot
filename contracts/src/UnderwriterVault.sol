@@ -70,7 +70,7 @@ contract UnderwriterVault is ERC20, Ownable, ReentrancyGuard {
     ///      its inventory is worth nothing to new depositors, not a negative amount.
     function totalAssets() public view returns (uint256) {
         int256 total = market.equity(address(this)) + usdc.balanceOf(address(this)).toInt256();
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         return total > 0 ? uint256(total) : 0;
     }
 
@@ -80,7 +80,7 @@ contract UnderwriterVault is ERC20, Ownable, ReentrancyGuard {
     function availableLiquidity() public view returns (uint256) {
         uint256 free = market.freeCollateral(address(this));
         int256 cash = market.balanceOf(address(this));
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         uint256 withdrawable = cash > 0 ? uint256(cash) : 0;
         return (free < withdrawable ? free : withdrawable) + usdc.balanceOf(address(this));
     }

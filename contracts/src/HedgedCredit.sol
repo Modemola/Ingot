@@ -19,8 +19,8 @@ import {Units} from "./libraries/Units.sol";
 ///
 ///          H * S  +  H * (F - S)  =  H * F
 ///
-///      Fixed, whatever the index does. The borrower stops carrying rental-rate risk, and — the
-///      part that matters commercially — the lender stops underwriting a GPU price forecast and
+///      Fixed, whatever the index does. The borrower stops carrying rental-rate risk and (the
+///      part that matters commercially) the lender stops underwriting a GPU price forecast and
 ///      starts underwriting a known number.
 ///
 ///      Today a lender cannot do this. They can ask the borrower to go hedge somewhere else and
@@ -32,12 +32,12 @@ import {Units} from "./libraries/Units.sol";
 ///      How that shows up in the accounting: the pool holds the short, so its margin equity moves
 ///      with the index. The borrower's obligation is `debt - hedgePnl`, which moves by exactly the
 ///      same amount in the opposite direction. `totalAssets()` computes both explicitly so the
-///      cancellation is visible in the code rather than asserted in a pitch — and the test suite
+///      cancellation is visible in the code rather than asserted in a pitch, and the test suite
 ///      pins it across a +/-60% index range.
 ///
 ///      One refinement the data forced. An operator's rate is not the index: measured across
 ///      23 providers over 78 days of posted H100 rates, provider levels sit anywhere from 45%
-///      below the index to 237% above it. What they do share is movement — median tracking
+///      below the index to 237% above it. What they do share is movement: median tracking
 ///      error of 3.1%. So a hedge sized 1:1 on raw GPU-hours over-hedges a discount operator by
 ///      nearly a factor of two, and the residual is not small. Each loan therefore carries a
 ///      basis ratio, and the hedge is sized `offtake x basis`, which is also the quantity the
@@ -93,7 +93,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
     /// @notice Ceiling on a loan's basis ratio.
     ///
     /// @dev The ratio is asserted by the borrower, not proven, and it scales the advance
-    ///      directly — so it is the one self-reported input that can be used to borrow against
+    ///      directly, so it is the one self-reported input that can be used to borrow against
     ///      revenue that does not exist. Measured across 23 providers over 78 days the highest
     ///      real level was +237% of the index (AWS), so the ceiling sits just above that.
     ///      Anything higher is not a hedger and should be underwritten by hand.
@@ -186,7 +186,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
         int256 receivables = totalReceivable();
 
         int256 total = idle + hedgeEquity + receivables;
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         return total > 0 ? uint256(total) : 0;
     }
 
@@ -236,7 +236,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
     ///
     /// @dev This is the comparison the product exists to make, so it is a contract view rather than
     ///      a slide. Hedged, the borrower's resources are `hours * forward` no matter where the
-    ///      index lands, and since LTV is below 100% those resources always cover the debt — the
+    ///      index lands, and since LTV is below 100% those resources always cover the debt: the
     ///      lender is made whole at every settlement price. Unhedged, the borrower's resources are
     ///      `hours * settlement`; when rates fall far enough that figure drops through the debt and
     ///      the lender eats the difference.
@@ -269,7 +269,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
         unhedgedResources = Units.absNotional(loan.hedgeSize.toInt256(), settlementPrice);
 
         int256 hedged = unhedgedResources.toInt256() + hedgePnl;
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         hedgedResources = hedged > 0 ? uint256(hedged) : 0;
 
         uint256 debt = loan.principal + loan.interest;
@@ -459,7 +459,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
 
     /// @notice Settle a matured loan: realize the hedge, net it against the debt, square up.
     /// @dev If the hedge gained, the borrower owes less by exactly that much. If it lost, they owe
-    ///      more — and their offtake revenue rose by the same amount to pay for it.
+    ///      more, and their offtake revenue rose by the same amount to pay for it.
     function close(uint256 loanId) external nonReentrant {
         Loan storage loan = _loans[loanId];
         if (loan.borrower != msg.sender) revert NotBorrower();
@@ -480,7 +480,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
         // The borrower's margin is applied first; anything left over goes back to them.
         uint256 marginReturned;
         if (netOwed > 0) {
-            // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+            // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
             uint256 owed = uint256(netOwed);
             if (owed > margin) {
                 usdc.safeTransferFrom(msg.sender, address(this), owed - margin);
@@ -488,7 +488,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
                 marginReturned = margin - owed;
             }
         } else {
-            // forge-lint: disable-next-line(unsafe-typecast) — netOwed is non-positive here.
+            // forge-lint: disable-next-line(unsafe-typecast): netOwed is non-positive here.
             marginReturned = margin + uint256(-netOwed);
         }
 
@@ -528,7 +528,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
         emit LoanSeized(loanId, msg.sender, netOwed - margin.toInt256());
     }
 
-    /// @dev Pull margin back out of the market once a hedge is closed — but only what the
+    /// @dev Pull margin back out of the market once a hedge is closed, but only what the
     ///      remaining hedges do not need. Withdrawing everything above the market's initial margin
     ///      would strip the `hedgeMarginBps` buffer from every other open loan at once, leaving
     ///      their hedges one ordinary move from liquidation.
@@ -543,7 +543,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
         if (spare > cash) spare = cash;
         int256 free = market.freeCollateral(address(this)).toInt256();
         if (spare > free) spare = free;
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         if (spare > 0) market.withdraw(uint256(spare));
     }
 
@@ -561,7 +561,7 @@ contract HedgedCredit is ERC20, Ownable, ReentrancyGuard {
     function _coverMarketDeficit() internal {
         int256 cash = market.balanceOf(address(this));
         if (cash >= 0) return;
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded negative.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded negative.
         uint256 deficit = uint256(-cash);
         uint256 available = availableLiquidity();
         uint256 amount = deficit < available ? deficit : available;

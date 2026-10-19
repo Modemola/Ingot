@@ -25,7 +25,7 @@ export function NotDeployed() {
     ? isConnected
       ? "Your wallet is on a network Ingot is not deployed to. Switch to Monad testnet."
       : "Connect a wallet on Monad testnet to trade."
-    : "This build of Ingot has no contract addresses for Monad testnet yet. Nothing is wrong with your wallet or network — the deployment step has not run.";
+    : "This build of Ingot has no contract addresses for Monad testnet yet. Nothing is wrong with your wallet or network: the deployment step has not run.";
 
   return (
     <div className="space-y-10">

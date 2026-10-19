@@ -19,7 +19,7 @@ export const Vault: React.FC = () => {
   return (
     <AbsoluteFill style={{ opacity: 1 - out }}>
       <div style={{ position: "absolute", left: 120, top: 70 }}>
-        <Eyebrow t={t} at={s.start + 0.3}>V — The other side</Eyebrow>
+        <Eyebrow t={t} at={s.start + 0.3}>V: The other side</Eyebrow>
       </div>
       <div style={{ position: "absolute", left: 120, top: 104 }}>
         <Rise text="The vault takes the other side." t={t} at={L17.start} size={52} accent={["other", "side."]} />

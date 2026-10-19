@@ -11,7 +11,7 @@ import { useDeployment } from "@/lib/useIngot";
 import { Button, Field, Row, TextInput } from "./ui";
 
 /// Deposit and withdraw margin. Kept separate from the ticket so the two irreversible
-/// actions — moving money in, and taking risk — are never one click.
+/// actions (moving money in, and taking risk) are never one click.
 export function Collateral({
   balance,
   freeCollateral,
@@ -43,7 +43,7 @@ export function Collateral({
   });
 
   // Only realized cash can leave the market, so what is withdrawable is the smaller of free
-  // collateral and the cash balance — unrealized profit backs margin but is not paid out.
+  // collateral and the cash balance: unrealized profit backs margin but is not paid out.
   const cash = balance === undefined ? undefined : balance > 0n ? balance : 0n;
   const withdrawable =
     freeCollateral === undefined || cash === undefined ? undefined : freeCollateral < cash ? freeCollateral : cash;
@@ -67,11 +67,11 @@ export function Collateral({
 
   return (
     <div>
-      <Row label="Wallet USDC" value={walletBalance === undefined ? "—" : formatUsdc(walletBalance)} />
-      <Row label="Posted as margin" value={balance === undefined ? "—" : formatUsdc(balance)} />
+      <Row label="Wallet USDC" value={walletBalance === undefined ? "…" : formatUsdc(walletBalance)} />
+      <Row label="Posted as margin" value={balance === undefined ? "…" : formatUsdc(balance)} />
       <Row
         label="Withdrawable"
-        value={withdrawable === undefined ? "—" : formatUsdc(withdrawable)}
+        value={withdrawable === undefined ? "…" : formatUsdc(withdrawable)}
         hint="realized cash above margin"
         tone="muted"
       />
@@ -99,7 +99,7 @@ export function Collateral({
                 deployment &&
                 tx.send(
                   { address: deployment.usdc, abi: mockUSDCAbi, functionName: "approve", args: [deployment.market, maxUint256] },
-                  { label: "Approve USDC for the market", success: "Approved — now deposit" },
+                  { label: "Approve USDC for the market", success: "Approved. Now deposit" },
                 )
               }
             >
@@ -121,7 +121,7 @@ export function Collateral({
         </div>
 
         {overWallet && !overWithdrawable && (
-          <p className="text-[12px] text-ink-muted">More than your wallet holds — you can still withdraw this much.</p>
+          <p className="text-[12px] text-ink-muted">More than your wallet holds: you can still withdraw this much.</p>
         )}
         {overWallet && overWithdrawable && <p className="text-[12px] text-critical">More than your wallet holds or can withdraw.</p>}
         {tx.status === "error" && <p className="break-words text-[12px] text-critical">{tx.error}</p>}

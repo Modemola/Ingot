@@ -1,7 +1,7 @@
 /// Report-body encoding, shared by the CRE workflow and the Node simulator.
 ///
 /// Deliberately free of any `@chainlink/cre-sdk` import. The SDK types Node's `fs` and friends as
-/// `never`, globally, because a workflow runs in a WASM sandbox with no filesystem — so anything
+/// `never`, globally, because a workflow runs in a WASM sandbox with no filesystem, so anything
 /// that imports the SDK inherits the sandbox's restrictions. The simulator runs in Node and needs
 /// `fs`; keeping these helpers SDK-free is what lets both environments use one implementation.
 
@@ -9,7 +9,7 @@
 /// workflow aimed at our receiver is rejected on chain.
 export const WORKFLOW_TAG = "ingot-h100-index-v1";
 
-/// ABI-encode `(bytes32, uint64, uint256, uint32, uint16)` — the body IngotIndexReceiver decodes.
+/// ABI-encode `(bytes32, uint64, uint256, uint32, uint16)`: the body IngotIndexReceiver decodes.
 /// Hand-rolled because the workflow runs in a restricted WASM sandbox without an ABI library.
 export function encodeReport(input: {
   tag: string;

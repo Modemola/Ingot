@@ -14,7 +14,7 @@ const BASE = "gloss relative px-4 py-2 font-mono text-[10.5px] uppercase trackin
 /// The wallets this browser can connect with, in the order a visitor should see them.
 ///
 /// Extension wallets that announce themselves (EIP-6963) each get their own entry, by name and
-/// icon. The generic `window.ethereum` connector is offered only when nothing announced itself —
+/// icon. The generic `window.ethereum` connector is offered only when nothing announced itself:
 /// otherwise it would duplicate one of them, usually under whichever name won the race to
 /// `window.ethereum` (which is how every wallet ended up looking like MetaMask).
 function useWalletOptions() {
@@ -106,7 +106,7 @@ export function ConnectButton() {
   );
 }
 
-/// Wallet apps whose built-in browser can open this page directly — the way in on a phone, where
+/// Wallet apps whose built-in browser can open this page directly: the way in on a phone, where
 /// there is no extension to find.
 function appLinks(url: string) {
   const bare = url.replace(/^https?:\/\//, "");
@@ -229,11 +229,11 @@ function WalletPicker({
                   ))}
                 </div>
                 <p className="mt-3 text-[12px] leading-relaxed text-ink-muted">
-                  On a computer, install any EVM wallet extension —{" "}
+                  On a computer, install any EVM wallet extension (
                   <a href="https://ethereum.org/en/wallets/find-wallet/" target="_blank" rel="noreferrer" className="text-gold/80 hover:text-gold">
                     find one here
-                  </a>{" "}
-                  — and reload.
+                  </a>
+                  ) and reload.
                 </p>
               </div>
             )}

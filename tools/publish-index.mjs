@@ -1,7 +1,7 @@
 // Compute the current Ingot H100 index print from public rental-rate data.
 //
 // Pure computation: fetches the source, applies the published methodology, and writes the
-// print to stdout as JSON. It never touches a key — signing is the caller's job — so this
+// print to stdout as JSON. It never touches a key (signing is the caller's job), so this
 // can be run and checked by anyone.
 //
 //   node tools/publish-index.mjs            # human-readable
@@ -11,7 +11,7 @@
 //   1. Per provider: the median across that provider's H100 SKUs, so a provider listing many
 //      SKUs cannot dominate the print.
 //   2. Across providers: a 10% trimmed mean of those medians.
-// Universe is on-demand and secure capacity only — spot, community and serverless are
+// Universe is on-demand and secure capacity only: spot, community and serverless are
 // different products with different availability, and mixing them makes the index meaningless.
 
 /// The dataset's canonical live API first, then its GitHub mirror. Both serve the same snapshot
@@ -61,7 +61,7 @@ export function computePrint(snapshot) {
 
   if (byProvider.size < MIN_SOURCES) {
     throw new Error(
-      `only ${byProvider.size} providers in the snapshot, need at least ${MIN_SOURCES} — refusing to publish`,
+      `only ${byProvider.size} providers in the snapshot, need at least ${MIN_SOURCES}: refusing to publish`,
     );
   }
 
@@ -84,21 +84,21 @@ export const MAX_SOURCE_AGE_HOURS = 36;
 
 export function assertFresh(snapshot, now = Date.now()) {
   const generated = Date.parse(snapshot.generated_at ?? "");
-  if (Number.isNaN(generated)) throw new Error("snapshot has no generated_at — refusing to publish");
+  if (Number.isNaN(generated)) throw new Error("snapshot has no generated_at: refusing to publish");
   const ageHours = (now - generated) / 3_600_000;
   if (ageHours > MAX_SOURCE_AGE_HOURS) {
     throw new Error(
-      `snapshot is ${ageHours.toFixed(1)}h old (limit ${MAX_SOURCE_AGE_HOURS}h) — refusing to publish stale data`,
+      `snapshot is ${ageHours.toFixed(1)}h old (limit ${MAX_SOURCE_AGE_HOURS}h): refusing to publish stale data`,
     );
   }
-  if (ageHours < -1) throw new Error("snapshot is dated in the future — refusing to publish");
+  if (ageHours < -1) throw new Error("snapshot is dated in the future: refusing to publish");
 }
 
 /// The most recently generated of the snapshots that arrived. Freshness is still checked after:
 /// picking the newest of several stale copies must not make stale data publishable.
 export function pickFreshest(snapshots) {
   const dated = snapshots.filter((s) => s && !Number.isNaN(Date.parse(s.generated_at ?? "")));
-  if (!dated.length) throw new Error("no source returned a dated snapshot — refusing to publish");
+  if (!dated.length) throw new Error("no source returned a dated snapshot: refusing to publish");
   return dated.reduce((a, b) => (Date.parse(b.generated_at) > Date.parse(a.generated_at) ? b : a));
 }
 
@@ -122,7 +122,7 @@ async function main() {
     return;
   }
 
-  console.log(`Ingot H100 index — ${print.date}`);
+  console.log(`Ingot H100 index: ${print.date}`);
   console.log(`  price        $${print.price.toFixed(4)} / GPU-hour`);
   console.log(`  price (wei)  ${print.priceWei}`);
   console.log(`  built from   ${print.sampleCount} quotes across ${print.sourceCount} venues`);

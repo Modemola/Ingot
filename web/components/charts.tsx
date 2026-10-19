@@ -4,8 +4,8 @@ import { motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useId, useMemo, useState } from "react";
 
 /// Charts in the Molten Glass language: a gradient stroke that glows, light pooled beneath the
-/// line, and a draw-in the first time the chart is seen. Interrogable — crosshair and tooltip on
-/// hover — because a chart that cannot be questioned is a picture of a chart.
+/// line, and a draw-in the first time the chart is seen. Interrogable, crosshair and tooltip on
+/// hover, because a chart that cannot be questioned is a picture of a chart.
 
 const INK_MUTED = "#867d70";
 const GRID = "rgba(243,236,223,0.06)";
@@ -26,7 +26,7 @@ function scale(value: number, from: [number, number], to: [number, number]): num
 }
 
 /// A smooth path through the points (monotone-ish Catmull-Rom), so the line reads as liquid
-/// rather than as a polyline — without overshooting between samples.
+/// rather than as a polyline, without overshooting between samples.
 function smoothPath(points: Point[]): string {
   if (points.length < 2) return "";
   let d = `M${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
@@ -69,7 +69,7 @@ function nearestIndex(points: Point[], x: number) {
 /// Draw at the container's real width so labels stay legible on a phone instead of being scaled
 /// down with the whole drawing. The prop width is what the server renders before measuring.
 function useFit(defaultWidth: number, defaultHeight: number) {
-  // A callback ref held in state, so the observer follows the wrapper whenever it is replaced —
+  // A callback ref held in state, so the observer follows the wrapper whenever it is replaced:
   // the placeholder and the drawn chart are different elements.
   const [node, setNode] = useState<HTMLDivElement | null>(null);
   const [size, setSize] = useState({ width: defaultWidth, height: defaultHeight });

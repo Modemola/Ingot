@@ -45,7 +45,7 @@ export const anvil = defineChain({
 /// time, so a production build never configures, orders or falls back to the local chain.
 ///
 /// Note the claim is behavioural. The chain *definition* above is still in the bundle, because the
-/// generated address map keys on `anvil.id` — so grepping the output for 127.0.0.1 will find it.
+/// generated address map keys on `anvil.id`, so grepping the output for 127.0.0.1 will find it.
 /// What was verified is that a production build makes no request to it: a browser session across
 /// all three pages recorded zero outbound requests.
 export const LOCAL_CHAIN_ENABLED =

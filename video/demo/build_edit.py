@@ -154,7 +154,7 @@ out = {
     "address": ev["address"],
 }
 (ROOT / "src/demo-edit.json").write_text(json.dumps(out, indent=1))
-print(f"cut ends {end:.2f}s; end card {outro:.2f}–{TOTAL}s; unallocated {spare:.2f}s")
+print(f"cut ends {end:.2f}s; end card {outro:.2f} to {TOTAL}s; unallocated {spare:.2f}s")
 for c in clips:
-    print(f"  {c['start']:7.2f}–{c['end']:7.2f}  src {c['src']:7.2f}  ×{c['rate']:.2f}")
+    print(f"  {c['start']:7.2f} to {c['end']:7.2f}  src {c['src']:7.2f}  ×{c['rate']:.2f}")
 print(f"{len(txs)} transactions, {sum(1 for x in txs if x['at'] < 0)} outside the cut")

@@ -4,7 +4,7 @@ The series in `contracts/data/h100_index.csv` is built by `tools/build_index.py`
 [gpu-rental-prices](https://github.com/adriannutiu/gpu-rental-prices) dataset (CC BY 4.0): daily
 snapshots of posted rental rates across 30+ providers, 2026-07-06 to 2026-09-21.
 
-**Methodology.** Per provider per day, the median across that provider's H100 SKUs — one
+**Methodology.** Per provider per day, the median across that provider's H100 SKUs: one
 observation per provider, so a provider listing many SKUs cannot dominate the print. Then a 10%
 trimmed mean across provider medians. On-demand and secure capacity only; spot, community and
 serverless are excluded as different products.
@@ -16,10 +16,10 @@ Reproduce with `python3 tools/build_index.py <snapshot-dir> contracts/data/h100_
 | | |
 |---|---|
 | Days | 78, no gaps |
-| Index range | $3.1244 – $3.9075 / GPU-hour |
+| Index range | $3.1244 to $3.9075 / GPU-hour |
 | Mean | $3.6399 |
 | Standard deviation | $0.1029 (2.83% of mean) |
-| Daily volatility | 3.13% — **59.8% annualised** |
+| Daily volatility | 3.13%: **59.8% annualised** |
 | Max drawdown | −10.19% |
 | Peak to trough | 25% |
 
@@ -34,9 +34,9 @@ cheapest. At the widest, 6.18x. Every day, all 78 days.
 ## Basis: the finding that changed the product
 
 Measured across the 23 providers present on 60+ days, provider rates sit anywhere from **45% below
-the index to 237% above it** — hyperscalers at the top, neoclouds at the bottom.
+the index to 237% above it**: hyperscalers at the top, neoclouds at the bottom.
 
-But the *tracking error* — the standard deviation of each provider's basis against the index — has
+But the *tracking error*, the standard deviation of each provider's basis against the index, has
 a **median of 3.1%**. Levels differ enormously; movement does not.
 
 ```
@@ -60,7 +60,7 @@ Reproduce with `python3 tools/analyse_basis.py <snapshot-dir>`.
 
 ## The backtest, and its negative result
 
-`contracts/test/Backtest.t.sol` replays the series through the real contracts — real index, real
+`contracts/test/Backtest.t.sol` replays the series through the real contracts: real index, real
 market, real credit pool, real settlement. It walks a 30-day contract forward, rolling every
 fortnight, opening a hedged loan at each listing and settling at expiry.
 
@@ -80,14 +80,14 @@ who ran the numbers would find out.
 
 The reason nothing broke is that the terms are conservative. At a 70% advance with the borrower
 posting 20% margin, the first cohort's unhedged lender does not take a loss until the rate settles
-at **$1.661** against a strike of **$3.873** — a **57.1% cushion**. The window's worst settlement
+at **$1.661** against a strike of **$3.873**: a **57.1% cushion**. The window's worst settlement
 was **5.9%** below its strike.
 
 That cushion is not free. It is the advance rate the borrower does not get.
 
 The hedged lender has no cushion because it needs none: recovery equals the debt at every
 settlement price tested, from the strike down to a tenth of it. The product is not insurance
-against a crash that may not come — it is the removal of the cushion, and therefore a larger
+against a crash that may not come: it is the removal of the cushion, and therefore a larger
 advance against the same risk appetite.
 
 ## Honest limits

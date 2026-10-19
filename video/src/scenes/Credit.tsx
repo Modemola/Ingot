@@ -69,7 +69,7 @@ export const Credit: React.FC = () => {
   // L13: the one-transaction diagram
   const dia = tw(t, L12.end + 0.4, L12.end + 1.2, 0, 1, OUT) * (1 - tw(t, L14.start - 0.6, L14.start));
   const d0 = L12.end + 1.0;
-  // L14–L16: recovery
+  // L14 to L16: recovery
   const rec = tw(t, L14.start - 0.3, L14.start + 0.6, 0, 1, OUT) * (1 - tw(t, s.end - 0.8, s.end));
   const sweep = tw(t, L14.start + 0.8, L15.start + 5.6, 0, 1, INOUT) - 0.5 * tw(t, L16.start + 0.6, L16.start + 6.0, 0, 1, INOUT);
   const frame = Math.round(sweep * 219);
@@ -81,7 +81,7 @@ export const Credit: React.FC = () => {
     <AbsoluteFill>
       {/* L11 */}
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: head }}>
-        <Eyebrow t={t} at={s.start + 0.2}>IV — Hedged credit</Eyebrow>
+        <Eyebrow t={t} at={s.start + 0.2}>IV: Hedged credit</Eyebrow>
         <div style={{ marginTop: 30 }}>
           <Rise text="Here's what the market is for." t={t} at={L11.start} size={104} align="center" accent={["for."]} />
         </div>
@@ -164,7 +164,7 @@ export const Credit: React.FC = () => {
         </div>
       </AbsoluteFill>
 
-      {/* L14–L16: sweep the settlement rate */}
+      {/* L14 to L16: sweep the settlement rate */}
       <AbsoluteFill style={{ opacity: rec }}>
         <div style={{ position: "absolute", left: RX, top: RY, width: RW, height: 800, overflow: "hidden", borderRadius: 4, boxShadow: "0 50px 120px -30px rgba(0,0,0,0.95), 0 0 90px -20px rgba(232,182,97,0.16)", transform: `scale(${recZoom})`, transformOrigin: "50% 40%" }}>
           <Img src={staticFile(`footage/recovery/${String(frame).padStart(4, "0")}.jpg`)} style={{ width: RW, transform: `translateY(${-ry(206)}px)` }} />

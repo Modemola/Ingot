@@ -175,22 +175,22 @@ export function Ticket({
       </div>
 
       <div className="mt-5 border-t border-hairline pt-1">
-        <Row label="Mark" value={mark === undefined ? "—" : formatPrice(mark)} />
+        <Row label="Mark" value={mark === undefined ? "…" : formatPrice(mark)} />
         <Row
           label="Your fill"
-          value={quoted === undefined ? "—" : formatPrice(quoted)}
+          value={quoted === undefined ? "…" : formatPrice(quoted)}
           hint={slippage === undefined ? undefined : `(${slippage > 0 ? "+" : ""}${slippage.toFixed(2)}%)`}
         />
-        <Row label="Notional" value={notional === undefined ? "—" : formatUsdc(notional)} />
+        <Row label="Notional" value={notional === undefined ? "…" : formatUsdc(notional)} />
         <Row
           label="Margin locked"
-          value={marginRequired === undefined ? "—" : formatUsdc(marginRequired)}
+          value={marginRequired === undefined ? "…" : formatUsdc(marginRequired)}
           tone={insufficient ? "critical" : "default"}
         />
-        <Row label="Taker fee" value={fee === undefined ? "—" : formatUsdc(fee)} tone="muted" />
+        <Row label="Taker fee" value={fee === undefined ? "…" : formatUsdc(fee)} tone="muted" />
         <Row
           label={side === "long" ? "Max fill accepted" : "Min fill accepted"}
-          value={priceLimit === undefined ? "—" : formatPrice(priceLimit)}
+          value={priceLimit === undefined ? "…" : formatPrice(priceLimit)}
           hint="enforced on chain"
           tone="muted"
         />

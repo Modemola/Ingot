@@ -93,7 +93,7 @@ export function Thesis() {
   return (
     <section id="thesis" className="relative mx-auto max-w-6xl scroll-mt-24 px-4 pt-32 sm:px-6">
       <Reveal>
-        <Label>I — The problem</Label>
+        <Label>I: The problem</Label>
       </Reveal>
       <h2 className="text-balance mt-5 max-w-4xl font-display text-[clamp(2.3rem,5.4vw,4.6rem)] font-light leading-[1.03] tracking-[-0.02em]">
         <SplitWords text="The most important price in AI has no market." wordClassName={goldWords("no", "market")} />
@@ -190,7 +190,7 @@ export function IndexStage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(9,8,7,0.85))]" />
 
         <div className="pointer-events-none relative z-10 mx-auto flex h-full max-w-6xl flex-col px-4 pt-24 sm:px-6 sm:pt-28">
-          <Label>II — The index</Label>
+          <Label>II: The index</Label>
           <div className="relative mt-4 h-[9rem] max-w-xl sm:h-[11rem]">
             {captions.map((c, i) => (
               <motion.div
@@ -243,7 +243,7 @@ export function IndexStory() {
       <div className="grid items-end gap-8 lg:grid-cols-[1fr_auto]">
         <div>
           <Reveal>
-            <Label>III — 78 days</Label>
+            <Label>III: 78 days</Label>
           </Reveal>
           <h2 className="text-balance mt-5 font-display text-[clamp(2.2rem,4.8vw,4rem)] font-light leading-[1.04] tracking-[-0.02em]">
             <SplitWords text="Real prices, not a simulation." wordClassName={goldWords("Real", "prices")} />
@@ -312,7 +312,7 @@ export function HowItWorks() {
   return (
     <section className="relative mx-auto max-w-6xl px-4 pt-36 sm:px-6">
       <Reveal>
-        <Label>IV — How it works</Label>
+        <Label>IV: How it works</Label>
       </Reveal>
       <h2 className="mt-5 max-w-4xl text-balance font-display text-[clamp(2.2rem,4.8vw,4rem)] font-light leading-[1.04] tracking-[-0.02em]">
         <SplitWords text="Three layers. One bar of value." wordClassName={goldWords("One", "bar", "of", "value")} />
@@ -368,7 +368,7 @@ export function TheCase() {
       <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
         <div>
           <Reveal>
-            <Label>VI — The case</Label>
+            <Label>VI: The case</Label>
           </Reveal>
           <h2 className="text-balance mt-5 font-display text-[clamp(2.2rem,4.6vw,3.8rem)] font-light leading-[1.04] tracking-[-0.02em]">
             <SplitWords text="Hedged, the lender is whole at every rate." wordClassName={goldWords("whole")} />
@@ -459,7 +459,7 @@ export function BuiltWith() {
   return (
     <section className="relative mx-auto max-w-6xl px-4 pt-36 sm:px-6">
       <Reveal>
-        <Label>VII — Built with</Label>
+        <Label>VII: Built with</Label>
       </Reveal>
       <div className="relative mt-8 grid gap-px border border-hairline bg-hairline md:grid-cols-3">
         <Hallmarks />

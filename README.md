@@ -1,10 +1,10 @@
 # Ingot
 
-![Ingot — compute, priced & hedged. The H100 index on a split-flap board, and eight GPU providers' prices against one index.](docs/brand/ingot-cover.png)
+![Ingot: compute, priced & hedged. The H100 index on a split-flap board, and eight GPU providers' prices against one index.](docs/brand/ingot-cover.png)
 
-**A cash-settled market for compute, and the credit layer it unlocks.**
+**A cash-settled market for compute, and hedged credit built on top of it.**
 
-Built for Metropolis — Onchain Finance & Trading track. Live on Monad testnet:
+Built for Metropolis: Onchain Finance & Trading track. Live on Monad testnet:
 **<https://ingotx.vercel.app>** · five-minute walkthrough in [docs/JUDGES.md](docs/JUDGES.md).
 
 ---
@@ -14,16 +14,16 @@ Built for Metropolis — Onchain Finance & Trading track. Live on Monad testnet:
 Compute is one of the most valuable commodities in the world and it trades like a private
 handshake. NVIDIA H100 rentals have been observed between **$0.72 and $15.14 per GPU-hour on the
 same day** across two dozen marketplaces. There is no forward curve, no hedge, and almost no
-secondary market — publicly documented secondary GPU transactions total roughly **$26.3M**.
+secondary market: publicly documented secondary GPU transactions total roughly **$26.3M**.
 
 That missing hedge has a price, and it lands on credit. CoreWeave borrows at **+225bps against a
-hyperscaler counterparty and +450–550bps against a weaker one — on identical hardware.** The
+hyperscaler counterparty and +450 to 550bps against a weaker one, on identical hardware.** The
 spread is not hardware risk. It is unhedgeable cash-flow risk, and it is repriced on tens of
 billions of dollars of GPU-backed debt.
 
 On **October 5, 2026**, CME lists Silicon Data H100 and B200 Rental Index futures: 730 GPU-hours
 per contract, financially settled. Compute is now, officially, a commodity. But that contract is
-NYMEX-cleared, FCM-gated and US-regulated — closed to the neoclouds, brokers and AI startups who
+NYMEX-cleared, FCM-gated and US-regulated: closed to the neoclouds, brokers and AI startups who
 actually carry the exposure, across 40+ countries.
 
 ## What Ingot is
@@ -33,12 +33,12 @@ actually carry the exposure, across 40+ countries.
    they are settleable, so a bad scrape can be revoked before money moves against it.
 2. **A market.** Cash-settled swaps on that index, in CME-parity 730 GPU-hour lots, with liquidity
    underwritten by a vault rather than by hope.
-3. **A margin engine** that marks continuously against the index instead of once a day — which is
+3. **A margin engine** that marks continuously against the index instead of once a day, which is
    only economical at Monad's sub-cent gas and 800ms finality.
 4. **Hedged credit.** The part that does not exist anywhere, onchain or off: a loan against compute
    revenue where the offsetting hedge is opened *at origination*, so the lender underwrites a fixed
    cash flow instead of a GPU price forecast. The hedge is not a separate product the borrower has
-   to go buy — it is part of the loan.
+   to go buy: it is part of the loan.
 
 ## Product tour
 
@@ -83,11 +83,11 @@ a wallet and testnet gas.
 ## Repository layout
 
 ```
-contracts/      Foundry workspace — index, market, vault, credit
+contracts/      Foundry workspace: index, market, vault, credit
   src/          Contracts
   test/         Test suite
   script/       Deployment and seeding
-web/            Next.js front end — terminal, credit desk, underwriter vault
+web/            Next.js front end: terminal, credit desk, underwriter vault
 oracle/         Chainlink CRE workflow that publishes the index by DON consensus
 indexer/        Envio HyperIndex indexer: trades, both sides of every position, loans, history
 tools/          Index construction, basis analysis, scheduled publisher, brand renderer (tools/brand)
@@ -114,23 +114,23 @@ before anyone connects.
 
 | Component | State |
 |---|---|
-| `IngotIndex` — index oracle | Built, 22 tests passing |
-| `IngotMarket` — swaps, margin, settlement, liquidation | Built, 33 tests passing |
-| `UnderwriterVault` — LP accounting over the vault account | Built, 12 tests passing |
-| `HedgedCredit` — loans with auto-hedge | Built, 29 tests passing |
-| `IngotIndexReceiver` — CRE workflow landing pad | Built, 12 tests passing |
-| Envio indexer — replayed against a recorded contract session | Built, 9 tests passing |
-| Front end — terminal, credit desk, underwriter vault | Built, builds clean |
-| End-to-end — trade, credit and underwrite driven through the UI against a fresh chain | 3 flows passing in CI (`scripts/e2e.sh`) |
+| `IngotIndex`: index oracle | Built, 22 tests passing |
+| `IngotMarket`: swaps, margin, settlement, liquidation | Built, 33 tests passing |
+| `UnderwriterVault`: LP accounting over the vault account | Built, 12 tests passing |
+| `HedgedCredit`: loans with auto-hedge | Built, 29 tests passing |
+| `IngotIndexReceiver`: CRE workflow landing pad | Built, 12 tests passing |
+| Envio indexer: replayed against a recorded contract session | Built, 9 tests passing |
+| Front end: terminal, credit desk, underwriter vault | Built, builds clean |
+| End-to-end: trade, credit and underwrite driven through the UI against a fresh chain | 3 flows passing in CI (`scripts/e2e.sh`) |
 | Backtest over historical rental data | Replayed over 78 days, 3 tests passing |
-| Deploy seed — the real 78-day index history, on chain | Built, 4 tests passing |
-| Keeper — index prints every six hours; lists, settles and realizes contracts as months roll | Built, 17 tests passing |
+| Deploy seed: the real 78-day index history, on chain | Built, 4 tests passing |
+| Keeper: index prints every six hours; lists, settles and realizes contracts as months roll | Built, 17 tests passing |
 
 116 contract tests, 9 indexer tests, 17 keeper tests (index publisher and contract calendar) and 3 end-to-end browser flows, all passing. Three security reviews; every finding is in [docs/SECURITY.md](docs/SECURITY.md) with the test that pins it. Deployed to Monad testnet; addresses in [docs/JUDGES.md](docs/JUDGES.md#contract-addresses).
 
 ## The number that makes the case
 
-A 100,000 GPU-hour monthly offtake, hedged at $2.48/hr, financed at 70% LTV — $175,000 of
+A 100,000 GPU-hour monthly offtake, hedged at $2.48/hr, financed at 70% LTV: $175,000 of
 principal, $183,750 of debt, $60,000 of borrower margin. Recovery by settlement price, straight
 out of `HedgedCredit.project()`:
 
@@ -140,7 +140,7 @@ out of `HedgedCredit.project()`:
 | $1.20/hr | $183,750 | $180,000 |
 | $1.80/hr and above | $183,750 | $183,750 |
 
-At $0.80/hr the unhedged lender is down $43,750 — a quarter of the principal. That is not a
+At $0.80/hr the unhedged lender is down $43,750: a quarter of the principal. That is not a
 contrived stress case: H100 listings have been observed between $0.72 and $15.14 per GPU-hour on
 the same day.
 
@@ -165,11 +165,11 @@ install if any transitive dependency was published too recently:
 ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION
 ```
 
-That is the supply-chain policy doing its job, not a defect here — the offending package is
+That is the supply-chain policy doing its job, not a defect here: the offending package is
 usually `electron-to-chromium`, a Chromium version-mapping data package reached through
 `next → browserslist`, which publishes most days. Deleting and regenerating the lockfile does not
 help: pnpm re-resolves to the same release and rejects it again.
 
 It clears once the package ages past the window. To install before then, add `minimumReleaseAge: 0`
-to `web/pnpm-workspace.yaml` for that one run and take it out afterwards — rather than leaving the
+to `web/pnpm-workspace.yaml` for that one run and take it out afterwards, rather than leaving the
 check disabled for everything.

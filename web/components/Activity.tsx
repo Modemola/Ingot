@@ -41,7 +41,7 @@ function time(seconds: Num) {
 }
 
 /// The trade tape and the vault's book for the front series. The vault never trades directly,
-/// so its inventory is derived by the indexer from every other fill — the contract only
+/// so its inventory is derived by the indexer from every other fill: the contract only
 /// exposes it one account at a time.
 export function MarketActivity({ seriesId }: { seriesId: bigint | undefined }) {
   const { data, isError } = useIndexer<MarketData>("market", MARKET, { series: seriesId?.toString() ?? "" });
@@ -59,17 +59,17 @@ export function MarketActivity({ seriesId }: { seriesId: bigint | undefined }) {
       ) : (
         <div className="grid gap-x-8 gap-y-4 lg:grid-cols-[220px_1fr]">
           <div>
-            <Row label="Vault inventory" value={series ? `${formatLots(inventory)} lots` : "—"} />
+            <Row label="Vault inventory" value={series ? `${formatLots(inventory)} lots` : "…"} />
             <Row
               label="Traders are net"
-              value={series ? (inventory === 0n ? "flat" : inventory < 0n ? "long" : "short") : "—"}
+              value={series ? (inventory === 0n ? "flat" : inventory < 0n ? "long" : "short") : "…"}
             />
-            <Row label="Trades" value={series ? series.tradeCount.toLocaleString() : "—"} />
-            <Row label="Volume" value={series ? formatUsdc(big(series.notionalVolume), 0) : "—"} />
-            <Row label="Traders" value={protocol ? protocol.traders.toLocaleString() : "—"} />
+            <Row label="Trades" value={series ? series.tradeCount.toLocaleString() : "…"} />
+            <Row label="Volume" value={series ? formatUsdc(big(series.notionalVolume), 0) : "…"} />
+            <Row label="Traders" value={protocol ? protocol.traders.toLocaleString() : "…"} />
             <Row
               label="Liquidations"
-              value={protocol ? protocol.liquidations.toLocaleString() : "—"}
+              value={protocol ? protocol.liquidations.toLocaleString() : "…"}
               hint={protocol && big(protocol.badDebt) > 0n ? `${formatUsdc(big(protocol.badDebt), 0)} bad debt` : undefined}
             />
           </div>

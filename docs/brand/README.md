@@ -6,14 +6,14 @@ submission graphics and the product agree.
 
 | File | Use |
 |---|---|
-| `ingot-logo.png` | 1024×1024 square logo — the submission's project logo |
+| `ingot-logo.png` | 1024×1024 square logo: the submission's project logo |
 | `ingot-cover.png` | 1600×900 cover: headline, the index on a split-flap board, eight venues against one index |
 | `ingot-mark.svg` | Vector source, for any size not covered above |
 | `../../web/app/opengraph-image.png` | 1200×630 social preview card |
 
 The palette is "Foundry" (`web/tailwind.config.ts`): warm black `#090807`, bone type `#f3ecdf`,
 one molten-gold accent `#e8b661`. Type is Newsreader for display and Geist / Geist Mono for
-interface and figures — the same font files the app ships.
+interface and figures: the same font files the app ships.
 
 All three PNGs are rendered from HTML by one script, in the app's own fonts:
 

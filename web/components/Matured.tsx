@@ -12,7 +12,7 @@ type Position = { size: bigint; cost: bigint };
 const fmtDate = (seconds: bigint) =>
   new Date(Number(seconds) * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 
-/// Positions the account still holds in contracts other than the front month — in practice, last
+/// Positions the account still holds in contracts other than the front month: in practice, last
 /// month's, after the roll. A settled contract pays out only when the position is realized into
 /// the account's cash; until then the profit backs margin but cannot be withdrawn. Settlement and
 /// realization are both permissionless, so the trader never has to wait on the keeper.
@@ -125,7 +125,7 @@ function MaturedRow({
       <div className="min-w-0">
         <div className="text-[13px] text-ink">
           <span className={long ? "text-good" : "text-critical"}>{long ? "Long" : "Short"}</span> {formatLots(absSize)} lots
-          <span className="text-ink-muted"> · {fmtDate(series.windowStart)}–{fmtDate(series.expiry)}</span>
+          <span className="text-ink-muted"> · {fmtDate(series.windowStart)} to {fmtDate(series.expiry)}</span>
         </div>
         <div className={`mt-0.5 font-mono text-[11px] ${pnl === undefined ? "text-ink-muted" : pnl >= 0n ? "text-good" : "text-critical"}`}>
           {status}

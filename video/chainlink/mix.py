@@ -51,7 +51,7 @@ def add(buf, sig, at, gain_db=0.0, pan=0.0):
 
 
 # -------------------------------------------------------------------------------------------
-# The bed: I–V–vi–IV in F, plucked, with a soft groove that sits out for the one-key gag.
+# The bed: I, V, vi, IV in F, plucked, with a soft groove that sits out for the one-key gag.
 
 
 PROG = [M.FMAJ9, M.CADD9, M.DM9, M.BBMAJ7]

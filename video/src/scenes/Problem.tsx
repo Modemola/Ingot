@@ -53,7 +53,7 @@ export const Problem: React.FC = () => {
   return (
     <AbsoluteFill>
       <div style={{ position: "absolute", left: 210, top: 120, opacity: (1 - toL4) * (1 - toBasis) }}>
-        <Eyebrow t={t} at={s.start + 0.3}>I — The problem</Eyebrow>
+        <Eyebrow t={t} at={s.start + 0.3}>I: The problem</Eyebrow>
       </div>
 
       {/* the index, drawing itself */}

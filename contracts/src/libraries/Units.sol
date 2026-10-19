@@ -10,7 +10,7 @@ import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 ///
 ///      - `size`  : GPU-hours, signed, 18 decimals. Positive is long compute (you gain when rental
 ///                  rates rise). A contract lot is 730 GPU-hours, matching the CME unit, but sizes
-///                  are not restricted to whole lots — a hedge should match an offtake exactly.
+///                  are not restricted to whole lots: a hedge should match an offtake exactly.
 ///      - `price` : USD per GPU-hour, 18 decimals. Straight from the index.
 ///      - `value` : USDC, 6 decimals, signed where it represents a cost basis or a PnL.
 ///

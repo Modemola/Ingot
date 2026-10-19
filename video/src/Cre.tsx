@@ -135,7 +135,7 @@ const Terminal: React.FC = () => {
       <div style={{ marginTop: 48, width: 1840, borderRadius: 10, overflow: "hidden", border: `1px solid ${C.hair2}`, boxShadow: "0 50px 120px -30px rgba(0,0,0,0.95)" }}>
         <div style={{ height: 40, background: "#1b1814", display: "flex", alignItems: "center", padding: "0 16px", gap: 12, fontFamily: F.sans, fontSize: 15, color: C.ink2 }}>
           <span style={{ width: 14, height: 14, borderRadius: 3, background: "#2f5f9e" }} />
-          Windows PowerShell — C:\Users\HP\Ingot\oracle
+          Windows PowerShell: C:\Users\HP\Ingot\oracle
         </div>
         <div style={{ height: 800, background: "#0c0b0a", padding: "18px 22px", fontFamily: `${F.mono}, "DejaVu Sans Mono", monospace`, fontSize: 18.5, lineHeight: 1.55, whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
           {visible.map((r, i) => (

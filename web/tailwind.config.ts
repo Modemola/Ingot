@@ -1,8 +1,8 @@
 import type { Config } from "tailwindcss";
 
 /// Foundry. Warm black like the inside of a furnace, type the colour of bone, and one light:
-/// molten gold. Everything else is restraint — hairline rules, square corners, small tracked
-/// labels — so the gold, and the numbers, are what the eye finds.
+/// molten gold. Everything else is restraint (hairline rules, square corners, small tracked
+/// labels) so the gold, and the numbers, are what the eye finds.
 ///
 /// Token names are the ones the components already speak (`ink`, `hairline`, `good`), so the
 /// palette can move here without touching a component.

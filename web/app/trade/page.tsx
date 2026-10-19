@@ -88,12 +88,12 @@ export default function Terminal() {
               <LiveDot tone="good" />
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">Mark</div>
-                <div className="tnum font-mono text-[22px] text-ink">{mark ? formatPrice(mark) : "—"}</div>
+                <div className="tnum font-mono text-[22px] text-ink">{mark ? formatPrice(mark) : "…"}</div>
               </div>
               <div className="h-9 w-px bg-hairline" />
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">Expiry</div>
-                <div className="tnum font-mono text-[22px] text-ink">{daysToExpiry === undefined ? "—" : `${daysToExpiry}d`}</div>
+                <div className="tnum font-mono text-[22px] text-ink">{daysToExpiry === undefined ? "…" : `${daysToExpiry}d`}</div>
               </div>
             </div>
           </div>
@@ -104,13 +104,13 @@ export default function Terminal() {
       <StatStrip className="grid-cols-2 lg:grid-cols-4">
         <Stat
           label="Index"
-          value={latest ? `$${latest.price.toFixed(4)}` : "—"}
+          value={latest ? `$${latest.price.toFixed(4)}` : "…"}
           detail={latest ? `USD / GPU-hr · as of ${asOf(latest.timestamp)}` : "USD / GPU-hour, H100 on-demand"}
           accent="cobalt"
         />
         <Stat
           label={changeIsDaily ? "24h change" : "Change"}
-          value={change === undefined ? "—" : `${change > 0 ? "+" : ""}${change.toFixed(2)}%`}
+          value={change === undefined ? "…" : `${change > 0 ? "+" : ""}${change.toFixed(2)}%`}
           tone={change === undefined ? "default" : change >= 0 ? "good" : "critical"}
           detail={
             !previous
@@ -123,13 +123,13 @@ export default function Terminal() {
         />
         <Stat
           label="Front contract"
-          value={mark ? formatPrice(mark) : "—"}
+          value={mark ? formatPrice(mark) : "…"}
           detail={daysToExpiry === undefined ? "no series" : `${daysToExpiry} days to expiry`}
           accent="gold"
         />
         <Stat
           label="Open interest"
-          value={series ? `${formatLots(series.longOpenInterest)} lots` : "—"}
+          value={series ? `${formatLots(series.longOpenInterest)} lots` : "…"}
           detail={series ? `${formatHours(series.longOpenInterest)} GPU-hours` : undefined}
           accent="violet"
         />

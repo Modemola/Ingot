@@ -43,7 +43,7 @@ forge script script/Deploy.s.sol --rpc-url $MONAD_TESTNET_RPC_URL --broadcast
 
 Deploys the index, market, underwriter vault and credit pool, wires them together, and writes
 every address to `deployments/<chainid>.json`. A mock six-decimal USDC is deployed and left
-mintable unless `USDC_ADDRESS` is set — judges need to be able to get test funds.
+mintable unless `USDC_ADDRESS` is set: judges need to be able to get test funds.
 
 Testnet deployments set the index finality delay to 60 seconds so the market is usable a minute
 after seeding. Mainnet would run the one-hour default.
@@ -54,9 +54,9 @@ after seeding. Mainnet would run the one-hour default.
 forge script script/Seed.s.sol --rpc-url $MONAD_TESTNET_RPC_URL --broadcast
 ```
 
-Backfills the real index history — one print a day for the 78 days in
+Backfills the real index history: one print a day for the 78 days in
 `contracts/data/h100_index.csv`, the same series the landing page charts and
-[BACKTEST.md](BACKTEST.md) analyses — lists the front-month contract, and capitalizes the underwriter
+[BACKTEST.md](BACKTEST.md) analyses: lists the front-month contract, and capitalizes the underwriter
 vault with 2,000,000 USDC and the credit pool with 1,000,000 USDC. The market is live once the
 finality delay elapses. `deploy.sh` then waits out that delay and runs
 `forge script script/Seed.s.sol --sig "openDemoLoan()"`, which opens one 100,000 GPU-hour hedged
@@ -111,7 +111,7 @@ $0.80/hr and $180,000 at $1.20/hr.
 
 ## Publishing the front end
 
-The app is a static-friendly Next.js client with no backend and no secrets — it reads Monad
+The app is a static-friendly Next.js client with no backend and no secrets: it reads Monad
 directly. Any Next host works; Vercel is the shortest path.
 
 The app builds to a static export (`output: "export"`), and `vercel.json` at the repository root
@@ -127,7 +127,7 @@ Three optional settings:
   Rabby, Phantom, OKX, Coinbase Wallet and others announce themselves), and on a phone it offers
   links that open the app inside a wallet's own browser.
 - `NEXT_PUBLIC_MONAD_RPC_URL`. Leave it unset and the app uses the public
-  `https://testnet-rpc.monad.xyz`, which is rate-limited and shared — fine for a judge clicking
+  `https://testnet-rpc.monad.xyz`, which is rate-limited and shared: fine for a judge clicking
   through, worth replacing with a dedicated endpoint before a demo recording.
 - `NEXT_PUBLIC_INDEXER_URL`, the GraphQL endpoint of the hosted Envio indexer
   ([`INDEXER.md`](INDEXER.md#hosting)). It adds the trade tape and vault inventory to the
@@ -137,16 +137,16 @@ Three optional settings:
 
 ### If the hosted URL shows `404 NOT_FOUND`
 
-Vercel's own 404 page — not the app's — means the deployment built nothing it could serve.
+Vercel's own 404 page, not the app's, means the deployment built nothing it could serve.
 
 **Check which branch production serves.** The `*.vercel.app` production URL serves the project's
 production branch, `main` by default. If `main` does not contain `web/` and `vercel.json`, Vercel
 deploys the repository as plain files, finds no `index.html`, and reports the deployment as a
-*success* — so the dashboard shows green while the site 404s. Either merge the app into `main`, or
+*success*, so the dashboard shows green while the site 404s. Either merge the app into `main`, or
 Settings → Environments → Production → Branch Tracking → point it at the branch that has it.
 
 You can confirm what Vercel built for any commit without opening Vercel: the GitHub commit status
-it posts names the deployment. Settings changes do not apply to existing deployments — redeploy.
+it posts names the deployment. Settings changes do not apply to existing deployments: redeploy.
 
 Addresses are compiled into the bundle by `scripts/addresses.mjs`, so **redeploying the contracts
 means rebuilding the front end.** Run the sync, commit, and let the host rebuild:
@@ -160,7 +160,7 @@ git add ../contracts/deployments lib/addresses.ts lib/abis.ts
 
 1. Commit `contracts/deployments/<chainid>.json`, `web/lib/addresses.ts` and `web/lib/abis.ts`.
    The app cannot find the contracts without them.
-2. Fill [JUDGES.md](JUDGES.md)'s two placeholders — `<!-- LIVE_URL -->` with the hosted app,
+2. Fill [JUDGES.md](JUDGES.md)'s two placeholders: `<!-- LIVE_URL -->` with the hosted app,
    `<!-- ADDRESSES -->` with the contents of the deployment JSON.
 3. Open the app in a clean browser profile with no wallet connected and confirm the index chart,
    the front contract and the vault all render. That is what a judge sees first, and it is the

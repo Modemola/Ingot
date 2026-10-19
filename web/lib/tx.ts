@@ -121,8 +121,8 @@ class NeverSeenError extends Error {}
 
 /// Rejects if the chain this app reads has still not heard of the transaction after half a minute.
 ///
-/// A wallet sends through its own RPC. When that RPC is a different node — a stale copy of the
-/// testnet, or another network on the same chain id — the wallet reports success, the hash it
+/// A wallet sends through its own RPC. When that RPC is a different node (a stale copy of the
+/// testnet, or another network on the same chain id) the wallet reports success, the hash it
 /// returns exists nowhere the app can see, and the receipt wait would sit at "pending" until it
 /// timed out. Monad includes a transaction within a second or two, so thirty seconds of silence is
 /// conclusive. Never settles once the transaction has been seen.
@@ -156,7 +156,7 @@ export type TxState = {
   error?: string;
 };
 
-/// Sign, submit, confirm — with a toast that follows the transaction through each step, an explorer
+/// Sign, submit, confirm, with a toast that follows the transaction through each step, an explorer
 /// link once it has a hash, a plain-language reason if it fails, and every read refreshed the moment
 /// it lands rather than on the next poll.
 export function useTx() {

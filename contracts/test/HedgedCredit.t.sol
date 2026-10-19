@@ -77,7 +77,7 @@ contract HedgedCreditTest is Fixtures {
     ///
     ///      The contract settles to the *average* index over its delivery window, so moving the
     ///      rate on the last day barely moves the settlement price. To model rates falling for the
-    ///      month, the rate has to fall early and hold — which is exactly how the real contract
+    ///      month, the rate has to fall early and hold, which is exactly how the real contract
     ///      behaves, and why a spot-settled design would have been the wrong choice here.
     function _settleAt(uint256 price) internal {
         _setSpot(price);
@@ -361,7 +361,7 @@ contract HedgedCreditTest is Fixtures {
         int256 hedgePnl = credit.hedgePnlOf(loanId);
         assertGt(hedgePnl, 0, "short profits");
 
-        // The borrower still writes a cheque — their offtake revenue fell too — but the hedge
+        // The borrower still writes a cheque (their offtake revenue fell too) but the hedge
         // gain has taken a large bite out of what they owe.
         uint256 debt = credit.debtOf(loanId);
         int256 netOwed = credit.receivableOf(loanId);
@@ -570,7 +570,7 @@ contract HedgedCreditTest is Fixtures {
         vm.stopPrank();
 
         // Part of the stake is now in the market paying the hedge, owed back by the borrower, so
-        // it cannot all leave at once — but none of it is a gain.
+        // it cannot all leave at once, but none of it is a gain.
         uint256 worth = (shares * credit.totalAssets()) / credit.totalSupply();
         assertLe(worth, stake, "no profit from the round trip");
         assertEq(market.badDebt(), 0, "and underwriters wore nothing");

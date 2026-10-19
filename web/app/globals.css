@@ -223,7 +223,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Entrances that run on first paint. The server HTML carries them, so content is visible as soon
-   as the CSS lands — never held at opacity 0 waiting for JavaScript to hydrate. */
+   as the CSS lands, never held at opacity 0 waiting for JavaScript to hydrate. */
 /* Opacity and transform only: both run on the compositor. An animated `filter: blur()` over the
    whole page had to be repainted every frame of every navigation, and was the stutter on arrival. */
 @keyframes route-enter {

@@ -71,8 +71,8 @@ jobs:
           INDEX="${{ steps.addr.outputs.index }}"
           PRICE="${{ steps.print.outputs.price }}"
 
-          # `observedAt` must advance past the newest print — provisional ones included, since a
-          # CRE print may have landed since the last finalized one — by at most the clock and at
+          # `observedAt` must advance past the newest print (provisional ones included, since a
+          # CRE print may have landed since the last finalized one) by at most the clock and at
           # least the index's minimum interval. The contract also rejects a print outside the
           # deviation band, so a broken upstream feed fails here rather than repricing the market.
           COUNT=$(cast call "$INDEX" 'observationCount()(uint256)' --rpc-url "$RPC" | awk '{print $1}')
@@ -105,7 +105,7 @@ jobs:
           set -euo pipefail
           MARKET="${{ steps.addr.outputs.market }}"
           node tools/lifecycle.mjs --rpc "$RPC" --market "$MARKET" --index "${{ steps.addr.outputs.index }}" > plan.json
-          jq -r '.[] | "\(.signature) — \(.reason)"' plan.json
+          jq -r '.[] | "\(.signature): \(.reason)"' plan.json
           jq -c '.[]' plan.json | while read -r action; do
             SIG=$(jq -r .signature <<<"$action")
             mapfile -t ARGS < <(jq -r '.args[]' <<<"$action")

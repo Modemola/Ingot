@@ -44,7 +44,7 @@ type Series {
   basisBps: Int!
   settled: Boolean!
   settlementPrice: BigInt
-  # Sum of every positive position, the vault's included — the same quantity the contract keeps.
+  # Sum of every positive position, the vault's included: the same quantity the contract keeps.
   longOpenInterest: BigInt!
   # The vault's own position. Traders are net long when this is negative.
   vaultInventory: BigInt!

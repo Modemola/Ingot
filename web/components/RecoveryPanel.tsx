@@ -13,7 +13,7 @@ const SAMPLES = 21;
 
 /// Reads the recovery curve out of the contract rather than recomputing the formula in
 /// the browser. `recoveryHedged` is piecewise linear in the settlement rate, so 21 points
-/// describe it exactly — and every point on the chart is a value the chain returned.
+/// describe it exactly, and every point on the chart is a value the chain returned.
 export function RecoveryPanel({
   loanId,
   hedgeEntryPrice,
@@ -137,29 +137,29 @@ export function RecoveryPanel({
           <Row label="Debt at maturity" value={formatUsdc(debt)} />
           <Row
             label="Hedge PnL"
-            value={selected ? formatSignedUsdc(selected[0]) : "—"}
+            value={selected ? formatSignedUsdc(selected[0]) : "…"}
             tone={selected && selected[0] >= 0n ? "good" : "critical"}
           />
           <Row
             label="Borrower resources"
-            value={selected ? formatUsdc(selected[1]) : "—"}
+            value={selected ? formatUsdc(selected[1]) : "…"}
             hint="offtake + hedge"
           />
         </div>
         <div>
           <Row
             label="Lender recovery, hedged"
-            value={selected ? formatUsdc(selected[3]) : "—"}
+            value={selected ? formatUsdc(selected[3]) : "…"}
             tone="gold"
           />
           <Row
             label="Lender recovery, unhedged"
-            value={selected ? formatUsdc(selected[4]) : "—"}
+            value={selected ? formatUsdc(selected[4]) : "…"}
             tone={shortfall > 0n ? "critical" : "default"}
           />
           <Row
             label="Shortfall avoided"
-            value={shortfall > 0n ? formatUsdc(shortfall) : "—"}
+            value={shortfall > 0n ? formatUsdc(shortfall) : "none"}
             tone={shortfall > 0n ? "critical" : "muted"}
           />
         </div>

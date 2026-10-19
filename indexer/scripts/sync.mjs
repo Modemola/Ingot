@@ -49,7 +49,7 @@ function write(path, contents) {
 for (const { name } of CONTRACTS) {
   const artifact = resolve(CONTRACTS_OUT, `${name}.sol/${name}.json`);
   if (!existsSync(artifact)) {
-    console.error(`missing ${artifact} — run \`forge build\` in contracts/ first`);
+    console.error(`missing ${artifact}: run \`forge build\` in contracts/ first`);
     process.exit(1);
   }
   const events = JSON.parse(readFileSync(artifact, "utf8")).abi.filter((e) => e.type === "event");
@@ -82,7 +82,7 @@ if (at === -1) {
 write(CONFIG, `${config.slice(0, at + marker.length)}${chainBlocks}\n`);
 
 if (stale.length > 0) {
-  console.error("stale — run `node indexer/scripts/sync.mjs` and commit:");
+  console.error("stale: run `node indexer/scripts/sync.mjs` and commit:");
   for (const path of stale) console.error(`  ${path.replace(`${HERE}/`, "indexer/")}`);
   process.exit(1);
 }

@@ -143,7 +143,7 @@ export function AnimatedNumber({
 
   return (
     <span ref={ref} className={className}>
-      {value === undefined ? "—" : format(0)}
+      {value === undefined ? "…" : format(0)}
     </span>
   );
 }
@@ -212,7 +212,7 @@ export function Tilt({ children, className, max = 8 }: { children: ReactNode; cl
   );
 }
 
-/// Pointer handlers that drive the `.spotlight` light across a surface without tilting it —
+/// Pointer handlers that drive the `.spotlight` light across a surface without tilting it,
 /// for panels holding forms, where a moving target would be hostile.
 export function spotlightHandlers() {
   return {

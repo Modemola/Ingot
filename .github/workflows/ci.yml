@@ -139,7 +139,7 @@ jobs:
 
       # Two programs, on purpose: the workflow is checked against the CRE SDK's sandbox types,
       # the simulator against plain Node. One program would let the SDK's global `fs: never`
-      # leak into the simulator — which is how a typecheck failure once shipped unnoticed.
+      # leak into the simulator, which is how a typecheck failure once shipped unnoticed.
       - name: Typecheck
         working-directory: oracle
         run: pnpm typecheck

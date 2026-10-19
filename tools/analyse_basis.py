@@ -1,6 +1,6 @@
 """Measure the risks the Ingot index is actually exposed to.
 
-Time-series volatility of posted on-demand rates is low — they are sticky. The
+Time-series volatility of posted on-demand rates is low: they are sticky. The
 risks that matter to a hedger are different, and both are measurable from the
 same data:
 

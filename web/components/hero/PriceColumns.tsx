@@ -8,7 +8,7 @@ import * as THREE from "three";
 
 /// The thesis as an object. One gold column per provider, each as tall as what that provider
 /// charges for the same H100 on the same day; then a plane of light rises through them and stops
-/// at the index — the single number they average to. Driven entirely by scroll.
+/// at the index: the single number they average to. Driven entirely by scroll.
 
 export type Venue = { name: string; price: number };
 
@@ -20,7 +20,7 @@ function smooth(edge0: number, edge1: number, x: number) {
   return t * t * (3 - 2 * t);
 }
 
-/// A provider's name and price, drawn once to a canvas and shown as a sprite above its column —
+/// A provider's name and price, drawn once to a canvas and shown as a sprite above its column:
 /// cheaper than DOM labels, and it lives in the same light as everything else.
 function labelTexture(name: string, price: number) {
   const c = document.createElement("canvas");

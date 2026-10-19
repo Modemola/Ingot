@@ -11,8 +11,8 @@ This is the brief the soundtrack was built from. `audio/mix.py` implements it fr
 > expensive, restrained and exact, never "crypto hype".
 >
 > **Voice first, always.** The narration is the lead instrument. Level every line to the same
-> loudness. Use a light leveling compressor, a small presence lift around 2.5–6 kHz, a dip in
-> the boom at 180–320 Hz, and a trace of short room so it sits in the music. The music ducks
+> loudness. Use a light leveling compressor, a small presence lift around 2.5 to 6 kHz, a dip in
+> the boom at 180 to 320 Hz, and a trace of short room so it sits in the music. The music ducks
 > about 12 dB under every word, fast on (60 ms) and slow off (450 ms). Between sentences it
 > breathes back up. Under speech the music never comes within 12 dB of the voice. In the
 > pauses it rises to about 4 dB under it.
@@ -23,9 +23,9 @@ This is the brief the soundtrack was built from. `audio/mix.py` implements it fr
 > moves. The arc:
 > - **Open:** drone and stillness under the split-flap clacks. A riser into one deep impact
 >   and a bell shimmer on the logo reveal; the music steps forward here.
-> - **Problem:** Dm–B♭–Gm–A. A faint ticking clock (the rates move every day). Two hits for
+> - **Problem:** Dm, B♭, Gm, A. A faint ticking clock (the rates move every day). Two hits for
 >   −45% and +237%, and a dark low hit under "a premium for risk they can't measure".
-> - **Index:** it lifts to Dm–F–C–B♭ with sparse plucks. A tick per data row and a chime on
+> - **Index:** it lifts to Dm, F, C, B♭ with sparse plucks. A tick per data row and a chime on
 >   the price. The finality window ticks down; a digital glitch when the bad scrape is struck
 >   out; a confirmation chime when the print goes final.
 > - **Trade:** the groove arrives. Key clicks for "10 lots", a tick per ticket callout, a real
@@ -36,7 +36,7 @@ This is the brief the soundtrack was built from. `audio/mix.py` implements it fr
 >   groove drops out and a slow descending tone follows the unhedged line down. A dark,
 >   detuned low hit on −$111,967. Then the resolve: D major, a full impact and a shimmer on
 >   $274,311, and the groove comes back.
-> - **Vault:** lighter, B♭–F–C–Dm. Alternating bid and ask ticks, a soft stop when the vault
+> - **Vault:** lighter, B♭, F, C, Dm. Alternating bid and ask ticks, a soft stop when the vault
 >   stops adding risk.
 > - **Proof:** the most confident groove. A hit and a tick on each of the four tiles.
 > - **End:** a riser, the biggest impact, a long shimmer on the logo, one last chime, and a

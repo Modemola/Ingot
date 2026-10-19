@@ -35,7 +35,7 @@ export function formatPrice(price: bigint, places = 4): string {
   return `$${fixed(price, 18n, places)}`;
 }
 
-/// USDC amounts, e.g. "$166,300.87". Always two places — this is money.
+/// USDC amounts, e.g. "$166,300.87". Always two places: this is money.
 export function formatUsdc(value: bigint, places = 2): string {
   const sign = value < 0n ? "-" : "";
   const body = withThousands(fixed(value < 0n ? -value : value, 6n, places));

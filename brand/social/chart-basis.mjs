@@ -55,7 +55,7 @@ h1 i{font-family:NI;color:#e8b661}
 <div class="brand">Ingot</div>
 <div class="chart"><div class="zl">INDEX</div><div class="zero"></div>${rows}</div>
 <div class="legend"><span><span class="sw" style="background:${BELOW}"></span>Below the index</span><span><span class="sw" style="background:${ABOVE}"></span>Above the index</span></div>
-<div class="src">78-day mean, Jul–Sep 2026 · data: gpu-rental-prices (CC BY 4.0)<br>ingotx.vercel.app</div>
+<div class="src">78-day mean, Jul to Sep 2026 · data: gpu-rental-prices (CC BY 4.0)<br>ingotx.vercel.app</div>
 </body></html>`;
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || "/opt/pw-browsers/chromium" });

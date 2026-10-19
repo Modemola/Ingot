@@ -102,7 +102,7 @@ function NavLink({ href, label, on, id }: { href: string; label: string; on: boo
 }
 
 /// The brand mark: a silicon ingot in section. Same geometry as docs/brand/ingot-mark.svg, cast in
-/// gold — lit front, bright top, shadowed side.
+/// gold: lit front, bright top, shadowed side.
 export function IngotMark({ size = 22, className }: { size?: number; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 22 22" aria-hidden="true" className={className}>

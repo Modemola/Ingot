@@ -7,7 +7,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 /// A bar of fine gold on a dark mirror, lit like a product photograph. The bar is a true cast
-/// ingot — a frustum, narrower at the top — and its top face carries a stamp, the way bullion
+/// ingot (a frustum, narrower at the top) and its top face carries a stamp, the way bullion
 /// is hallmarked with its refiner, purity and serial.
 
 const W = 2.9; // bottom length
@@ -128,7 +128,7 @@ function Floor({ lite }: { lite: boolean }) {
 function Studio() {
   return (
     <Environment resolution={256} frames={1}>
-      {/* A warm dome first, so every reflection the metal shows is lit, not black — then a
+      {/* A warm dome first, so every reflection the metal shows is lit, not black, then a
           jeweller's set of softboxes for the highlights that make it read as gold. */}
       <mesh scale={60}>
         <sphereGeometry args={[1, 32, 16]} />

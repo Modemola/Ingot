@@ -87,20 +87,20 @@ export function PositionPanel({
           <Row label="Side" value={long ? "Long" : "Short"} tone={long ? "good" : "critical"} />
           <Row label="Size" value={`${formatLots(absSize)} lots`} hint={`${formatHours(absSize)} GPU-hrs`} />
           <Row label="Entry" value={formatPrice(entry)} />
-          <Row label="Mark" value={mark === undefined ? "—" : formatPrice(mark)} />
+          <Row label="Mark" value={mark === undefined ? "…" : formatPrice(mark)} />
         </div>
         <div>
           <Row label="Unrealized" value={formatSignedUsdc(unrealized)} tone={unrealized >= 0n ? "good" : "critical"} />
-          <Row label="Equity" value={equity === undefined ? "—" : formatUsdc(equity)} />
+          <Row label="Equity" value={equity === undefined ? "…" : formatUsdc(equity)} />
           <Row
             label="Health"
-            value={health === null ? "—" : `${health.toFixed(2)}×`}
+            value={health === null ? "…" : `${health.toFixed(2)}×`}
             hint={health !== null && health < 1.2 ? "at risk" : "equity ÷ maintenance"}
             tone={health === null ? "muted" : health < 1 ? "critical" : health < 1.2 ? "default" : "good"}
           />
           <Row
             label="Liquidation"
-            value={liquidation === null ? (onlyPosition ? "none" : "—") : `$${liquidation.toFixed(4)}`}
+            value={liquidation === null ? (onlyPosition ? "none" : "…") : `$${liquidation.toFixed(4)}`}
             hint={onlyPosition ? "est., index level" : "cross-margined"}
             tone="muted"
           />
@@ -111,7 +111,7 @@ export function PositionPanel({
         <p className="text-[12px] leading-relaxed text-ink-muted">
           {closeQuote === undefined
             ? "Quoting a close…"
-            : `Closing now fills near ${formatPrice(closeQuote)} and realizes ${closePnl === undefined ? "—" : formatSignedUsdc(closePnl)}, within ${formatTolerance(DEFAULT_SLIPPAGE_BPS)}.`}
+            : `Closing now fills near ${formatPrice(closeQuote)} and realizes ${closePnl === undefined ? "…" : formatSignedUsdc(closePnl)}, within ${formatTolerance(DEFAULT_SLIPPAGE_BPS)}.`}
         </p>
         <div className="sm:w-48">
           <Button

@@ -1,7 +1,7 @@
 /// Slippage bounds for order submission.
 ///
 /// `IngotMarket.trade` and `HedgedCredit.open` both take the worst acceptable fill and
-/// enforce it on chain. Submitting the extremes — max uint when buying, zero when selling —
+/// enforce it on chain. Submitting the extremes (max uint when buying, zero when selling)
 /// disables that protection entirely, which on a public mempool means any order can be
 /// sandwiched for up to the vault's maximum quote adjustment. So the UI always sends a
 /// bound derived from the quote it actually showed the trader.

@@ -10,19 +10,19 @@ import {IngotIndex} from "./IngotIndex.sol";
 ///
 /// @dev This contract exists to fix a specific weakness. `IngotIndex` trusts an allowlisted set of
 ///      publishers: any one of them can print within the deviation band every interval, so a single
-///      compromised key can walk the settlement price over a few hours. Operational mitigations —
-///      the finality delay, tip revocation — buy time but do not remove the trust.
+///      compromised key can walk the settlement price over a few hours. Operational mitigations
+///      (the finality delay, tip revocation) buy time but do not remove the trust.
 ///
 ///      With this receiver installed as the only publisher, a print requires a quorum instead of a
 ///      key. The CRE workflow runs on a Decentralized Oracle Network: each node fetches venue
 ///      rates independently, the DON takes the median across nodes, and the signed result is
-///      delivered here by the CRE forwarder. No single node — and no single operator — can move
+///      delivered here by the CRE forwarder. No single node, and no single operator, can move
 ///      the index.
 ///
 ///      Authentication has two parts. The forwarder verifies DON signatures before it calls
 ///      anything, so `msg.sender == forwarder` proves *a* quorum produced the report. But the
 ///      forwarder is shared by every workflow on the chain, and the report body is whatever the
-///      sending workflow chose to write — a tag in it proves nothing on its own. What the forwarder
+///      sending workflow chose to write: a tag in it proves nothing on its own. What the forwarder
 ///      does vouch for is the metadata it passes alongside: the workflow's ID, name and owner, taken
 ///      from the signed report header. So this contract also pins the expected workflow owner and,
 ///      optionally, the workflow ID, and only then trusts the body.
@@ -35,7 +35,7 @@ contract IngotIndexReceiver is Ownable {
 
     /// @notice Tag the workflow stamps into every report body, so a report from some other
     ///         workflow pointed at this receiver is rejected.
-    /// @dev The ASCII form of the workflow name, i.e. `bytes32("ingot-h100-index-v1")` — not a
+    /// @dev The ASCII form of the workflow name, i.e. `bytes32("ingot-h100-index-v1")`, not a
     ///      hash of it. Legible in an explorer, and the workflow's encoder rejects names longer
     ///      than 32 bytes rather than truncating.
     bytes32 public workflowTag;
@@ -83,7 +83,7 @@ contract IngotIndexReceiver is Ownable {
 
         if (tag != workflowTag) revert UnexpectedWorkflow(tag);
 
-        // Publishing guards — deviation band, minimum interval, monotonic timestamps — stay in the
+        // Publishing guards (deviation band, minimum interval, monotonic timestamps) stay in the
         // index. A quorum is not licence to print anything.
         index.publish(observedAt, price, sampleCount, sourceCount);
 

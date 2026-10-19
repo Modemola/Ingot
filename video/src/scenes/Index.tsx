@@ -36,7 +36,7 @@ export const Index: React.FC = () => {
   return (
     <AbsoluteFill>
       <div style={{ position: "absolute", left: 120, top: 70, opacity: 1 - toFinal }}>
-        <Eyebrow t={t} at={s.start + 0.3}>II — The index</Eyebrow>
+        <Eyebrow t={t} at={s.start + 0.3}>II: The index</Eyebrow>
       </div>
       <div style={{ position: "absolute", left: 120, top: 104, opacity: 1 - toDetail }}>
         <Rise text="An on-chain index for one H100 GPU-hour." t={t} at={L5.start + 0.1} size={52} accent={["H100"]} />

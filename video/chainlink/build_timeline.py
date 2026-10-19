@@ -44,4 +44,4 @@ scenes[-1]["end"] = TOTAL
 (ROOT / "src/chainlink-timeline.json").write_text(json.dumps({"fps": FPS, "duration": TOTAL, "frames": int(TOTAL * FPS), "scenes": scenes, "lines": out_lines}, indent=1))
 print(f"speech {speech:.1f}s, gap scale {k:.2f}, last word ends {t:.2f}s")
 for s in scenes:
-    print(f"  {s['id']:10s} {s['start']:7.2f} – {s['end']:7.2f}  ({s['end'] - s['start']:.1f}s)")
+    print(f"  {s['id']:10s} {s['start']:7.2f} to {s['end']:7.2f}  ({s['end'] - s['start']:.1f}s)")

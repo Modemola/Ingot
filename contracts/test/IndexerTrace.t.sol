@@ -11,8 +11,8 @@ import {UnderwriterVault} from "../src/UnderwriterVault.sol";
 
 /// @notice Records a realistic session against the real contracts for the indexer to replay.
 ///
-/// @dev The indexer derives state the chain never emits — the vault's position and cost basis,
-///      open interest after flips — by porting `_applyDelta` to TypeScript. That port is only
+/// @dev The indexer derives state the chain never emits (the vault's position and cost basis,
+///      open interest after flips) by porting `_applyDelta` to TypeScript. That port is only
 ///      worth trusting if it is checked against the contracts themselves, so this test runs
 ///      opens, reduces, a flip, a revoked print, a hedged loan, a liquidation and settlement,
 ///      then writes every log plus the contract's own final state to
@@ -68,7 +68,7 @@ contract IndexerTraceTest is Fixtures {
 
     function _stand_up_pools() internal {
         // CREATE2, so the recorded addresses do not depend on how a given Foundry version counts
-        // the test contract's nonce across cheatcodes — the fixture must be byte-identical in CI.
+        // the test contract's nonce across cheatcodes: the fixture must be byte-identical in CI.
         underwriter = new UnderwriterVault{salt: "underwriter"}(market, IERC20(address(usdc)), owner);
         vm.prank(owner);
         market.setVault(address(underwriter));

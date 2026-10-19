@@ -20,7 +20,7 @@ export function Hallmarks({ tone = "gold" }: { tone?: "gold" | "ink" }) {
   );
 }
 
-/// A panel on the foundry floor: one hairline, hallmarked corners, and an optional lot serial —
+/// A panel on the foundry floor: one hairline, hallmarked corners, and an optional lot serial:
 /// the small stamped code in the top-right that says what this panel is.
 export function Card({
   title,
@@ -117,7 +117,7 @@ function Ticking({ value, className, textClassName = "" }: { value: ReactNode; c
   );
 }
 
-/// A headline figure. Several sit side by side in a strip divided by hairlines — the exchange
+/// A headline figure. Several sit side by side in a strip divided by hairlines: the exchange
 /// board above the pit.
 export function Stat({
   label,

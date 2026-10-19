@@ -5,7 +5,7 @@
 /// `IngotIndex.methodologyHash` is decoration.
 ///
 /// Two stages:
-///   1. Per venue, the median across that venue's H100 SKUs — one observation per venue, so a
+///   1. Per venue, the median across that venue's H100 SKUs: one observation per venue, so a
 ///      provider listing many SKUs cannot dominate the print.
 ///   2. Across venues, a 10% trimmed mean of those medians.
 ///

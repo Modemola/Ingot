@@ -228,7 +228,7 @@ contract IngotIndex is IIngotIndex, Ownable {
     /// @inheritdoc IIngotIndex
     /// @dev The window ends now, not at the newest finalized print, with that print's price held
     ///      forward to the present. Ending at the print would leave the newest price outside the
-    ///      average until the *next* print arrived — hours on a six-hourly schedule — and a mark
+    ///      average until the *next* print arrived (hours on a six-hourly schedule) and a mark
     ///      that lags a public price is free money against the vault. Provisional prints are never
     ///      read, so a print still inside its finality delay cannot move the mark.
     function twap(uint32 window) external view returns (uint256) {
@@ -321,8 +321,8 @@ contract IngotIndex is IIngotIndex, Ownable {
     /// @dev `publishedAt` never decreases and revocation only pops the tip, so the finalized
     ///      prints are always a prefix of the history. The newest print is checked first, which
     ///      settles the usual case in one read; otherwise the prefix's end is binary-searched. A
-    ///      linear scan back from the tip cost a read per pending print, which made a backfill —
-    ///      every print still pending — quadratic in its length.
+    ///      linear scan back from the tip cost a read per pending print, which made a backfill
+    ///      (every print still pending) quadratic in its length.
     function _tryFinalizedTip() internal view returns (bool found, uint256 id) {
         uint256 length = _observations.length;
         if (length == 0) return (false, 0);

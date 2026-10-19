@@ -57,7 +57,7 @@ indexer.onEvent({ contract: "IngotIndex", event: "Revoked" }, async ({ event, co
   };
   context.Protocol.set(updated);
 
-  // The revoked print's day closes on whatever preceded it — unless that was a different day,
+  // The revoked print's day closes on whatever preceded it, unless that was a different day,
   // in which case the revoked print was the only one there and the day has no close.
   const d = await day(context, Number(timestamp), updated);
   const sameDay = previous !== undefined && dayOf(Number(previous.observedAt)) === d.day;

@@ -112,22 +112,22 @@ export default function Underwrite() {
     <div className="space-y-4">
       <Reveal>
       <StatStrip className="grid-cols-2 lg:grid-cols-4">
-        <Stat label="Vault NAV" value={assets === undefined ? "—" : formatUsdc(assets)} detail="mark to market" accent="gold" />
+        <Stat label="Vault NAV" value={assets === undefined ? "…" : formatUsdc(assets)} detail="mark to market" accent="gold" />
         <Stat
           label="Share price"
-          value={sharePrice === undefined ? "—" : formatUsdc(sharePrice, 4)}
+          value={sharePrice === undefined ? "…" : formatUsdc(sharePrice, 4)}
           detail="per share"
           accent="cobalt"
         />
         <Stat
           label="Free liquidity"
-          value={available === undefined ? "—" : formatUsdc(available)}
+          value={available === undefined ? "…" : formatUsdc(available)}
           detail="redeemable now"
           accent="good"
         />
         <Stat
           label="Inventory"
-          value={position ? `${formatLots(position.size)} lots` : "—"}
+          value={position ? `${formatLots(position.size)} lots` : "…"}
           detail={position && position.size !== 0n ? (position.size > 0n ? "net long" : "net short") : "flat"}
           accent="violet"
         />
@@ -154,7 +154,7 @@ export default function Underwrite() {
                 onClick={() =>
                   tx.send(
                     { address: deployment.usdc, abi: mockUSDCAbi, functionName: "approve", args: [deployment.underwriterVault, maxUint256] },
-                    { label: "Approve USDC for the vault", success: "Approved — now deposit" },
+                    { label: "Approve USDC for the vault", success: "Approved. Now deposit" },
                   )
                 }
               >
@@ -193,16 +193,16 @@ export default function Underwrite() {
           </div>
 
           <div className="mt-4 border-t border-hairline pt-1">
-            <Row label="Your shares" value={shares === undefined ? "—" : formatShares(shares)} />
+            <Row label="Your shares" value={shares === undefined ? "…" : formatShares(shares)} />
             <Row
               label="Your claim"
-              value={shares === undefined ? "—" : shares === 0n ? formatUsdc(0n) : claim === undefined ? "—" : formatUsdc(claim)}
+              value={shares === undefined ? "…" : shares === 0n ? formatUsdc(0n) : claim === undefined ? "…" : formatUsdc(claim)}
             />
             <Row
               label="Pool share"
               value={
                 shares === undefined || supply === undefined || supply === 0n
-                  ? "—"
+                  ? "…"
                   : `${(Number((shares * 10_000n) / supply) / 100).toFixed(2)}%`
               }
               tone="muted"
@@ -213,7 +213,7 @@ export default function Underwrite() {
 
           <Disclosure>
             The vault is the counterparty to every trade on Ingot. It earns the half-spread and
-            taker fees, and it carries the inventory that comes with them — when traders are
+            taker fees, and it carries the inventory that comes with them, when traders are
             right, the vault is wrong, and NAV falls. Redemptions are limited to capital not
             currently backing open positions.
           </Disclosure>
@@ -231,7 +231,7 @@ export default function Underwrite() {
               Revenue is the spread and the taker fee, collected on every fill regardless of
               direction. Against that sits the inventory: the vault is the natural counterparty to
               hedgers, so it tends to end up long compute when neoclouds are selling it forward.
-              That exposure is real and it is marked continuously — the NAV above is not a book
+              That exposure is real and it is marked continuously: the NAV above is not a book
               value.
             </p>
             <p>
@@ -247,13 +247,13 @@ export default function Underwrite() {
               />
               <Row
                 label="Average entry"
-                value={entryPrice === undefined ? "—" : `${formatPrice(entryPrice)} / GPU-hr`}
+                value={entryPrice === undefined ? "…" : `${formatPrice(entryPrice)} / GPU-hr`}
                 tone={entryPrice === undefined ? "muted" : "default"}
               />
               <Row
                 label="Unrealized on inventory"
                 hint="at the mark"
-                value={inventoryPnl === undefined ? "—" : formatSignedUsdc(inventoryPnl)}
+                value={inventoryPnl === undefined ? "…" : formatSignedUsdc(inventoryPnl)}
                 tone={inventoryPnl === undefined ? "muted" : inventoryPnl >= 0n ? "good" : "critical"}
               />
             </div>

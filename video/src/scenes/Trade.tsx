@@ -42,7 +42,7 @@ export const Trade: React.FC = () => {
   return (
     <AbsoluteFill>
       <div style={{ position: "absolute", left: 120, top: 70, opacity: 1 - toPos }}>
-        <Eyebrow t={t} at={s.start + 0.3}>III — Trading it</Eyebrow>
+        <Eyebrow t={t} at={s.start + 0.3}>III: Trading it</Eyebrow>
       </div>
 
       {/* L8: the terminal, then into the ticket */}

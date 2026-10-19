@@ -12,7 +12,7 @@ type Provider = { request: (args: { method: string; params?: unknown[] }) => Pro
 ///
 /// A wallet signs and sends through its own RPC for the network, not the app's. If its "Monad
 /// Testnet" entry points at a stale or different node with the same chain id, a transaction "goes
-/// through" there — calling an address with no contract simply succeeds and does nothing — and
+/// through" there, calling an address with no contract simply succeeds and does nothing, and
 /// never reaches Ingot. Nothing on the page would ever change. So ask the wallet itself whether it
 /// can see Ingot's contracts, and how far its chain has got, and compare.
 function useWalletSeesIngot() {

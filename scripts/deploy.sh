@@ -82,7 +82,7 @@ node -e "process.exit(BigInt('$BALANCE') >= BigInt('$NEEDED') ? 0 : 1)" \
 # ---------------------------------------------------------------- test first
 
 say "Running the test suite before touching a network"
-( cd contracts && forge test ) || fail "tests failed — not deploying"
+( cd contracts && forge test ) || fail "tests failed, not deploying"
 
 # ---------------------------------------------------------------- deploy
 

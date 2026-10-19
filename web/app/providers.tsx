@@ -12,7 +12,7 @@ import { refreshInterval, staleTime } from "@/lib/refresh";
 
 /// Deployed chains first. With no wallet connected wagmi reports `chains[0]`, so ordering this way
 /// means a visitor's reads hit a chain Ingot actually lives on. The local chain is only configured
-/// at all when LOCAL_CHAIN_ENABLED — see lib/chains.ts for why that matters — and in such a build
+/// at all when LOCAL_CHAIN_ENABLED (see lib/chains.ts for why that matters), and in such a build
 /// it comes first: a developer or the end-to-end test running against anvil means to read anvil,
 /// not the public testnet deployment that is also in the address map.
 const available = LOCAL_CHAIN_ENABLED ? [anvil, monadTestnet] : [monadTestnet];
@@ -40,7 +40,7 @@ const config = createConfig({
             showQrModal: true,
             metadata: {
               name: "Ingot",
-              description: "A cash-settled market for compute, and the credit layer it unlocks.",
+              description: "A cash-settled market for compute, and hedged credit built on top of it.",
               url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ingotx.vercel.app",
               icons: [],
             },

@@ -8,7 +8,7 @@ function segments(): Seg[] {
   const out: Seg[] = [];
   for (const l of TL.lines) {
     const parts: string[] = [];
-    const sentences = l.caption.match(/[^.!?:—]+[.!?:—]?/g) ?? [l.caption];
+    const sentences = l.caption.match(/[^.!?:]+[.!?:]?/g) ?? [l.caption];
     for (const s of sentences) {
       const words = s.trim().split(" ");
       let cur = "";

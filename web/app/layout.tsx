@@ -14,7 +14,7 @@ import { WalletNetworkCheck } from "@/components/WalletNetworkCheck";
 import { Nav } from "@/components/Nav";
 
 const DESCRIPTION =
-  "A cash-settled market for GPU rental rates on Monad, and the credit layer it unlocks.";
+  "A cash-settled market for GPU rental rates on Monad, and hedged credit built on top of it.";
 
 // Absolute URLs for link previews. Vercel provides the production host at build time.
 const SITE =
@@ -25,19 +25,19 @@ const SITE =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
-  title: { default: "Ingot — compute, priced and hedged", template: "%s · Ingot" },
+  title: { default: "Ingot: compute, priced and hedged", template: "%s · Ingot" },
   description: DESCRIPTION,
   applicationName: "Ingot",
   keywords: ["GPU", "H100", "compute", "rental rate", "index", "swaps", "hedging", "credit", "Monad", "DeFi"],
   openGraph: {
-    title: "Ingot — compute, priced and hedged",
+    title: "Ingot: compute, priced and hedged",
     description: DESCRIPTION,
     siteName: "Ingot",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ingot — compute, priced and hedged",
+    title: "Ingot: compute, priced and hedged",
     description: DESCRIPTION,
   },
 };

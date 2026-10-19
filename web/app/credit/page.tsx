@@ -70,7 +70,7 @@ export default function CreditDesk() {
   const open = loans.filter((entry) => !entry.loan.closed);
 
   // With no wallet connected, fall back to the protocol's most recent loan so the
-  // recovery profile — the thing this page exists to show — renders on arrival rather
+  // recovery profile, the thing this page exists to show, renders on arrival rather
   // than behind a connect prompt. It is labelled as someone else's loan when it is.
   const { data: loanCount } = useReadContract({
     address: deployment?.hedgedCredit,
@@ -128,7 +128,7 @@ export default function CreditDesk() {
             active
               ? showingOwn
                 ? "Every point on this chart is returned by HedgedCredit.project() on chain"
-                : "Most recent loan on the protocol — every point returned by project() on chain"
+                : "Most recent loan on the protocol: every point returned by project() on chain"
               : undefined
           }
         >
@@ -257,12 +257,12 @@ function CloseLoan({ id, seriesId, maturity, margin }: { id: bigint; seriesId: b
           if (settleFirst) {
             tx.send(
               { address: deployment.market, abi: ingotMarketAbi, functionName: "settleSeries", args: [seriesId] },
-              { label: `Settle series #${seriesId.toString()}`, success: "Contract settled — now close the loan" },
+              { label: `Settle series #${seriesId.toString()}`, success: "Contract settled. Now close the loan" },
             );
           } else if (needsApproval) {
             tx.send(
               { address: deployment.usdc, abi: mockUSDCAbi, functionName: "approve", args: [deployment.hedgedCredit, due] },
-              { label: `Approve ${formatUsdc(due)} to repay loan #${id.toString()}`, success: "Approved — now close the loan" },
+              { label: `Approve ${formatUsdc(due)} to repay loan #${id.toString()}`, success: "Approved. Now close the loan" },
             );
           } else {
             tx.send(
@@ -306,10 +306,10 @@ function PoolHeader() {
 
   return (
     <StatStrip className="grid-cols-2 lg:grid-cols-4">
-      <Stat label="Pool size" value={assets === undefined ? "—" : formatUsdc(assets)} detail="lender capital" accent="gold" />
-      <Stat label="Available" value={available === undefined ? "—" : formatUsdc(available)} detail="undrawn" accent="cobalt" />
-      <Stat label="Advance rate" value={ltv === undefined ? "—" : `${ltv / 100}%`} detail="of hedged revenue" accent="violet" />
-      <Stat label="Term rate" value={rate === undefined ? "—" : `${rate / 100}%`} detail="flat, to maturity" accent="good" />
+      <Stat label="Pool size" value={assets === undefined ? "…" : formatUsdc(assets)} detail="lender capital" accent="gold" />
+      <Stat label="Available" value={available === undefined ? "…" : formatUsdc(available)} detail="undrawn" accent="cobalt" />
+      <Stat label="Advance rate" value={ltv === undefined ? "…" : `${ltv / 100}%`} detail="of hedged revenue" accent="violet" />
+      <Stat label="Term rate" value={rate === undefined ? "…" : `${rate / 100}%`} detail="flat, to maturity" accent="good" />
     </StatStrip>
   );
 }
@@ -338,7 +338,7 @@ function OriginationForm({
   const parsedBasisPct = parseDecimal(basis, 2);
   const basisBps = parsedBasisPct === null ? null : Number(parsedBasisPct);
 
-  // The hedge — and the advance — track exposure, not the headline hour count.
+  // The hedge, and the advance, track exposure, not the headline hour count.
   const hedgeSize =
     parsedHours !== null && basisBps !== null
       ? (parsedHours * BigInt(basisBps)) / 10_000n
@@ -444,7 +444,7 @@ function OriginationForm({
         </Field>
         <p className="mt-2 text-[11.5px] leading-relaxed text-ink-muted">
           What you actually sell at, relative to the index. Across 23 providers over 78 days,
-          levels ran from 45% below the index to 237% above it — so the hedge is sized to your
+          levels ran from 45% below the index to 237% above it, so the hedge is sized to your
           exposure, not your hour count.
         </p>
       </div>
@@ -469,27 +469,27 @@ function OriginationForm({
       </div>
 
       <div className="mt-4 border-t border-hairline pt-1">
-        <Row label="Forward rate" value={mark === undefined ? "—" : formatPrice(mark)} />
+        <Row label="Forward rate" value={mark === undefined ? "…" : formatPrice(mark)} />
         <Row
           label="Hedge size"
-          value={hedgeSize === null ? "—" : `${formatHours(hedgeSize)} hrs`}
+          value={hedgeSize === null ? "…" : `${formatHours(hedgeSize)} hrs`}
           hint="index hours"
           tone="muted"
         />
-        <Row label="Hedged revenue" value={revenue === undefined ? "—" : formatUsdc(revenue)} />
+        <Row label="Hedged revenue" value={revenue === undefined ? "…" : formatUsdc(revenue)} />
         <Row
           label="You receive"
-          value={principal === undefined ? "—" : formatUsdc(principal)}
+          value={principal === undefined ? "…" : formatUsdc(principal)}
           tone={principalTooSmall ? "critical" : "default"}
         />
         <Row
           label="Margin required"
-          value={marginRequired === undefined ? "—" : formatUsdc(marginRequired)}
+          value={marginRequired === undefined ? "…" : formatUsdc(marginRequired)}
           tone={marginShort ? "critical" : "muted"}
         />
         <Row
           label="Min hedge fill"
-          value={minHedgePrice === undefined ? "—" : formatPrice(minHedgePrice)}
+          value={minHedgePrice === undefined ? "…" : formatPrice(minHedgePrice)}
           hint="enforced on chain"
           tone="muted"
         />
@@ -513,7 +513,7 @@ function OriginationForm({
               deployment &&
               tx.send(
                 { address: deployment.usdc, abi: mockUSDCAbi, functionName: "approve", args: [deployment.hedgedCredit, maxUint256] },
-                { label: "Approve USDC for the credit pool", success: "Approved — now draw" },
+                { label: "Approve USDC for the credit pool", success: "Approved. Now draw" },
               )
             }
           >
@@ -584,7 +584,7 @@ function OriginationForm({
         The hedge will not fill below the bound above. It fixes the rate you sell compute at; it
         does not guarantee you sell it. If your
         offtake does not materialise you still owe the debt, and the short can lose money your
-        revenue was supposed to cover. Rate risk is hedged here — delivery risk and the promise to
+        revenue was supposed to cover. Rate risk is hedged here: delivery risk and the promise to
         repay are not.
       </Disclosure>
     </Card>

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 /// flips when its character changes: the old leaf falls away, the new one swings down.
 ///
 /// Given a `sequence`, the board plays through it once when it first comes into view and then
-/// settles on `value` — on Ingot, every provider's price for the same H100 flipping past until
+/// settles on `value`: on Ingot, every provider's price for the same H100 flipping past until
 /// the board lands on the one number they average to.
 
 type Frame = { label: string; value: string };
@@ -81,7 +81,7 @@ export function SplitFlap({
   }[size];
 
   return (
-    // Read as one phrase — the final label and value — never letter by letter or mid-flip.
+    // Read as one phrase, the final label and value, never letter by letter or mid-flip.
     <div ref={ref} role="img" aria-label={`${label ?? ""} ${value}`.trim()} className={`inline-flex flex-col items-center gap-2.5 ${className}`}>
       {labelWidth > 0 && (
         <div aria-hidden className="flex gap-[2px]">

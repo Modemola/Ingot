@@ -7,7 +7,7 @@ import { Reveal, SplitWords } from "@/components/fx/motion";
 import { Hallmarks } from "@/components/ui";
 
 /// What `HedgedCredit.open()` does before the transaction ends, drawn as a sequence diagram: four
-/// parties, four messages, one transaction. If any step fails, none of them happened — which is
+/// parties, four messages, one transaction. If any step fails, none of them happened, which is
 /// the whole claim, so it is worth showing rather than saying. The figures are the same worked
 /// example "The case" uses below: 100,000 GPU-hours at a $2.50 forward, 70% advance, $60,000 margin.
 
@@ -44,7 +44,7 @@ export function OneTransaction() {
   return (
     <section className="relative mx-auto max-w-6xl px-4 pt-36 sm:px-6">
       <Reveal>
-        <div className="eyebrow">V — One transaction</div>
+        <div className="eyebrow">V: One transaction</div>
       </Reveal>
       <h2 className="mt-5 max-w-4xl text-balance font-display text-[clamp(2.2rem,4.8vw,4rem)] font-light leading-[1.04] tracking-[-0.02em]">
         <SplitWords
@@ -54,8 +54,8 @@ export function OneTransaction() {
       </h2>
       <Reveal delay={0.1}>
         <p className="mt-5 max-w-2xl text-[15.5px] leading-relaxed text-ink-secondary">
-          One call does four things before the transaction ends. If any of them fails — the hedge
-          fills outside the borrower&apos;s bound, the vault is at capacity, the pool is short of cash —
+          One call does four things before the transaction ends. If any of them fails (the hedge
+          fills outside the borrower&apos;s bound, the vault is at capacity, the pool is short of cash),
           the whole call reverts and none of them happened. There is no moment where the loan exists
           and the hedge does not.
         </p>
@@ -205,7 +205,7 @@ export function OneTransaction() {
             className="mt-5 flex flex-col gap-2 border-t border-hairline px-1 pt-5 sm:flex-row sm:items-center sm:justify-between"
           >
             <span className="text-[13.5px] text-ink-secondary">
-              Lender recovery is now <span className="text-gold">$183,750</span> — the full debt — at every
+              Lender recovery is now <span className="text-gold">$183,750</span>, the full debt, at every
               settlement rate.
             </span>
             <span className="label">All four, or none</span>

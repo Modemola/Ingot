@@ -3,7 +3,7 @@
 What Ingot trusts, what it does not, and what a reviewer should push on. Written after three
 security reviews of the protocol; findings are listed whether or not they were fixed.
 
-## Fixed — third review
+## Fixed: third review
 
 A third pass attacked the second review's own fixes. Each finding was reproduced as a passing
 exploit first; every one of those exploits now fails, and the suite carries a regression test
@@ -54,7 +54,7 @@ receiver now fails closed (`WorkflowNotPinned`). The deploy script pins the work
 `CRE_WORKFLOW_OWNER` / `CRE_WORKFLOW_ID` are set and otherwise prints the command.
 `test_onReport_failsClosedUntilAWorkflowIsPinned`.
 
-## Fixed — second review
+## Fixed: second review
 
 A second, adversarial review went through every contract and the off-chain publisher looking for
 ways to take money. Each finding below was reproduced with a Foundry test first, then fixed, and
@@ -69,7 +69,7 @@ its limit is enforced by refusing to quote risk-adding trades.
 
 **Settlement losses were never written off.** A loss realized at settlement could leave an account
 flat with a negative balance forever, sitting in the vault's balance as a receivable nobody would
-pay — overstating NAV to underwriters. Settlement now records the shortfall; after a three-day
+pay: overstating NAV to underwriters. Settlement now records the shortfall; after a three-day
 grace (so a solvent integrator such as the credit pool can cover it) anyone can write it off
 against the vault as bad debt. `test_settlement_shortfallIsWrittenOffAfterTheGracePeriod`.
 
@@ -86,7 +86,7 @@ Inside the window the mark is now the time-weighted blend of the realized averag
 only) and the forward for the remainder. `test_markPrice_blendsTheRealizedPartOfTheWindow`.
 
 **The mark lagged a public price by hours.** The trailing TWAP ended at the newest finalized print,
-so that print's price only entered the average when the *next* one arrived — up to six hours on the
+so that print's price only entered the average when the *next* one arrived: up to six hours on the
 keeper's schedule. The window now ends at the present with the newest finalized price held forward;
 provisional prints still never count. `test_twap_endsNowWithTheNewestFinalizedPriceHeldForward`,
 `test_twap_ignoresProvisionalPrints`.
@@ -125,18 +125,18 @@ realized cash can be withdrawn now; unrealized PnL still backs margin.
 36 hours, stamps prints with the chain's clock rather than the runner's, and waits out the index's
 minimum interval measured from the newest print, provisional ones included.
 
-## Fixed — first review
+## Fixed: first review
 
 **Orders could be sandwiched for the full quote adjustment.** `IngotMarket.trade` and
 `HedgedCredit.open` both take the worst acceptable fill and enforce it on chain, but the front end
-originally submitted the extremes — max uint when buying, zero when selling — which disabled that
+originally submitted the extremes (max uint when buying, zero when selling) which disabled that
 protection entirely. On a public mempool an attacker could push the vault's inventory-skewed quote,
 let the victim fill against it, and unwind. Both surfaces now derive the bound from the quote the
 trader was actually shown, with a visible tolerance control defaulting to 0.5%, and the bound is
 displayed before the button.
 
 **A freely mintable collateral token could reach mainnet.** `Deploy.s.sol` deploys `MockUSDC` when
-`USDC_ADDRESS` is unset, and `MockUSDC.mint` is unrestricted — correct for a testnet a judge needs
+`USDC_ADDRESS` is unset, and `MockUSDC.mint` is unrestricted: correct for a testnet a judge needs
 funds on, catastrophic anywhere else. The script now reverts if that path is taken on a chain that
 is not Monad testnet or a local node.
 
@@ -149,15 +149,15 @@ across 23 providers over 78 days was +237% (AWS). It is now 250%.
 
 **The basis ratio is asserted, not proven.** Lowering the ceiling bounds the damage; it does not
 verify the claim. A borrower who overstates their realized rate borrows against revenue they do not
-have. The honest fix is attestation — a zkTLS proof over provider invoices, or an oracle of the
-borrower's realized rate — which is the same mechanism the production design needs in order to
+have. The honest fix is attestation (a zkTLS proof over provider invoices, or an oracle of the
+borrower's realized rate) which is the same mechanism the production design needs in order to
 route revenue at source. Until then this is underwriting, not code.
 
 **Publishers are trusted within a band.** Any allowlisted publisher can print up to 25% from the
 previous print every 5 minutes. There is no quorum and no median across publishers, so a single
 compromised key can walk the index over a few hours, and settlement follows it. The finality delay
 and tip revocation give a guardian a window to intervene, and every print carries its methodology
-hash, sample count and venue count — but the mitigation today is operational, not cryptographic.
+hash, sample count and venue count, but the mitigation today is operational, not cryptographic.
 The fix is a quorum with a per-period median plus a cumulative drift cap on top of the per-print
 band, and it does not change the read interface.
 
@@ -169,7 +169,7 @@ USDC. A production deployment leaves it closed and approves borrowers after unde
 **The credit product is undercollateralised on purpose.** A 70% advance against 20% borrower
 margin means a borrower who draws and walks retains roughly 80% of the advance. The hedge removes
 rate risk; it does not create an enforcement mechanism. This is stated in the product surface
-rather than buried: *rate risk is hedged here — delivery risk and the promise to repay are not.*
+rather than buried: *rate risk is hedged here: delivery risk and the promise to repay are not.*
 
 **Owner powers are real.** The owner can list series, retune risk and credit terms, set the vault
 address and move the index guardian. There is no timelock. For a hackathon deployment this is
@@ -203,5 +203,5 @@ deliberate; any real deployment needs the standard treatment.
 - `markPrice` falls back from a trailing TWAP to a single print if the TWAP reverts, which is more
   manipulable than the primary path.
 - Settling one loan calls `settlePosition` for the pool's whole position in that series. The
-  accounting holds — realized PnL lands in the pool's balance and is subtracted from the remaining
-  receivables — but it is a coupling worth removing.
+  accounting holds, realized PnL lands in the pool's balance and is subtracted from the remaining
+  receivables, but it is a coupling worth removing.

@@ -2,8 +2,8 @@ import type { Query } from "@tanstack/react-query";
 
 /// How often each on-chain value is worth re-reading, by the function that reads it.
 ///
-/// Polling everything every two seconds sent a request per value, per page, per tick — dozens a
-/// second on the terminal, against a public RPC that rate-limits — and re-rendered the page each
+/// Polling everything every two seconds sent a request per value, per page, per tick (dozens a
+/// second on the terminal, against a public RPC that rate-limits) and re-rendered the page each
 /// time. Most of those values cannot change that fast. Risk parameters change only when the owner
 /// retunes them, the index prints every few hours, a loan's projection is fixed once it opens.
 /// Anything the visitor changes themselves is refreshed at once anyway: every confirmed

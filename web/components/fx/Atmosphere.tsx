@@ -1,5 +1,5 @@
 /// The ground everything stands on: warm black, a faint ember glow from above like light off a
-/// furnace mouth, and assay-paper dots that fade toward the edges. Static and almost free — the
+/// furnace mouth, and assay-paper dots that fade toward the edges. Static and almost free: the
 /// set pieces on the landing page do the moving.
 export function Atmosphere() {
   return (

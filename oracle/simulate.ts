@@ -4,7 +4,7 @@
 ///
 /// Runs the exact methodology the workflow runs, over a real venue snapshot, and prints the
 /// report body it would hand to the DON. Also writes the encoded payload to
-/// `fixtures/report-payload.hex`, which a Foundry test decodes — so the TypeScript encoder and
+/// `fixtures/report-payload.hex`, which a Foundry test decodes, so the TypeScript encoder and
 /// the Solidity decoder are checked against each other rather than assumed to agree.
 ///
 /// This is the "simulate" half of the CRE workflow lifecycle. Deploying to a live DON needs the
@@ -69,4 +69,4 @@ console.log(`  bytes        ${payload.length} (${payload.length / 32} words)`);
 console.log(`  base64       ${toBase64(payload).slice(0, 44)}…`);
 
 writeFileSync(new URL("./fixtures/report-payload.hex", import.meta.url), hex);
-console.log(`\nwrote fixtures/report-payload.hex — decoded by IngotIndexReceiver.t.sol`);
+console.log(`\nwrote fixtures/report-payload.hex: decoded by IngotIndexReceiver.t.sol`);

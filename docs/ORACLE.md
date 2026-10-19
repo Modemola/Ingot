@@ -6,7 +6,7 @@
 
 `IngotIndex` trusts an allowlisted set of publisher keys. Any one of them can print within the
 deviation band every interval, so a single compromised key can walk the settlement price over a
-few hours — and every position, liquidation and settlement follows it. The finality delay and tip
+few hours, and every position, liquidation and settlement follows it. The finality delay and tip
 revocation buy a guardian time to intervene, but the trust is still a key.
 
 `docs/SECURITY.md` lists this as an accepted finding with the mechanism it would need: *"a quorum
@@ -38,8 +38,8 @@ with a per-period median plus a cumulative drift cap."* This is that mechanism.
                        IngotIndex.publish
 ```
 
-Two aggregations doing two different jobs. **Within a node**, a trimmed mean across venues — that
-is the index methodology, unchanged from `tools/build_index.py`. **Across nodes**, a median — that
+Two aggregations doing two different jobs. **Within a node**, a trimmed mean across venues: that
+is the index methodology, unchanged from `tools/build_index.py`. **Across nodes**, a median: that
 is the consensus. A node that is lied to by one venue, rate-limited, or simply wrong cannot move
 the published number.
 
@@ -65,13 +65,13 @@ minimum interval and monotonic timestamps are enforced in `IngotIndex` exactly a
 | `oracle/index-workflow/` | The CLI's workflow folder: `main.ts` (the Runner entry), `workflow.yaml`, config |
 | `oracle/project.yaml` | CRE project settings: the Monad testnet RPC |
 | `oracle/methodology.ts` | The index methodology, shared by the workflow and the simulator |
-| `oracle/encoding.ts` | Report-body encoding, shared — and deliberately free of any SDK import |
+| `oracle/encoding.ts` | Report-body encoding, shared, and deliberately free of any SDK import |
 | `oracle/simulate.ts` | Runs the whole thing locally over a real venue snapshot |
 | `oracle/fixtures/` | One real snapshot, and the encoded report body it produces |
 | `contracts/src/IngotIndexReceiver.sol` | On-chain landing pad |
 
 Monad testnet is a first-class chain in the CRE SDK's selector table
-(`2183018362218727504`, chain id 10143) — this is a supported path, not a workaround.
+(`2183018362218727504`, chain id 10143): this is a supported path, not a workaround.
 
 ## Running it
 
@@ -134,7 +134,7 @@ consensus across 5 nodes
 
 The CRE SDK types Node's `fs` and friends as `never`, globally, because a workflow runs in a WASM
 sandbox with no filesystem. Anything that imports the SDK inherits that. The simulator runs in Node
-and needs `fs`, so it must never reach the SDK — which is why the encoding helpers live in
+and needs `fs`, so it must never reach the SDK, which is why the encoding helpers live in
 `encoding.ts` with no SDK import, and why `pnpm typecheck` runs two separate programs.
 
 This was learned the hard way. The first version had `simulate.ts` import from `workflow.ts`; it
@@ -152,14 +152,14 @@ the deployer as a publisher.
 ## The things that caught real bugs
 
 **`tsc` against the real SDK types.** The first version passed a `Uint8Array` as the report
-payload. Protobuf JSON carries `bytes` as base64, so it had to be encoded — a mismatch that would
+payload. Protobuf JSON carries `bytes` as base64, so it had to be encoded: a mismatch that would
 have surfaced only at DON runtime.
 
 **The cross-language encoding test.** The workflow runs in a restricted WASM sandbox with no ABI
 library, so it hand-rolls the encoding of `(bytes32, uint64, uint256, uint32, uint16)`. An encoder
 and a decoder written in different languages agreeing *by inspection* is exactly what is wrong in
 production. `test_onReport_decodesThePayloadTheWorkflowEncoded` reads the payload `pnpm simulate`
-wrote and puts it through the real receiver — and on its first run it failed, because the workflow
+wrote and puts it through the real receiver, and on its first run it failed, because the workflow
 encoded the tag as ASCII `bytes32` while the receiver had been configured with `keccak256` of the
 same string. The payload decoded cleanly and the receiver rejected it, which is precisely the
 failure that test exists to find.

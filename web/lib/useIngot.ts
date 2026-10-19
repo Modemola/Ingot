@@ -10,7 +10,7 @@ import type { IndexPoint } from "@/components/charts";
 ///
 /// With no wallet connected, wagmi reports the first configured chain, which may not be
 /// the one Ingot is deployed to. Rather than showing a visitor an empty app, the read-only
-/// views fall back to the first chain that does have a deployment — a judge opening the
+/// views fall back to the first chain that does have a deployment: a judge opening the
 /// link sees the live market before touching a wallet. Writes still go through the
 /// connected chain, and the connect button prompts a switch when it is the wrong one.
 export function useDeployment() {
@@ -175,7 +175,7 @@ export function useLatestIndex(): number | undefined {
 const HISTORY_DEPTH = 96;
 
 /// The index's recent prints, for the chart. Read straight from the oracle rather than an
-/// indexer — at this depth it is one multicall, and it keeps the chart honest about what
+/// indexer: at this depth it is one multicall, and it keeps the chart honest about what
 /// is actually on chain.
 export function useIndexHistory(): IndexPoint[] {
   const { deployment, chainId } = useDeployment();

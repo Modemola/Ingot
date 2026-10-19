@@ -22,7 +22,7 @@ const RPC_URL = process.env.RPC_URL ?? "http://127.0.0.1:8545";
 const ARTIFACTS = join(dirname(fileURLToPath(import.meta.url)), "artifacts");
 mkdirSync(ARTIFACTS, { recursive: true });
 
-// anvil's well-known default accounts #1–#3; #0 is the deployer.
+// anvil's well-known default accounts #1 to #3; #0 is the deployer.
 const TRADER = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
 const BORROWER = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC";
 const UNDERWRITER = "0x90F79bf6EB2c4f870365E785982E1f101E93b906";

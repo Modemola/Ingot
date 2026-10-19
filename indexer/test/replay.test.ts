@@ -4,7 +4,7 @@
 // The fixture is written by contracts/test/IndexerTrace.t.sol: real logs from real calls, plus
 // what IngotMarket itself reports for every position and for open interest at each checkpoint.
 // Nothing here is hand-computed, so a passing run means the TypeScript port of _applyDelta and
-// the open-interest bookkeeping are exact — including for the vault, which emits nothing of its
+// the open-interest bookkeeping are exact, including for the vault, which emits nothing of its
 // own and whose position the indexer can only derive.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";

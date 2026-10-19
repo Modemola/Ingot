@@ -23,7 +23,7 @@ import {Units} from "./libraries/Units.sol";
 ///      which quotes a two-way price off the mark: a fixed half-spread plus an inventory skew that
 ///      widens as the vault accumulates one-sided risk. The vault is an ordinary margin account
 ///      inside this contract, so its solvency is enforced by the same margin engine as everyone
-///      else's — when the vault can no longer meet maintenance, quotes stop. That is the capacity
+///      else's, when the vault can no longer meet maintenance, quotes stop. That is the capacity
 ///      limit, and it is a property of the accounting rather than a parameter someone has to
 ///      remember to set.
 ///
@@ -242,7 +242,7 @@ contract IngotMarket is Ownable, ReentrancyGuard {
         int256 realized = Units.notional(size, series.settlementPrice) - position.cost;
         balanceOf[account] += realized;
 
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         if (size > 0) series.longOpenInterest -= uint256(size);
 
         position.size = 0;
@@ -368,7 +368,7 @@ contract IngotMarket is Ownable, ReentrancyGuard {
         if (series.settled) revert SeriesAlreadySettled();
         // Liquidating the vault would close its slice against itself: the position would not
         // change, but the penalty would still move from the vault to the liquidator, and the
-        // vault would stay liquidatable — a loop that drains underwriter capital. The vault's
+        // vault would stay liquidatable: a loop that drains underwriter capital. The vault's
         // limit is enforced by refusing to quote risk-adding trades instead.
         if (account == vault) revert VaultNotLiquidatable();
 
@@ -520,7 +520,7 @@ contract IngotMarket is Ownable, ReentrancyGuard {
     function freeCollateral(address account) external view returns (uint256) {
         int256 equity_ = equity(account);
         int256 required = int256(marginRequirement(account, initialMarginBps));
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded strictly greater.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded strictly greater.
         return equity_ > required ? uint256(equity_ - required) : 0;
     }
 
@@ -662,12 +662,12 @@ contract IngotMarket is Ownable, ReentrancyGuard {
     }
 
     /// @dev Once an account is flat, any negative balance left is real loss: the vault wears it
-    ///      and it is recorded as bad debt. The vault itself is excluded — it is the backstop.
+    ///      and it is recorded as bad debt. The vault itself is excluded: it is the backstop.
     function _absorbShortfall(address account) internal {
         address vault_ = vault;
         if (account == vault_) return;
         if (_openSeries[account].length != 0 || balanceOf[account] >= 0) return;
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded negative.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded negative.
         uint256 shortfall = uint256(-balanceOf[account]);
         balanceOf[account] = 0;
         balanceOf[vault_] -= shortfall.toInt256();
@@ -684,9 +684,9 @@ contract IngotMarket is Ownable, ReentrancyGuard {
 
     function _syncOpenInterest(uint256 seriesId, int256 before, int256 current) internal {
         Series storage series = _series[seriesId];
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         if (before > 0) series.longOpenInterest -= uint256(before);
-        // forge-lint: disable-next-line(unsafe-typecast) — guarded positive.
+        // forge-lint: disable-next-line(unsafe-typecast): guarded positive.
         if (current > 0) series.longOpenInterest += uint256(current);
     }
 
