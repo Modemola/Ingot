@@ -84,6 +84,75 @@ export function buildPrint(offers: Offer[]): IndexPrint {
   };
 }
 
+/// A copy of the venue dataset: every offer, stamped with when it was generated.
+export type Snapshot = { generated_at?: string; offers: Offer[] };
+
+/// The print is stamped with the time it is published, so the data behind it must be current: a
+/// feed that stopped updating would otherwise keep publishing yesterday's rate as today's. The
+/// same limit as the scheduled publisher (tools/publish-index.mjs).
+export const MAX_SNAPSHOT_AGE_HOURS = 36;
+
+/// The dataset's CSV export as a snapshot. It carries the same offers as the JSON at a fifth of
+/// the size, which matters: CRE caps an HTTP response at 250 KB, and the JSON outgrew that.
+/// Columns: date, provider, gpu, vram_gb, usd_per_hr, kind, source_url, fetched_at. A snapshot is
+/// as fresh as its newest quote.
+export function parseCsvSnapshot(text: string): Snapshot {
+  const rows = text.split(/\r?\n/).filter((line) => line.trim() !== "").map(splitCsvLine);
+  const [header, ...body] = rows;
+  if (!header) throw new Error("empty CSV");
+  const col = (name: string) => {
+    const i = header.indexOf(name);
+    if (i < 0) throw new Error(`CSV has no ${name} column`);
+    return i;
+  };
+  const [provider, gpu, usd, kind, fetched] = [col("provider"), col("gpu"), col("usd_per_hr"), col("kind"), col("fetched_at")];
+  let newest = Number.NEGATIVE_INFINITY;
+  const offers: Offer[] = [];
+  for (const r of body) {
+    const t = Date.parse(r[fetched] ?? "");
+    if (!Number.isNaN(t) && t > newest) newest = t;
+    offers.push({ provider: r[provider], gpu: r[gpu], usd_hr: Number(r[usd]), kind: r[kind] });
+  }
+  return { generated_at: Number.isFinite(newest) ? new Date(newest).toISOString() : undefined, offers };
+}
+
+/// One CSV line, with RFC 4180 quoting: a quoted field may hold commas and doubled quotes.
+function splitCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let cur = "";
+  let quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (quoted) {
+      if (ch === '"' && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else if (ch === '"') quoted = false;
+      else cur += ch;
+    } else if (ch === '"') quoted = true;
+    else if (ch === ",") {
+      out.push(cur);
+      cur = "";
+    } else cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+
+/// The newest of the copies that arrived, or throw if even that one is stale. Picking the newest
+/// of several stale copies must not make stale data publishable.
+export function freshestSnapshot(snapshots: Snapshot[], nowMs: number): Snapshot {
+  const dated = snapshots.filter((s) => !Number.isNaN(Date.parse(s.generated_at ?? "")));
+  if (dated.length === 0) throw new Error("no feed returned a dated snapshot");
+  const newest = dated.reduce((a, b) => (Date.parse(b.generated_at!) > Date.parse(a.generated_at!) ? b : a));
+  const ageHours = (nowMs - Date.parse(newest.generated_at!)) / 3_600_000;
+  if (ageHours > MAX_SNAPSHOT_AGE_HOURS) {
+    throw new Error(`newest snapshot is ${ageHours.toFixed(1)}h old (limit ${MAX_SNAPSHOT_AGE_HOURS}h)`);
+  }
+  if (ageHours < -1) throw new Error("snapshot is dated in the future");
+  return newest;
+}
+
 /// Convert a float price to 18-decimal fixed point without going through a lossy string path.
 export function toWei(price: number): bigint {
   return BigInt(Math.round(price * 1e9)) * 10n ** 9n;

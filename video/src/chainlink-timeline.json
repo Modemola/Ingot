@@ -1,0 +1,216 @@
+{
+ "fps": 30,
+ "duration": 120.0,
+ "frames": 3600,
+ "scenes": [
+  {
+   "id": "open",
+   "start": 0.0,
+   "end": 11.276
+  },
+  {
+   "id": "stakes",
+   "start": 11.276,
+   "end": 20.976
+  },
+  {
+   "id": "key",
+   "start": 20.976,
+   "end": 27.941
+  },
+  {
+   "id": "cre",
+   "start": 27.941,
+   "end": 39.284
+  },
+  {
+   "id": "fetch",
+   "start": 39.284,
+   "end": 54.851
+  },
+  {
+   "id": "consensus",
+   "start": 54.851,
+   "end": 66.664
+  },
+  {
+   "id": "deliver",
+   "start": 66.664,
+   "end": 81.703
+  },
+  {
+   "id": "guards",
+   "start": 81.703,
+   "end": 90.758
+  },
+  {
+   "id": "product",
+   "start": 90.758,
+   "end": 98.726
+  },
+  {
+   "id": "proof",
+   "start": 98.726,
+   "end": 112.757
+  },
+  {
+   "id": "end",
+   "start": 112.757,
+   "end": 120.0
+  }
+ ],
+ "lines": [
+  {
+   "id": "L1",
+   "scene": "open",
+   "start": 1.4,
+   "end": 3.32,
+   "text": "Every market runs on one number.",
+   "caption": "Every market runs on one number."
+  },
+  {
+   "id": "L2",
+   "scene": "open",
+   "start": 3.837,
+   "end": 10.557,
+   "text": "Ours is what it costs to rent an H one hundred for an hour. Right now, about three dollars and seventy cents.",
+   "caption": "Ours is what it costs to rent an H100 for an hour. Right now, about $3.70."
+  },
+  {
+   "id": "L3",
+   "scene": "stakes",
+   "start": 11.826,
+   "end": 17.116,
+   "text": "That number marks every position, triggers every liquidation, and settles every contract.",
+   "caption": "That number marks every position, triggers every liquidation, and settles every contract."
+  },
+  {
+   "id": "L4",
+   "scene": "stakes",
+   "start": 17.633,
+   "end": 20.257,
+   "text": "So the real question is: who gets to write it?",
+   "caption": "So the real question is: who gets to write it?"
+  },
+  {
+   "id": "L5",
+   "scene": "key",
+   "start": 21.526,
+   "end": 27.222,
+   "text": "The simple answer is one key, on one server. Which works perfectly, right up until it doesn't.",
+   "caption": "The simple answer is one key, on one server. Which works perfectly, right up until it doesn't."
+  },
+  {
+   "id": "L6",
+   "scene": "cre",
+   "start": 28.491,
+   "end": 32.224,
+   "text": "So Ingot hands the job to Chainlink's Runtime Environment.",
+   "caption": "So Ingot hands the job to the Chainlink Runtime Environment."
+  },
+  {
+   "id": "L7",
+   "scene": "cre",
+   "start": 32.741,
+   "end": 38.565,
+   "text": "Every hour, a cron trigger wakes a workflow that runs across a decentralized oracle network.",
+   "caption": "Every hour, a cron trigger wakes a workflow that runs across a decentralized oracle network."
+  },
+  {
+   "id": "L8",
+   "scene": "fetch",
+   "start": 39.834,
+   "end": 48.282,
+   "text": "Each node independently fetches live rental quotes, covering more than twenty G P U providers, through the H T T P capability.",
+   "caption": "Each node independently fetches live rental quotes, covering 20+ GPU providers, through the HTTP capability."
+  },
+  {
+   "id": "L9",
+   "scene": "fetch",
+   "start": 48.799,
+   "end": 54.132,
+   "text": "Then it applies the index method: a median per provider, and a trimmed mean across them.",
+   "caption": "Then it applies the index method: a median per provider, and a trimmed mean across them."
+  },
+  {
+   "id": "L10",
+   "scene": "consensus",
+   "start": 55.401,
+   "end": 59.668,
+   "text": "Now, say one node is fed bad data, and reports ninety-nine dollars.",
+   "caption": "Now, say one node is fed bad data, and reports $99."
+  },
+  {
+   "id": "L11",
+   "scene": "consensus",
+   "start": 60.185,
+   "end": 65.945,
+   "text": "The network takes the median across nodes. That answer isn't averaged in. It's simply outvoted.",
+   "caption": "The network takes the median across nodes. That answer isn't averaged in. It's simply outvoted."
+  },
+  {
+   "id": "L12",
+   "scene": "deliver",
+   "start": 67.214,
+   "end": 69.795,
+   "text": "The agreed price becomes one signed report.",
+   "caption": "The agreed price becomes one signed report."
+  },
+  {
+   "id": "L13",
+   "scene": "deliver",
+   "start": 70.312,
+   "end": 75.667,
+   "text": "Chainlink's forwarder verifies the signatures, and delivers it to Ingot's receiver on Mohnad.",
+   "caption": "Chainlink's forwarder verifies the signatures, and delivers it to Ingot's receiver on Monad."
+  },
+  {
+   "id": "L14",
+   "scene": "deliver",
+   "start": 76.184,
+   "end": 80.984,
+   "text": "The receiver checks the sender, and the workflow. Anyone else is politely turned away.",
+   "caption": "The receiver checks the sender, and the workflow. Anyone else is politely turned away."
+  },
+  {
+   "id": "L15",
+   "scene": "guards",
+   "start": 82.253,
+   "end": 90.039,
+   "text": "And a quorum still isn't a blank check. The index enforces a deviation band, a minimum interval, and a finality delay.",
+   "caption": "And a quorum still isn't a blank check. The index enforces a deviation band, a minimum interval, and a finality delay."
+  },
+  {
+   "id": "L16",
+   "scene": "product",
+   "start": 91.308,
+   "end": 98.007,
+   "text": "From there, that one price marks your trades, settles each contract, and decides whether a hedged loan comes out whole.",
+   "caption": "From there, that one price marks your trades, settles each contract, and decides whether a hedged loan comes out whole."
+  },
+  {
+   "id": "L17",
+   "scene": "proof",
+   "start": 99.276,
+   "end": 109.388,
+   "text": "We ran the full workflow with the C R E command line: it compiled, fetched, agreed on three seventy-five, and ran the write to Mohnad testnet as a dry run.",
+   "caption": "We ran the full workflow with the CRE CLI: it compiled, fetched, agreed on $3.75, and ran the write to Monad testnet as a dry run."
+  },
+  {
+   "id": "L18",
+   "scene": "proof",
+   "start": 109.904,
+   "end": 112.038,
+   "text": "Next step: a live D O N.",
+   "caption": "Next step: a live DON."
+  },
+  {
+   "id": "L19",
+   "scene": "end",
+   "start": 113.307,
+   "end": 116.4,
+   "text": "Ingot, on Chainlink. One price. No single key.",
+   "caption": "Ingot, on Chainlink. One price. No single key."
+  }
+ ]
+}

@@ -21,7 +21,7 @@ import {
 } from "@chainlink/cre-sdk";
 
 import { WORKFLOW_TAG, encodeReport, toBase64 } from "./encoding";
-import { buildPrint, type Offer } from "./methodology";
+import { buildPrint, freshestSnapshot, parseCsvSnapshot, type Snapshot } from "./methodology";
 
 /// Monad testnet, from the SDK's own chain-selector table.
 export const MONAD_TESTNET_SELECTOR = 2183018362218727504n;
@@ -29,35 +29,42 @@ export const MONAD_TESTNET_SELECTOR = 2183018362218727504n;
 export type Config = {
   /// Address of IngotIndexReceiver on Monad.
   receiver: `0x${string}`;
-  /// Venue endpoints each node queries independently.
-  venues: string[];
+  /// Copies of the venue dataset each node queries independently, as `.csv` or JSON. The freshest
+  /// copy that answers is used. CRE caps an HTTP response at 250 KB, which the full JSON exceeds,
+  /// so the config lists the dataset's CSV export.
+  feeds: string[];
   /// Cron schedule. Hourly by default; the index's own minInterval is the real floor.
   schedule: string;
 };
 
-/// One node's view of the market: fetch every venue, keep what parses, build the print.
+/// One node's view of the market: fetch every copy of the feed, keep the freshest, build the print.
 ///
-/// Failures are swallowed per venue rather than aborting the node. A venue being down is normal,
-/// and the methodology already requires a minimum number of venues before it will produce a
-/// number at all — so a thin sample fails loudly in `buildPrint` instead of quietly publishing a
-/// price derived from two providers.
+/// A feed being down is normal, so failures are logged per feed rather than aborting the node. What
+/// does abort it: no copy at all, a newest copy older than the freshness limit, or a sample too
+/// thin for the methodology. Each of those fails loudly instead of quietly publishing a stale or
+/// thin price, and the other nodes' medians carry on without this one.
 function fetchPriceOnThisNode(nodeRuntime: NodeRuntime<Config>): number {
   const http = new cre.capabilities.HTTPClient();
-  const offers: Offer[] = [];
+  const snapshots: Snapshot[] = [];
 
-  for (const url of nodeRuntime.config.venues) {
+  for (const url of nodeRuntime.config.feeds) {
     try {
       const response = http.sendRequest(nodeRuntime, { url, method: "GET" }).result();
-      const body = JSON.parse(new TextDecoder().decode(response.body));
-      if (Array.isArray(body?.offers)) offers.push(...(body.offers as Offer[]));
+      const text = new TextDecoder().decode(response.body);
+      if (url.split("?")[0].endsWith(".csv")) snapshots.push(parseCsvSnapshot(text));
+      else {
+        const body = JSON.parse(text);
+        if (Array.isArray(body?.offers)) snapshots.push(body as Snapshot);
+      }
     } catch (error) {
-      nodeRuntime.log(`venue ${url} unavailable: ${String(error)}`);
+      nodeRuntime.log(`feed ${url} unavailable: ${String(error)}`);
     }
   }
 
-  const print = buildPrint(offers);
+  const snapshot = freshestSnapshot(snapshots, nodeRuntime.now().getTime());
+  const print = buildPrint(snapshot.offers);
   nodeRuntime.log(
-    `node print $${print.price.toFixed(4)}/GPU-hour from ${print.sourceCount} venues, ${print.sampleCount} quotes`,
+    `node print $${print.price.toFixed(4)}/GPU-hour from ${print.sourceCount} venues, ${print.sampleCount} quotes (snapshot ${snapshot.generated_at})`,
   );
 
   // Consensus is taken on the integer price; the counts are reported from the agreed sample below.

@@ -1,0 +1,25 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "lines": [
+    { "id": "L1", "scene": "open", "text": "Every market runs on one number.", "caption": "Every market runs on one number." },
+    { "id": "L2", "scene": "open", "text": "Ours is what it costs to rent an H one hundred for an hour. Right now, about three dollars and seventy cents.", "caption": "Ours is what it costs to rent an H100 for an hour. Right now, about $3.70." },
+    { "id": "L3", "scene": "stakes", "text": "That number marks every position, triggers every liquidation, and settles every contract.", "caption": "That number marks every position, triggers every liquidation, and settles every contract." },
+    { "id": "L4", "scene": "stakes", "text": "So the real question is: who gets to write it?", "caption": "So the real question is: who gets to write it?" },
+    { "id": "L5", "scene": "key", "text": "The simple answer is one key, on one server. Which works perfectly, right up until it doesn't.", "caption": "The simple answer is one key, on one server. Which works perfectly, right up until it doesn't." },
+    { "id": "L6", "scene": "cre", "text": "So Ingot hands the job to Chainlink's Runtime Environment.", "caption": "So Ingot hands the job to the Chainlink Runtime Environment." },
+    { "id": "L7", "scene": "cre", "text": "Every hour, a cron trigger wakes a workflow that runs across a decentralized oracle network.", "caption": "Every hour, a cron trigger wakes a workflow that runs across a decentralized oracle network." },
+    { "id": "L8", "scene": "fetch", "text": "Each node independently fetches live rental quotes, covering more than twenty G P U providers, through the H T T P capability.", "caption": "Each node independently fetches live rental quotes, covering 20+ GPU providers, through the HTTP capability." },
+    { "id": "L9", "scene": "fetch", "text": "Then it applies the index method: a median per provider, and a trimmed mean across them.", "caption": "Then it applies the index method: a median per provider, and a trimmed mean across them." },
+    { "id": "L10", "scene": "consensus", "text": "Now, say one node is fed bad data, and reports ninety-nine dollars.", "caption": "Now, say one node is fed bad data, and reports $99." },
+    { "id": "L11", "scene": "consensus", "text": "The network takes the median across nodes. That answer isn't averaged in. It's simply outvoted.", "caption": "The network takes the median across nodes. That answer isn't averaged in. It's simply outvoted." },
+    { "id": "L12", "scene": "deliver", "text": "The agreed price becomes one signed report.", "caption": "The agreed price becomes one signed report." },
+    { "id": "L13", "scene": "deliver", "text": "Chainlink's forwarder verifies the signatures, and delivers it to Ingot's receiver on Mohnad.", "caption": "Chainlink's forwarder verifies the signatures, and delivers it to Ingot's receiver on Monad." },
+    { "id": "L14", "scene": "deliver", "text": "The receiver checks the sender, and the workflow. Anyone else is politely turned away.", "caption": "The receiver checks the sender, and the workflow. Anyone else is politely turned away." },
+    { "id": "L15", "scene": "guards", "text": "And a quorum still isn't a blank check. The index enforces a deviation band, a minimum interval, and a finality delay.", "caption": "And a quorum still isn't a blank check. The index enforces a deviation band, a minimum interval, and a finality delay." },
+    { "id": "L16", "scene": "product", "text": "From there, that one price marks your trades, settles each contract, and decides whether a hedged loan comes out whole.", "caption": "From there, that one price marks your trades, settles each contract, and decides whether a hedged loan comes out whole." },
+    { "id": "L17", "scene": "proof", "text": "We ran the full workflow with the C R E command line: it compiled, fetched, agreed on three seventy-five, and ran the write to Mohnad testnet as a dry run.", "caption": "We ran the full workflow with the CRE CLI: it compiled, fetched, agreed on $3.75, and ran the write to Monad testnet as a dry run." },
+    { "id": "L18", "scene": "proof", "text": "Next step: a live D O N.", "caption": "Next step: a live DON." },
+    { "id": "L19", "scene": "end", "text": "Ingot, on Chainlink. One price. No single key.", "caption": "Ingot, on Chainlink. One price. No single key." }
+  ]
+}
