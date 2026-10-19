@@ -91,15 +91,15 @@ cre login
 cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0
 ```
 
-A real run, CRE CLI v1.38.0, 2026-10-14:
+A real run, CRE CLI v1.38.0, 2026-10-19:
 
 ```
 ✓ Workflow compiled
 [SIMULATION] Running trigger trigger=cron-trigger@1.0.0
-[USER LOG] node print $3.7570/GPU-hour from 24 venues, 38 quotes
-[USER LOG] DON agreed $3.7570/GPU-hour at 1791934222
+[USER LOG] node print $3.7216/GPU-hour from 25 venues, 39 quotes (snapshot 2026-10-19T08:47:05.888Z)
+[USER LOG] DON agreed $3.7216/GPU-hour at 1792404410
 [USER LOG] report written to IngotIndexReceiver 0xEcD7c0ECf2093415dEC999379e631002d637D254 on Monad testnet: tx SUCCESS, hash none
-✓ Workflow Simulation Result: { "observedAt": 1791934222, "price": 3.75697 }
+✓ Workflow Simulation Result: { "observedAt": 1792404410, "price": 3.7215833333333332 }
 ```
 
 The cron trigger fires, the HTTP capability fetches the live feed, `consensusMedianAggregation`
