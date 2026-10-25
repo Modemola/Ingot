@@ -51,17 +51,28 @@ jobs:
           echo "index=$(jq -r .index contracts/deployments/10143.json)" >> "$GITHUB_OUTPUT"
           echo "market=$(jq -r .market contracts/deployments/10143.json)" >> "$GITHUB_OUTPUT"
 
+      # A feed that has stopped updating (exit 3) skips this round with a warning: the index holds
+      # its last print until fresh data arrives. Anything else wrong with the data still fails.
       - name: Compute the print
         id: print
         run: |
-          node tools/publish-index.mjs --json > print.json
+          set +e
+          node tools/publish-index.mjs --json > print.json 2> err.txt
+          CODE=$?
+          set -e
+          cat err.txt >&2
+          if [ "$CODE" -eq 3 ]; then
+            echo "::warning title=Index feed is stale::$(sed -n 's/^publish-index: //p' err.txt | tail -n 1). Skipped this print; the index holds its last value."
+            exit 0
+          fi
+          [ "$CODE" -eq 0 ] || exit "$CODE"
           cat print.json
           echo "price=$(jq -r .priceWei print.json)"   >> "$GITHUB_OUTPUT"
           echo "samples=$(jq -r .sampleCount print.json)" >> "$GITHUB_OUTPUT"
           echo "sources=$(jq -r .sourceCount print.json)" >> "$GITHUB_OUTPUT"
 
       - name: Publish onchain
-        if: steps.addr.outputs.index != ''
+        if: steps.addr.outputs.index != '' && steps.print.outputs.price != ''
         env:
           RPC: https://testnet-rpc.monad.xyz
           KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
