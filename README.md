@@ -72,6 +72,7 @@ a wallet and testnet gas.
 | | |
 |---|---|
 | [`docs/JUDGES.md`](docs/JUDGES.md) | Five-minute walkthrough for judges |
+| [`docs/FIRST-USER.md`](docs/FIRST-USER.md) | The first user, what has been shown so far, and what comes next |
 | [`docs/BACKTEST.md`](docs/BACKTEST.md) | 78 days of real H100 prices: method, findings, and the negative result |
 | [`docs/SECURITY.md`](docs/SECURITY.md) | What the protocol trusts, what was fixed, what was accepted |
 | [`docs/ORACLE.md`](docs/ORACLE.md) | The index publisher as a Chainlink CRE workflow |
