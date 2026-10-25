@@ -82,12 +82,17 @@ export function computePrint(snapshot) {
 /// A source that stopped updating would otherwise keep re-publishing yesterday's rate as today's.
 export const MAX_SOURCE_AGE_HOURS = 36;
 
+/// A feed that has gone quiet is expected now and then and resolves itself when it updates, so
+/// it gets its own exit code: the keeper skips the print with a warning instead of failing.
+export class StaleSnapshotError extends Error {}
+export const EXIT_STALE = 3;
+
 export function assertFresh(snapshot, now = Date.now()) {
   const generated = Date.parse(snapshot.generated_at ?? "");
   if (Number.isNaN(generated)) throw new Error("snapshot has no generated_at: refusing to publish");
   const ageHours = (now - generated) / 3_600_000;
   if (ageHours > MAX_SOURCE_AGE_HOURS) {
-    throw new Error(
+    throw new StaleSnapshotError(
       `snapshot is ${ageHours.toFixed(1)}h old (limit ${MAX_SOURCE_AGE_HOURS}h): refusing to publish stale data`,
     );
   }
@@ -131,6 +136,6 @@ async function main() {
 if (process.argv[1] && process.argv[1].endsWith("publish-index.mjs")) {
   main().catch((error) => {
     console.error(`publish-index: ${error.message}`);
-    process.exit(1);
+    process.exit(error instanceof StaleSnapshotError ? EXIT_STALE : 1);
   });
 }
