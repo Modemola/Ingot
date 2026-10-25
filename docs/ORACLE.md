@@ -111,14 +111,11 @@ access to a live DON has been requested.
 
 `--broadcast` sends the write for real, through the CRE CLI's simulation forwarder on Monad
 testnet (`0xB9F79d863261869B234c481D1f9A7af84AeAd192`). That forwarder does not verify DON
-signatures, so the receiver only trusts it inside a short window opened by the
-`cre simulation window` workflow (Actions tab): it pins the simulator's workflow owner (the address
-of `CRE_ETH_PRIVATE_KEY`), points the receiver at the simulation forwarder, waits, and closes again
-on its own.
-
-```bash
-cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0 --broadcast
-```
+signatures, so the receiver trusts it only for the minute the `cre broadcast` workflow (Actions
+tab) needs: it simulates once dry, pins the deployer as the workflow owner, points the receiver at
+the simulation forwarder, broadcasts, and closes the receiver again, also when a step fails. It
+then checks the index for the new print. It needs a `CRE_API_KEY` repository secret for the CLI's
+non-interactive login.
 
 ### The local harness
 

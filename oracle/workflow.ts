@@ -119,8 +119,15 @@ const publishIndex = async (runtime: Runtime<Config>) => {
   // The reply carries protobuf BigInts and raw bytes, which JSON.stringify refuses; report the
   // fields that matter, readably.
   const status = ["FATAL", "REVERTED", "SUCCESS"][receipt.txStatus] ?? String(receipt.txStatus);
+  // The forwarder's transaction can succeed while the receiver inside it reverts, so report both.
+  const receiverStatus =
+    receipt.receiverContractExecutionStatus === undefined
+      ? "unreported"
+      : (["SUCCESS", "REVERTED"][receipt.receiverContractExecutionStatus] ?? String(receipt.receiverContractExecutionStatus));
   const hash = receipt.txHash ? "0x" + Array.from(receipt.txHash, (b) => b.toString(16).padStart(2, "0")).join("") : "none";
-  runtime.log(`report written to IngotIndexReceiver ${runtime.config.receiver} on Monad testnet: tx ${status}, hash ${hash}`);
+  runtime.log(
+    `report written to IngotIndexReceiver ${runtime.config.receiver} on Monad testnet: tx ${status}, receiver ${receiverStatus}, hash ${hash}`,
+  );
   if (receipt.errorMessage) runtime.log(`chain write note: ${receipt.errorMessage}`);
   return { price: agreedPrice, observedAt };
 };
