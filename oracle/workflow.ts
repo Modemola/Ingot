@@ -12,12 +12,13 @@
 ///                    fails to reach it, cannot move the published number.
 
 import {
+  ConsensusAggregationByFields,
   EVMClient,
   type NodeRuntime,
   type Runtime,
-  consensusMedianAggregation,
   cre,
   handler,
+  median,
 } from "@chainlink/cre-sdk";
 
 import { WORKFLOW_TAG, encodeReport, toBase64 } from "./encoding";
@@ -37,13 +38,16 @@ export type Config = {
   schedule: string;
 };
 
+/// What each node reports, and what the DON agrees on field by field.
+type NodePrint = { price: number; sampleCount: number; sourceCount: number };
+
 /// One node's view of the market: fetch every copy of the feed, keep the freshest, build the print.
 ///
 /// A feed being down is normal, so failures are logged per feed rather than aborting the node. What
 /// does abort it: no copy at all, a newest copy older than the freshness limit, or a sample too
 /// thin for the methodology. Each of those fails loudly instead of quietly publishing a stale or
 /// thin price, and the other nodes' medians carry on without this one.
-function fetchPriceOnThisNode(nodeRuntime: NodeRuntime<Config>): number {
+function fetchPriceOnThisNode(nodeRuntime: NodeRuntime<Config>): NodePrint {
   const http = new cre.capabilities.HTTPClient();
   const snapshots: Snapshot[] = [];
 
@@ -67,27 +71,34 @@ function fetchPriceOnThisNode(nodeRuntime: NodeRuntime<Config>): number {
     `node print $${print.price.toFixed(4)}/GPU-hour from ${print.sourceCount} venues, ${print.sampleCount} quotes (snapshot ${snapshot.generated_at})`,
   );
 
-  // Consensus is taken on the integer price; the counts are reported from the agreed sample below.
-  return print.price;
+  return { price: print.price, sampleCount: print.sampleCount, sourceCount: print.sourceCount };
 }
 
 /// The hourly job: agree a price across the DON, then write one signed report to Monad.
 const publishIndex = async (runtime: Runtime<Config>) => {
-  const agreedPrice = runtime
-    .runInNodeMode(fetchPriceOnThisNode, consensusMedianAggregation())()
+  // A median per field: the price is the consensus, and the counts say how much data stood behind
+  // it, so the print onchain carries them like the keeper's prints do.
+  const agreed = runtime
+    .runInNodeMode(
+      fetchPriceOnThisNode,
+      ConsensusAggregationByFields<NodePrint>({ price: median, sampleCount: median, sourceCount: median }),
+    )()
     .result();
+  const agreedPrice = agreed.price;
 
   const observedAt = Math.floor(runtime.now().getTime() / 1000);
   const priceWei = BigInt(Math.round(agreedPrice * 1e9)) * 10n ** 9n;
 
-  runtime.log(`DON agreed $${agreedPrice.toFixed(4)}/GPU-hour at ${observedAt}`);
+  runtime.log(
+    `DON agreed $${agreedPrice.toFixed(4)}/GPU-hour at ${observedAt} from ${agreed.sourceCount} venues, ${agreed.sampleCount} quotes`,
+  );
 
   const encoded = encodeReport({
     tag: WORKFLOW_TAG,
     observedAt: BigInt(observedAt),
     priceWei,
-    sampleCount: 0n,
-    sourceCount: 0n,
+    sampleCount: BigInt(Math.round(agreed.sampleCount)),
+    sourceCount: BigInt(Math.round(agreed.sourceCount)),
   });
 
   const report = runtime
@@ -108,8 +119,15 @@ const publishIndex = async (runtime: Runtime<Config>) => {
   // The reply carries protobuf BigInts and raw bytes, which JSON.stringify refuses; report the
   // fields that matter, readably.
   const status = ["FATAL", "REVERTED", "SUCCESS"][receipt.txStatus] ?? String(receipt.txStatus);
+  // The forwarder's transaction can succeed while the receiver inside it reverts, so report both.
+  const receiverStatus =
+    receipt.receiverContractExecutionStatus === undefined
+      ? "unreported"
+      : (["SUCCESS", "REVERTED"][receipt.receiverContractExecutionStatus] ?? String(receipt.receiverContractExecutionStatus));
   const hash = receipt.txHash ? "0x" + Array.from(receipt.txHash, (b) => b.toString(16).padStart(2, "0")).join("") : "none";
-  runtime.log(`report written to IngotIndexReceiver ${runtime.config.receiver} on Monad testnet: tx ${status}, hash ${hash}`);
+  runtime.log(
+    `report written to IngotIndexReceiver ${runtime.config.receiver} on Monad testnet: tx ${status}, receiver ${receiverStatus}, hash ${hash}`,
+  );
   if (receipt.errorMessage) runtime.log(`chain write note: ${receipt.errorMessage}`);
   return { price: agreedPrice, observedAt };
 };
