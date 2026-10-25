@@ -25,7 +25,7 @@ with a per-period median plus a cumulative drift cap."* This is that mechanism.
   │                      then 10% trimmed mean            │
   │                                                       │
   │  across nodes:                                        │
-  │    consensusMedianAggregation()                       │
+  │    median per field: price, quotes, venues            │
   └───────────────────────────┬───────────────────────────┘
                               │ one DON-signed report
                               ▼
@@ -102,9 +102,23 @@ A real run, CRE CLI v1.38.0, 2026-10-19:
 ✓ Workflow Simulation Result: { "observedAt": 1792404410, "price": 3.7215833333333332 }
 ```
 
-The cron trigger fires, the HTTP capability fetches the live feed, `consensusMedianAggregation`
-agrees the price, and the EVM capability writes the DON-signed report to the receiver (a dry
-run: `--broadcast` would send it). Deployment access to a live DON has been requested.
+The cron trigger fires, the HTTP capability fetches the live feed, the nodes agree a median price
+(and median quote and venue counts, so the print onchain says what stood behind it), and the EVM
+capability writes the report to the receiver (a dry run: `--broadcast` would send it). Deployment
+access to a live DON has been requested.
+
+### Broadcasting a simulation
+
+`--broadcast` sends the write for real, through the CRE CLI's simulation forwarder on Monad
+testnet (`0xB9F79d863261869B234c481D1f9A7af84AeAd192`). That forwarder does not verify DON
+signatures, so the receiver only trusts it inside a short window opened by the
+`cre simulation window` workflow (Actions tab): it pins the simulator's workflow owner (the address
+of `CRE_ETH_PRIVATE_KEY`), points the receiver at the simulation forwarder, waits, and closes again
+on its own.
+
+```bash
+cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0 --broadcast
+```
 
 ### The local harness
 

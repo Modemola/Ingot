@@ -1,0 +1,94 @@
+# Opens IngotIndexReceiver to the CRE CLI's simulation forwarder for a few minutes, so a
+# `cre workflow simulate --broadcast` run lands a real report on Monad testnet, then shuts it again.
+#
+# Why a window and not a setting: the simulation forwarder (MockKeystoneForwarder) does not verify
+# DON signatures, so while the receiver trusts it, anyone could send a print through it. The
+# index's own guards still apply (deviation band, finality delay, guardian revocation), but the
+# window stays short and closes itself even if nobody comes back to close it.
+#
+# Inputs:
+#   minutes          how long to stay open (default 15, at most 30)
+#   workflow_owner   the address of CRE_ETH_PRIVATE_KEY in your local .env: the simulator reports
+#                    it as the workflow owner, and the receiver only accepts that owner
+#
+# Requires the repository secret DEPLOYER_PRIVATE_KEY (the receiver's owner).
+
+name: cre simulation window
+
+on:
+  workflow_dispatch:
+    inputs:
+      workflow_owner:
+        description: "Address of the key the CRE CLI signs with (CRE_ETH_PRIVATE_KEY)"
+        required: true
+      minutes:
+        description: "Minutes to keep the window open (max 30)"
+        required: false
+        default: "15"
+      close_now:
+        description: "Only close the window"
+        type: boolean
+        default: false
+
+concurrency:
+  group: cre-simulation-window
+  cancel-in-progress: false
+
+env:
+  RPC: https://testnet-rpc.monad.xyz
+  # The CRE CLI's simulation forwarder on Monad testnet (cmd/workflow/simulate/chain/evm/supported_chains.go).
+  SIM_FORWARDER: "0xB9F79d863261869B234c481D1f9A7af84AeAd192"
+
+jobs:
+  window:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+
+      - name: Resolve the receiver
+        id: addr
+        run: |
+          echo "receiver=$(jq -r .indexReceiver contracts/deployments/10143.json)" >> "$GITHUB_OUTPUT"
+          echo "index=$(jq -r .index contracts/deployments/10143.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Open the window
+        if: ${{ !inputs.close_now }}
+        env:
+          KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          OWNER: ${{ inputs.workflow_owner }}
+        run: |
+          set -euo pipefail
+          RECEIVER="${{ steps.addr.outputs.receiver }}"
+          [[ "$OWNER" =~ ^0x[0-9a-fA-F]{40}$ ]] || { echo "workflow_owner is not an address"; exit 1; }
+          IS_PUBLISHER=$(cast call "${{ steps.addr.outputs.index }}" 'isPublisher(address)(bool)' "$RECEIVER" --rpc-url "$RPC")
+          echo "receiver is an index publisher: $IS_PUBLISHER"
+          [ "$IS_PUBLISHER" = "true" ] || { echo "the receiver cannot publish; nothing to open"; exit 1; }
+          cast send "$RECEIVER" 'setExpectedWorkflow(address,bytes32)' "$OWNER" 0x0000000000000000000000000000000000000000000000000000000000000000 \
+            --rpc-url "$RPC" --private-key "$KEY" | grep -E 'status|transactionHash'
+          cast send "$RECEIVER" 'setForwarder(address)' "$SIM_FORWARDER" \
+            --rpc-url "$RPC" --private-key "$KEY" | grep -E 'status|transactionHash'
+
+      - name: Hold it open
+        if: ${{ !inputs.close_now }}
+        run: |
+          MIN="${{ inputs.minutes }}"
+          [[ "$MIN" =~ ^[0-9]+$ ]] && [ "$MIN" -ge 1 ] && [ "$MIN" -le 30 ] || MIN=15
+          echo "::notice title=Window open::Receiver accepts the simulation forwarder until $(date -u -d "+${MIN} min" +%H:%M) UTC. Run the broadcast now."
+          sleep $((MIN * 60))
+
+      # Always runs, including when the job is cancelled mid-wait, so the window cannot be left open.
+      - name: Close the window
+        if: ${{ always() }}
+        env:
+          KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          cast send "${{ steps.addr.outputs.receiver }}" 'setForwarder(address)' 0x0000000000000000000000000000000000000000 \
+            --rpc-url "$RPC" --private-key "$KEY" | grep -E 'status|transactionHash'
+          echo "::notice title=Window closed::The receiver accepts no forwarder until a live DON is registered."
