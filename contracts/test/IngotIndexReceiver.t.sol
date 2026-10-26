@@ -2,9 +2,22 @@
 pragma solidity ^0.8.30;
 
 import {Test} from "forge-std/Test.sol";
+import {ERC165Checker} from "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 
 import {IngotIndex} from "../src/IngotIndex.sol";
 import {IngotIndexReceiver} from "../src/IngotIndexReceiver.sol";
+import {IReceiver} from "../src/interfaces/IReceiver.sol";
+
+/// @dev The delivery step of Chainlink's Keystone forwarder (`route` in KeystoneForwarder and
+///      MockKeystoneForwarder): ask ERC165 first, call `onReport` only on a yes, and report
+///      success either way the transaction goes. A receiver that skips ERC165 is never called.
+contract ForwarderRoute {
+    function route(address receiver, bytes calldata metadata, bytes calldata report) external returns (bool) {
+        if (!ERC165Checker.supportsInterface(receiver, type(IReceiver).interfaceId)) return false;
+        (bool success,) = receiver.call(abi.encodeCall(IReceiver.onReport, (metadata, report)));
+        return success;
+    }
+}
 
 contract IngotIndexReceiverTest is Test {
     IngotIndex internal index;
@@ -205,5 +218,28 @@ contract IngotIndexReceiverTest is Test {
         vm.expectRevert(IngotIndexReceiver.WorkflowNotPinned.selector);
         vm.prank(forwarder);
         fresh.onReport(meta, _report(GENESIS + 1 hours, 3.6e18));
+    }
+
+    /// @dev Found by broadcasting a CRE simulation to Monad testnet: the forwarder's transaction
+    ///      succeeded, the CLI said so, and no print landed, because the first deployed receiver
+    ///      did not answer ERC165 and the forwarder skipped it.
+    function test_supportsInterface_answersTheForwardersCheck() public view {
+        assertEq(
+            type(IReceiver).interfaceId, bytes4(0x805f2132), "Chainlink's IReceiver id, onReport(bytes,bytes)"
+        );
+        assertTrue(
+            ERC165Checker.supportsInterface(address(receiver), type(IReceiver).interfaceId), "a CRE receiver"
+        );
+        assertFalse(receiver.supportsInterface(0xffffffff), "ERC165's invalid id");
+    }
+
+    function test_route_deliversThroughTheForwardersPath() public {
+        ForwarderRoute router = new ForwarderRoute();
+        vm.prank(owner);
+        receiver.setForwarder(address(router));
+
+        vm.warp(GENESIS + 1 hours);
+        assertTrue(router.route(address(receiver), meta, _report(GENESIS + 1 hours, 3.6e18)), "delivered");
+        assertEq(index.observationCount(), 1, "the print landed");
     }
 }

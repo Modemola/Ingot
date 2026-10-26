@@ -54,7 +54,7 @@ Everything here is public and checkable.
 - **A decentralised oracle path.** The Chainlink CRE workflow that fetches and computes the index
   has run end to end in simulation, matching the keeper's print exactly ($3.7216 from 25 venues
   on 2026-10-19). Deployment access to the live network has been requested.
-- **Verified end to end.** 116 contract tests, three security reviews with every finding
+- **Verified end to end.** 118 contract tests, three security reviews with every finding
   recorded, an Envio indexer replayed against the chain to the unit, and a browser test that
   runs all three flows on every push.
 
