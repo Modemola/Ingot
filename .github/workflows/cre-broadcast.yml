@@ -1,20 +1,43 @@
-# Runs the Chainlink CRE workflow with `cre workflow simulate --broadcast`, so a CRE report lands
-# on Monad testnet as a real transaction, without a live DON.
+# Lands a Chainlink CRE report on Monad testnet as a real transaction, without a live DON, by
+# running `cre workflow simulate --broadcast` against the CRE CLI's simulation forwarder.
 #
-# The broadcast goes through the CRE CLI's simulation forwarder, which does not verify DON
-# signatures. IngotIndexReceiver therefore trusts it only for the minute this job needs: the job
-# simulates once dry (nothing is opened if that fails), opens the receiver to the simulation
-# forwarder, broadcasts, and closes it again, also when a step fails or the job is cancelled. The
-# index's own guards (deviation band, finality delay, guardian revocation) apply throughout.
+# That forwarder does not verify DON signatures, so IngotIndexReceiver trusts it only inside a short
+# window, and the window always closes, also when a step fails or the job is cancelled. The index's
+# own guards (deviation band, finality delay, guardian revocation) apply throughout.
 #
-# Requires two repository secrets:
-#   DEPLOYER_PRIVATE_KEY   the receiver's owner; also signs the broadcast, so it is the workflow owner
-#   CRE_API_KEY            a CRE API key, for the CLI's non-interactive login
+# Two modes:
+#
+#   runner   Everything happens here: install the CLI, simulate dry (nothing is opened if that
+#            fails), open the receiver, broadcast, close. Open for about a minute.
+#            Needs the repository secret CRE_API_KEY. The broadcast is signed with the deployer key,
+#            which makes the deployer the workflow owner.
+#
+#   window   For when no API key is available: this job only opens the receiver for `minutes`, and
+#            you run the broadcast on your own machine, where `cre login` works:
+#              cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0 --broadcast
+#            Set `workflow_owner` to the address of CRE_ETH_PRIVATE_KEY in oracle/.env: the CLI
+#            reports that address as the workflow owner, and the receiver accepts only that owner.
+#
+# Both modes need DEPLOYER_PRIVATE_KEY (the receiver's owner), and both finish by checking the index
+# for the new print.
 
 name: cre broadcast
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "runner: all here (needs CRE_API_KEY). window: open the receiver while you broadcast locally"
+        type: choice
+        options: [runner, window]
+        default: runner
+      workflow_owner:
+        description: "window mode: address of CRE_ETH_PRIVATE_KEY in your oracle/.env"
+        required: false
+      minutes:
+        description: "window mode: minutes to stay open (1 to 30)"
+        required: false
+        default: "15"
 
 concurrency:
   group: cre-broadcast
@@ -25,11 +48,12 @@ env:
   # The CRE CLI's simulation forwarder on Monad testnet (cmd/workflow/simulate/chain/evm/supported_chains.go).
   SIM_FORWARDER: "0xB9F79d863261869B234c481D1f9A7af84AeAd192"
   SIMULATE: cre workflow simulate ./index-workflow --target staging-settings --non-interactive --trigger-index 0
+  RUNNER: ${{ inputs.mode == 'runner' }}
 
 jobs:
   broadcast:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,15 +64,18 @@ jobs:
           version: v1.5.1
 
       - uses: oven-sh/setup-bun@v2
+        if: ${{ inputs.mode == 'runner' }}
         with:
           bun-version: 1.3.1
 
       - name: Install the CRE CLI
+        if: ${{ inputs.mode == 'runner' }}
         run: |
           curl -sSL https://app.chain.link/install.sh | bash
           echo "$HOME/.cre/bin" >> "$GITHUB_PATH"
 
       - name: Install the workflow's dependencies
+        if: ${{ inputs.mode == 'runner' }}
         working-directory: oracle
         run: |
           bun install
@@ -59,13 +86,22 @@ jobs:
         id: addr
         env:
           KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          OWNER_INPUT: ${{ inputs.workflow_owner }}
         run: |
+          set -euo pipefail
+          if [ "$RUNNER" = "true" ]; then
+            OWNER=$(cast wallet address --private-key "$KEY")
+          else
+            OWNER=$(echo "$OWNER_INPUT" | tr -d '[:space:]')
+            [[ "$OWNER" =~ ^0x[0-9a-fA-F]{40}$ ]] || { echo "window mode needs workflow_owner: the address of your CRE_ETH_PRIVATE_KEY"; exit 1; }
+          fi
+          echo "owner=$OWNER" >> "$GITHUB_OUTPUT"
           echo "receiver=$(jq -r .indexReceiver contracts/deployments/10143.json)" >> "$GITHUB_OUTPUT"
           echo "index=$(jq -r .index contracts/deployments/10143.json)" >> "$GITHUB_OUTPUT"
-          echo "owner=$(cast wallet address --private-key "$KEY")" >> "$GITHUB_OUTPUT"
 
       # Dry first: a compile or consensus failure stops here, before the receiver is opened.
       - name: Simulate (dry run)
+        if: ${{ inputs.mode == 'runner' }}
         working-directory: oracle
         env:
           CRE_API_KEY: ${{ secrets.CRE_API_KEY }}
@@ -79,9 +115,11 @@ jobs:
         run: |
           set -euo pipefail
           RECEIVER="${{ steps.addr.outputs.receiver }}"
-          echo "before=$(cast call "${{ steps.addr.outputs.index }}" 'observationCount()(uint256)' --rpc-url "$RPC" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          [ "$(cast call "${{ steps.addr.outputs.index }}" 'isPublisher(address)(bool)' "$RECEIVER" --rpc-url "$RPC")" = "true" ] \
+          INDEX="${{ steps.addr.outputs.index }}"
+          [ "$(cast call "$INDEX" 'isPublisher(address)(bool)' "$RECEIVER" --rpc-url "$RPC")" = "true" ] \
             || { echo "the receiver is not an index publisher"; exit 1; }
+          echo "before=$(cast call "$INDEX" 'observationCount()(uint256)' --rpc-url "$RPC" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "block=$(cast block-number --rpc-url "$RPC")" >> "$GITHUB_OUTPUT"
           cast send "$RECEIVER" 'setExpectedWorkflow(address,bytes32)' "${{ steps.addr.outputs.owner }}" \
             0x0000000000000000000000000000000000000000000000000000000000000000 \
             --rpc-url "$RPC" --private-key "$KEY" | grep -E 'status|transactionHash'
@@ -89,6 +127,7 @@ jobs:
             --rpc-url "$RPC" --private-key "$KEY" | grep -E 'status|transactionHash'
 
       - name: Simulate and broadcast
+        if: ${{ inputs.mode == 'runner' }}
         working-directory: oracle
         env:
           CRE_API_KEY: ${{ secrets.CRE_API_KEY }}
@@ -99,6 +138,34 @@ jobs:
           grep -q "tx SUCCESS" broadcast.log || { echo "the forwarder transaction did not succeed"; exit 1; }
           ! grep -q "receiver REVERTED" broadcast.log || { echo "the receiver rejected the report"; exit 1; }
 
+      # Window mode: hold the receiver open until it accepts a report or the time is up, whichever
+      # is first, so the window is no longer than the broadcast needs. It watches the receiver's own
+      # ReportAccepted event: a print from the scheduled keeper must not be mistaken for yours.
+      - name: Wait for your local broadcast
+        id: wait
+        if: ${{ inputs.mode == 'window' }}
+        run: |
+          set -euo pipefail
+          MIN="${{ inputs.minutes }}"
+          [[ "$MIN" =~ ^[0-9]+$ ]] && [ "$MIN" -ge 1 ] && [ "$MIN" -le 30 ] || MIN=15
+          UNTIL=$(( $(date +%s) + MIN * 60 ))
+          echo "::notice title=Window open::Run the broadcast now. The receiver accepts the simulation forwarder for workflow owner ${{ steps.addr.outputs.owner }} until $(date -u -d "@$UNTIL" +%H:%M) UTC."
+          FROM="${{ steps.open.outputs.block }}"
+          while [ "$(date +%s)" -lt "$UNTIL" ]; do
+            sleep 10
+            TO=$(cast block-number --rpc-url "$RPC")
+            [ "$TO" -ge "$FROM" ] || continue
+            FOUND=$(cast logs --json --from-block "$FROM" --to-block "$TO" --address "${{ steps.addr.outputs.receiver }}" \
+              'ReportAccepted(uint64,uint256,uint32,uint16)' --rpc-url "$RPC" | jq -r '.[0].transactionHash // empty')
+            if [ -n "$FOUND" ]; then
+              echo "the receiver accepted a report: $FOUND"
+              echo "hash=$FOUND" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            FROM=$((TO + 1))
+          done
+          echo "no report reached the receiver within ${MIN} minutes"
+
       - name: Close the receiver
         if: ${{ always() && steps.addr.outputs.receiver != '' }}
         env:
@@ -107,8 +174,9 @@ jobs:
           set -euo pipefail
           cast send "${{ steps.addr.outputs.receiver }}" 'setForwarder(address)' 0x0000000000000000000000000000000000000000 \
             --rpc-url "$RPC" --private-key "$KEY" | grep -E 'status|transactionHash'
+          echo "::notice title=Window closed::The receiver accepts no forwarder until a live DON is registered."
 
-      # The proof is the index, not the log: a new print must exist.
+      # The proof is the index, not a log: a new print must exist.
       - name: Show the print it landed
         run: |
           set -euo pipefail
@@ -117,5 +185,7 @@ jobs:
           [ "$COUNT" -gt "${{ steps.open.outputs.before }}" ] || { echo "no new print on the index"; exit 1; }
           echo "newest print, id $((COUNT - 1)):"
           cast call "$INDEX" 'observation(uint256)((uint64,uint64,uint32,uint16,uint256,uint256))' "$((COUNT - 1))" --rpc-url "$RPC"
-          HASH=$(grep -o "hash 0x[0-9a-f]*" oracle/broadcast.log | tail -n 1 | cut -d' ' -f2)
+          HASH="${{ steps.wait.outputs.hash }}"
+          if [ -f oracle/broadcast.log ]; then HASH=$(grep -o "hash 0x[0-9a-f]*" oracle/broadcast.log | tail -n 1 | cut -d' ' -f2); fi
+          if [ "$RUNNER" != "true" ] && [ -z "$HASH" ]; then echo "the receiver accepted no report"; exit 1; fi
           echo "::notice title=CRE report onchain::https://testnet.monadscan.com/tx/$HASH"

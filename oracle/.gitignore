@@ -1,3 +1,5 @@
 # Written by the CRE CLI and by bun when the workflow is simulated; the lockfile of record is pnpm-lock.yaml.
 bun.lock
 index-workflow/.cre_build_tmp.js
+# The CLI reads CRE_ETH_PRIVATE_KEY from here for --broadcast: never commit it.
+.env
