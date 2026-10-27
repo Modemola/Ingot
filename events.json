@@ -1,0 +1,189 @@
+{
+ "address": "0x5BBA7712f71f5b6023917EC254079E742516ea23",
+ "events": [
+  {
+   "name": "landing",
+   "t": 1791928547.354
+  },
+  {
+   "name": "to-trade",
+   "t": 1791928560.366
+  },
+  {
+   "name": "connect",
+   "t": 1791928573.253
+  },
+  {
+   "name": "connected",
+   "t": 1791928585.416
+  },
+  {
+   "name": "index",
+   "t": 1791928587.918
+  },
+  {
+   "name": "index-done",
+   "t": 1791928599.361
+  },
+  {
+   "name": "faucet",
+   "t": 1791928599.361
+  },
+  {
+   "name": "tx",
+   "t": 1791928610.685,
+   "hash": "0x455e381d44148eee58bce70d80f4727f68e96f1bd46e9b1274b167023fe9ade0"
+  },
+  {
+   "name": "faucet-done",
+   "t": 1791928611.801
+  },
+  {
+   "name": "margin",
+   "t": 1791928614.303
+  },
+  {
+   "name": "tx",
+   "t": 1791928620.406,
+   "hash": "0x0842996a7ef84cc10a6dfff4a56f4e86798692c2fb7af7473cea908e463a9796"
+  },
+  {
+   "name": "approved",
+   "t": 1791928621.259
+  },
+  {
+   "name": "tx",
+   "t": 1791928624.077,
+   "hash": "0x87a99cbb3f24f6cbca5efdcda61f5535e1aebcf21618b0ec313dbb57f08317ba"
+  },
+  {
+   "name": "deposited",
+   "t": 1791928624.621
+  },
+  {
+   "name": "ticket",
+   "t": 1791928627.121
+  },
+  {
+   "name": "ticket-preview",
+   "t": 1791928636.219
+  },
+  {
+   "name": "tx",
+   "t": 1791928638.76,
+   "hash": "0xcb64e72a93c1b851c54da1f1daca81bf89b265302ab5a24d989af486e02c5c9a"
+  },
+  {
+   "name": "filled",
+   "t": 1791928639.364
+  },
+  {
+   "name": "position",
+   "t": 1791928643.383
+  },
+  {
+   "name": "explorer",
+   "t": 1791928648.386
+  },
+  {
+   "name": "explorer-done",
+   "t": 1791928655.572
+  },
+  {
+   "name": "to-credit",
+   "t": 1791928657.483
+  },
+  {
+   "name": "example",
+   "t": 1791928675.528
+  },
+  {
+   "name": "minimum",
+   "t": 1791928682.131
+  },
+  {
+   "name": "tx",
+   "t": 1791928689.735,
+   "hash": "0x73a07b57fe5a4a841f170b6811fa100ca2914384188e404c7733d215c998fa1b"
+  },
+  {
+   "name": "credit-approved",
+   "t": 1791928690.56
+  },
+  {
+   "name": "draw",
+   "t": 1791928691.762
+  },
+  {
+   "name": "tx",
+   "t": 1791928694.36,
+   "hash": "0x18b7e33bb9025789710d1d078c294a92573f948739f3eadeaf5d4122dcae7bdc"
+  },
+  {
+   "name": "drawn",
+   "t": 1791928695.002
+  },
+  {
+   "name": "sweep",
+   "t": 1791928701.935
+  },
+  {
+   "name": "sweep-done",
+   "t": 1791928720.612
+  },
+  {
+   "name": "to-underwrite",
+   "t": 1791928723.613
+  },
+  {
+   "name": "vault",
+   "t": 1791928736.841
+  },
+  {
+   "name": "tx",
+   "t": 1791928742.207,
+   "hash": "0xd87b1fabdbb8b9fef3f4ab79bf817d1bf5d4a9dcbf45607134838ceb82f4e758"
+  },
+  {
+   "name": "vault-approved",
+   "t": 1791928742.858
+  },
+  {
+   "name": "tx",
+   "t": 1791928745.606,
+   "hash": "0xd70daecb41754ad689ca5a2c8c75b35f2460f494be4effceab8b77c2252a904d"
+  },
+  {
+   "name": "vault-deposited",
+   "t": 1791928746.632
+  },
+  {
+   "name": "to-close",
+   "t": 1791928750.634
+  },
+  {
+   "name": "close",
+   "t": 1791928766.758
+  },
+  {
+   "name": "tx",
+   "t": 1791928769.056,
+   "hash": "0x88264e554e1b82dc0f5d2ce1b5673f0c41302a8568aac074c2348b05411e3dce"
+  },
+  {
+   "name": "closed",
+   "t": 1791928769.846
+  },
+  {
+   "name": "end",
+   "t": 1791928773.848
+  }
+ ],
+ "errors": [
+  "TypeError: Failed to set the 'innerHTML' property on 'Element': This document requires 'TrustedHTML' assignment.",
+  "TypeError: Failed to set the 'innerHTML' property on 'Element': This document requires 'TrustedHTML' assignment.",
+  "TypeError: Failed to set the 'innerHTML' property on 'Element': This document requires 'TrustedHTML' assignment.",
+  "TypeError: Failed to set the 'innerHTML' property on 'Element': This document requires 'TrustedHTML' assignment and no 'default' policy for 'TrustedHTML' has been defined.",
+  "TypeError: Failed to set the 'innerHTML' property on 'Element': This document requires 'TrustedHTML' assignment."
+ ]
+}
