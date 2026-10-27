@@ -2,8 +2,10 @@
 pragma solidity ^0.8.30;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 import {IngotIndex} from "./IngotIndex.sol";
+import {IReceiver} from "./interfaces/IReceiver.sol";
 
 /// @title IngotIndexReceiver
 /// @notice Receives index prints from a Chainlink CRE workflow and forwards them to the index.
@@ -26,7 +28,10 @@ import {IngotIndex} from "./IngotIndex.sol";
 ///      does vouch for is the metadata it passes alongside: the workflow's ID, name and owner, taken
 ///      from the signed report header. So this contract also pins the expected workflow owner and,
 ///      optionally, the workflow ID, and only then trusts the body.
-contract IngotIndexReceiver is Ownable {
+///
+///      It also answers ERC165 for `IReceiver`. The forwarder asks before every delivery and
+///      quietly skips a receiver that does not say yes, so without it no report ever arrives.
+contract IngotIndexReceiver is Ownable, IReceiver {
     /// @notice The index this receiver publishes into.
     IngotIndex public immutable index;
 
@@ -72,7 +77,7 @@ contract IngotIndexReceiver is Ownable {
     ///        uint16 sources)` produced by the workflow.
     /// @param metadata What the CRE forwarder passes from the signed header, packed as
     ///        `(bytes32 workflowId, bytes10 workflowName, address workflowOwner)`.
-    function onReport(bytes calldata metadata, bytes calldata report) external {
+    function onReport(bytes calldata metadata, bytes calldata report) external override {
         address forwarder_ = forwarder;
         if (forwarder_ == address(0)) revert ForwarderNotSet();
         if (msg.sender != forwarder_) revert NotForwarder(msg.sender);
@@ -88,6 +93,11 @@ contract IngotIndexReceiver is Ownable {
         index.publish(observedAt, price, sampleCount, sourceCount);
 
         emit ReportAccepted(observedAt, price, sampleCount, sourceCount);
+    }
+
+    /// @notice ERC165: this contract is a CRE receiver.
+    function supportsInterface(bytes4 interfaceId) external pure override returns (bool) {
+        return interfaceId == type(IReceiver).interfaceId || interfaceId == type(IERC165).interfaceId;
     }
 
     function _checkWorkflow(bytes calldata metadata) internal view {

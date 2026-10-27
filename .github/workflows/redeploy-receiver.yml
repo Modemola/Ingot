@@ -1,0 +1,46 @@
+# Replaces IngotIndexReceiver on Monad testnet with the current contract (script/RedeployReceiver.s.sol).
+#
+# The rest of the deployment, and the index's history, stay as they are. The run prints the new
+# address; recording it in contracts/deployments/10143.json and the CRE config is a separate commit.
+#
+# Requires the repository secret DEPLOYER_PRIVATE_KEY (owner of the index).
+
+name: Redeploy the index receiver
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: redeploy-receiver
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+
+      - name: Test the receiver first
+        working-directory: contracts
+        run: forge test --match-contract IngotIndexReceiver
+
+      - name: Deploy and swap the publisher
+        working-directory: contracts
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          forge script script/RedeployReceiver.s.sol --rpc-url https://testnet-rpc.monad.xyz --broadcast --slow | tee deploy.log
+          NEW=$(grep -oE "new receiver +0x[0-9a-fA-F]{40}" deploy.log | awk '{print $3}')
+          echo "::notice title=New receiver::$NEW"
+          echo "## New IngotIndexReceiver: \`$NEW\`" >> "$GITHUB_STEP_SUMMARY"
