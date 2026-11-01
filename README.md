@@ -81,6 +81,54 @@ a wallet and testnet gas.
 | [`docs/VIDEO-SCRIPTS.md`](docs/VIDEO-SCRIPTS.md) | Demo and pitch scripts |
 | [`docs/brand/`](docs/brand) | Logo, cover, mark and the script that renders them |
 
+## Architecture
+
+```
+ GPU rental prices (25+ venues, public dataset)
+        │
+        ├── keeper, every six hours (GitHub Actions, tools/publish-index.mjs)
+        └── Chainlink CRE workflow: each node computes the index, the DON agrees a median
+        ▼
+ IngotIndex            the onchain rate: provisional, then final; deviation band, revocation
+        ▼
+ IngotMarket           cash-settled swaps in 730 GPU-hour lots, margin marked to the index
+   ▲         ▲
+   │         └── UnderwriterVault   LPs take the other side of every trade
+   │
+ HedgedCredit          a loan against compute revenue that opens its own hedge, in one transaction
+        │
+        ▼ events
+ Envio indexer  ──►  Next.js front end (reads the chain directly, and the indexer for history)
+```
+
+The trade, credit and underwrite screens take every number from a contract call or an indexed
+event. The landing page's history charts draw on the published 78-day dataset behind the backtest.
+
+## Technology stack
+
+| Layer | Tools |
+|---|---|
+| Contracts | Solidity 0.8.30, Foundry, OpenZeppelin Contracts |
+| Oracle | Chainlink CRE (TypeScript SDK), plus a Node keeper on GitHub Actions |
+| Data | Envio HyperIndex (GraphQL) |
+| Front end | Next.js, React, wagmi, viem, TanStack Query, three.js with React Three Fiber, Motion |
+| Hosting | Vercel (site), GitHub Actions (keeper, CI, deploys) |
+| Chain | Monad testnet (chain 10143) |
+
+## Monad integration
+
+All of Ingot's contracts are deployed on Monad testnet; addresses are in
+[docs/JUDGES.md](docs/JUDGES.md#contract-addresses) and `contracts/deployments/10143.json`. The index
+has published a new print onchain every six hours since deployment, on top of the 78-day history
+the deploy backfilled.
+
+Why Monad: the margin engine marks every position against the index continuously rather than once
+a day, the keeper and the CRE workflow publish on a schedule, and `HedgedCredit.open()` posts
+margin, opens the short, fills it against the vault and pays out the principal in a single
+transaction. That pattern is many small, frequent writes that must settle quickly, which is what
+sub-cent gas, 400ms blocks and 800ms finality make practical. On the front end it means a trade
+shows its fill instead of a pending state.
+
 ## Repository layout
 
 ```
@@ -174,3 +222,38 @@ help: pnpm re-resolves to the same release and rejects it again.
 It clears once the package ages past the window. To install before then, add `minimumReleaseAge: 0`
 to `web/pnpm-workspace.yaml` for that one run and take it out afterwards, rather than leaving the
 check disabled for everything.
+
+## Build window and originality
+
+Ingot was built from scratch during the hackathon: the first commit is dated 21 September 2026 and
+the full history is in this repository. No pre-existing product or codebase was used as a
+foundation; the external code is limited to the open libraries and data credited below.
+
+## AI assistance
+
+AI coding tools were used to build this project, as the hackathon rules permit: Claude Code
+(Anthropic) assisted with writing code, tests and documentation. The product, its design and the
+decisions behind it are the team's.
+
+## Credits
+
+Libraries and data this project builds on, each under its own license:
+
+| What | Used for | License |
+|---|---|---|
+| [OpenZeppelin Contracts](https://github.com/OpenZeppelin/openzeppelin-contracts) | Ownable, ReentrancyGuard, SafeERC20, SafeCast, ERC165; ERC20 for the test USDC | MIT |
+| [forge-std](https://github.com/foundry-rs/forge-std) / [Foundry](https://github.com/foundry-rs/foundry) | Tests, scripts, deployment | MIT / Apache-2.0 |
+| [Chainlink CRE SDK](https://www.npmjs.com/package/@chainlink/cre-sdk) and CLI | The oracle workflow; `IReceiver` follows Chainlink's interface | BUSL-1.1 |
+| [Envio HyperIndex](https://envio.dev) | The indexer | Envio license |
+| [Next.js](https://nextjs.org), [React](https://react.dev) | Front end | MIT |
+| [wagmi](https://wagmi.sh), [viem](https://viem.sh), [TanStack Query](https://tanstack.com/query) | Wallet and chain access | MIT |
+| [three.js](https://threejs.org), [React Three Fiber](https://github.com/pmndrs/react-three-fiber), drei, [postprocessing](https://github.com/pmndrs/postprocessing) | 3D scenes | MIT / Zlib |
+| [Motion](https://motion.dev), [Lenis](https://github.com/darkroomengineering/lenis) | Animation and scrolling | MIT |
+| [Geist](https://vercel.com/font), [Newsreader](https://fonts.google.com/specimen/Newsreader) | Typefaces | SIL OFL 1.1 |
+| [Remotion](https://www.remotion.dev) | Rendering the videos in `video/` | Remotion license |
+| [gpu-rental-prices](https://github.com/adriannutiu/gpu-rental-prices) by Adrian Nutiu | Daily H100 rental snapshots behind the index and the backtest | CC BY 4.0 |
+
+## License
+
+Ingot's own code is released under the [MIT License](LICENSE). Third-party libraries and data keep
+their own licenses, listed above.
